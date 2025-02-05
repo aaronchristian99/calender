@@ -18,5 +18,5 @@
 <h2>How to run the application</h2>
 <ol>
     <li>Run `podman compose up -d`</li>
-    <li>To fo run commands inside the container run command - `podman exec -it {container_name} bash`</li>
+    <li>To fo run commands inside the container run command - `podman exec -it (container_name) bash`</li>
 </ol>
