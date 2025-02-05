@@ -1,5 +1,5 @@
-class Event:
-    pass
+from Calender import Event
+
 class GUI:
     _DATE_PRESCISION = ['year', 'month', 'day', 'hour']
     _DATE_DELIMETER = '/'
