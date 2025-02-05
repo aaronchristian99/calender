@@ -2,15 +2,13 @@ from Calender import Event
 
 class GUI:
     _DATE_PRESCISION = ['year', 'month', 'day', 'hour']
-    _DATE_DELIMETER = '/'
     # takes a list of events and displays them
     def printEvents(events: list[Event]):
         for event in events:
             print(event)
 
-    # gets input in 'title', 'description', 'location', 'start_date', 'end_date' all in string
-    # dates are stored in decending order with delimeter '_DATE_DELIMETER'
-    def getEventInput(self) -> tuple[str, str, str, str, str]:
+    # gets input in 'title', 'description', 'location' in string, 'start_date', 'end_date' in string lists
+    def getEventInput(self) -> tuple[str, str, str, list[str], list[str]]:
 
         title = input("Enter title for event: ")
 
@@ -30,10 +28,5 @@ class GUI:
                 end_date.append(start_date[index])
             else:
                 end_date.append(u_in)
-                
-        for parameter in start_date:
-            date_string += parameter
-            
 
         return title, description, location, start_date, end_date
-
