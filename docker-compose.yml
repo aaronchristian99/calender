@@ -1,6 +1,26 @@
 version: '3.1'
 
 services:
+  vue:
+    container_name: vue
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    ports:
+      - "8080:80"
+
+  python:
+    container_name: python
+    image: python:latest
+    working_dir: /app
+    volumes:
+      - ./backend:/app
+    environment:
+      - PYTHON_ENV=${ENVIRONMENT}
+    command: ["tail", "-f", "/dev/null"]
+    depends_on:
+      - mysql
+
   mysql:
     container_name: mysql
     image: mysql:latest
@@ -9,3 +29,5 @@ services:
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    ports:
+      - "3306:3306"
