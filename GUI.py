@@ -1,0 +1,43 @@
+from Calender import Event
+
+class GUI:
+    # for when we switch to more advanced GUI
+    def __init__(self):
+        pass
+
+    _DATE_PRESCISION = ['year', 'month', 'day', 'hour']
+    # takes a list of events and displays them
+    def printEvents(events: list[Event]):
+        for event in events:
+            print(event)
+
+    # gets input as 'title', 'description', 'location' in string, 'start_date', 'end_date' in string lists
+    def getEventInput(self) -> tuple[str, str, str, list[str], list[str]]:
+
+        title = input("Enter title for event: ")
+
+        description = input("Enter description for event: ")
+
+        location = input("Enter location for event")
+
+        start_date = []
+        for parameter in self._DATE_PRESCISION:
+            u_in = input(f"Enter the {parameter} for the start date: ")
+            start_date.append(u_in)
+
+        end_date = []
+        for index, parameter in enumerate(self._DATE_PRESCISION):
+            u_in = input(f"Enter the {parameter} for the end date (leave blank for the same as start date): ")
+            if u_in == None:
+                end_date.append(start_date[index])
+            else:
+                end_date.append(u_in)
+
+        return title, description, location, start_date, end_date
+    
+    # prints a numbered list of events and returns the index for the event they selected
+    def getEventSelection(events: list[Event], input_message: str="Enter the event number you wish to select") -> int:
+        for index, event in enumerate(events):
+            print(f"\nEvent {index+1}:\n" + event.returnName())
+
+        return int(input(input_message)) - 1
