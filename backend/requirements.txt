@@ -1,3 +1,4 @@
 SQLAlchemy
 mysql-connector-python
 alembic
+python-dotenv

@@ -1,11 +1,8 @@
 from sqlalchemy import Column, Integer, ForeignKey
-from sqlalchemy.orm import declarative_base
+from models import Base
 
-from backend.database_config import engine
+class PrivateEvent(Base):
+    __tablename__ = 'private_events'
 
-Base = declarative_base()
-
-class Events(Base):
-    __tablename__ = 'public_events'
     id = Column(Integer, primary_key=True, autoincrement=True)
     event_id = Column(Integer, ForeignKey('events.id'))

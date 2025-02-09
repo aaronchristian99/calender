@@ -17,6 +17,7 @@ services:
       - ./backend:/app
     environment:
       - PYTHON_ENV=${ENVIRONMENT}
+      - DATABASE_URL=${DB_URL}
     command: ["tail", "-f", "/dev/null"]
     depends_on:
       - mysql
