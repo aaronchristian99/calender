@@ -84,3 +84,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+.bg-black {
+  background-color: var(--vt-c-black);
+}
