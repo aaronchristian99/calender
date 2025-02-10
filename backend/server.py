@@ -36,7 +36,7 @@ class RequestHandler(BaseHTTPRequestHandler):
             self.send_error(404, "Not Found")
 
     def do_GET(self):
-        if self.path == '/api/event/get':
+        if self.path == '/api/events':
             response = self.eventController.getEvents()
             self.send_json_response(response)
         elif self.path.startswith('/api/event/get/'):
