@@ -1,20 +1,36 @@
 <script setup>
   import { ref, onMounted } from "vue";
+  import { useRouter } from "vue-router";
   import axios from "axios";
   import { CalendarView as Calendar } from "vue-simple-calendar";
   import CalendarViewHeader from "@/components/CalendarViewHeader.vue";
   import "../../node_modules/vue-simple-calendar/dist/style.css";
   import Button from "@/components/Button.vue";
 
+  const router = useRouter();
   const showDate = ref(new Date());
   const period = ref('month');
   const events = ref([]);
+  const createEventHref = ref(router.resolve({ name: "createEvent" } ).href);
 
   onMounted(async () => {
     try {
       const response = await axios.get('/api/events');
-      console.log(response);
-      events.value = response.data;
+
+      if(response.status === 200) {
+        events.value = response.data.events.map(event => {
+          return {
+            id: event.id,
+            title: event.title,
+            location: event.location,
+            startDate: new Date(event.time),
+            endDate: new Date(event.time),
+            tooltip: event.title,
+            url: router.resolve({ name: "event", params: { id: event.id } })
+          }
+        });
+        console.log(events.value);
+      }
     } catch (error) {
       console.log(error);
     }
@@ -40,7 +56,7 @@
 
 <template>
   <section class="calendar-operations-wrapper">
-    <Button label="Add new Event" href="" type="a" />
+    <Button label="Add new Event" :href="createEventHref" type="a" />
     <Button label="Download" @click="downloadEvents" />
     <Button label="Upload" @click="uploadEvent" />
   </section>
@@ -57,6 +73,7 @@
       </div>
     </template>
   </Calendar>
+  <router-view />
 </template>
 
 <style scoped>

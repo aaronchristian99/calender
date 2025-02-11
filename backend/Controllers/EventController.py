@@ -1,24 +1,19 @@
-from models import Event
+from models.Event import Event
 
 class EventController:
     def __init__(self):
         pass
 
     def getEvents(self):
-        pass
+        events = Event.get()
+        return {'events': events}
 
     def getEventById(self, id):
-        pass
+        event = Event.get(id)
 
     def createEvent(self, data):
-        eventData = {
-            'title': data.get('title'),
-            'description': data.get('description'),
-            'location': data.get('location'),
-            'time': data.get('time')
-        }
-        event = Event.create(eventData)
-        return event
+        event_id = Event.create(data)
+        return {'id': event_id}
 
     def updateEvent(self, id, data):
         pass

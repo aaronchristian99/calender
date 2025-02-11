@@ -51,6 +51,7 @@ class RequestHandler(BaseHTTPRequestHandler):
             self.send_error(404, "Not Found")
 
     def send_json_response(self, response):
+        print(response)
         self.send_response(200)
         self.send_header('Content-type', 'application/json')
         self.end_headers()

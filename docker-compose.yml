@@ -17,6 +17,8 @@ services:
     container_name: python
     image: python:latest
     working_dir: /app
+    ports:
+      - "5000:5000"
     volumes:
       - ./backend:/app
     environment:

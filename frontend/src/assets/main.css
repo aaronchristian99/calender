@@ -18,8 +18,13 @@ a,
 .cv-day {
   position: relative;
 }
+
 .cv-day-number {
   display: none !important;
+}
+
+.cv-item {
+  color: #000;
 }
 
 .day-cell {

@@ -34,3 +34,17 @@
     }
   }
 </script>
+
+<style scoped>
+  .button {
+    display: inline-block;
+    vertical-align: middle;
+    padding: 0.5rem;
+    outline: none;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 1rem;
+    font-weight: 700;
+  }
+</style>

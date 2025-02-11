@@ -26,20 +26,20 @@ const router = createRouter({
       component: CalendarView,
       children: [
         {
-          path: '/event',
+          path: 'event',
           children: [
             {
-              path: '/create',
+              path: 'create',
               name: 'createEvent',
               component: EventForm
             },
             {
-              path: '/edit/{id}',
+              path: 'edit/:id',
               name: 'editEvent',
               component: EventForm
             },
             {
-              path: '/{id}',
+              path: ':id',
               name: 'event',
               component: Event
             },

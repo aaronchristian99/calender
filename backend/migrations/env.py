@@ -28,10 +28,6 @@ if config.config_file_name is not None:
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
 from models import Base
-from models.User import User
-from models.Event import Event
-from models.PrivateEvent import PrivateEvent
-from models.PublicEvent import PublicEvent
 
 target_metadata = Base.metadata
 
