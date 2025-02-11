@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Meeting Scheduler</title>
+        <style>
+            body {background-color: powderblue;}
+            /* h1 {
+                position: absolute;
+                left: 600px;
+                top: 150px;
+                }
+            button {
+                position: absolute;
+                left: 600px;
+                top: 150px;
+                } */
+        </style>
+    </head>
+    <body>
+        <div class="form-container">
+            <h1>Schedule a Meeting</h1>
+            <form action="" method="post">
+                <div class="form-group" >
+                    <label for="title">Meeting Title:</label>
+                    <input type="text" id="title" name="title" placeholder="Enter meeting title" required>
+                </div>
+                <div class="form-group">
+                    <label for="datetime">Date and Time:</label>
+                    <input type="datetime-local" id="datetime" name="datetime" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Your Email:</label>
+                    <input type="email" id="email" name="email" placeholder="Enter your email" required >
+                </div>
+                <div class="form-group">
+                    <label for="meeting-link">Meeting Link:</label>
+                    <input type="url" id="meeting-link" name="meeting-link" placeholder="Enter meeting URL" required>
+                </div>
+                <button type="submit">Schedule Meeting</button>
+            </form>
+        </div>
+    </body>
+</html>
