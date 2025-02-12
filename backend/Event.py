@@ -6,7 +6,7 @@ class Event:
         self.__description = description
         self.__location = location
         self.__time = time
-        self.__visibility = visibility #True = public, False = private
+        self.__visibility = visibility # True = public, False = private
         self.__owner_id = owner_id
        
     def getTitle(self):
