@@ -20,6 +20,7 @@ Before running the application make sure that Podman and Podman Compose are inst
 
 1. Run:
    ```
+   podman compose build --no-cache
    podman compose up -d
     ```
    
