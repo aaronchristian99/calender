@@ -1,5 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
+import CalendarView from '../views/CalendarView.vue'
+import EventForm from "@/views/EventForm.vue";
+import Event from "@/views/Event.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -17,6 +20,33 @@ const router = createRouter({
       // which is lazy-loaded when the route is visited.
       component: () => import('../views/AboutView.vue'),
     },
+    {
+      path: '/calendar',
+      name: 'calendar',
+      component: CalendarView,
+      children: [
+        {
+          path: 'event',
+          children: [
+            {
+              path: 'create',
+              name: 'createEvent',
+              component: EventForm
+            },
+            {
+              path: 'edit/:id',
+              name: 'editEvent',
+              component: EventForm
+            },
+            {
+              path: ':id',
+              name: 'event',
+              component: Event
+            },
+          ]
+        }
+      ]
+    }
   ],
 })
 
