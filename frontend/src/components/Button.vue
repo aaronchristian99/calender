@@ -3,7 +3,7 @@
           :class="['button', colour, textColor]">
     {{ label }}
   </button>
-  <a v-else :class="['button', colour, textColor]" :href="url"> {{ label }}</a>
+  <a v-else :class="['button', colour, textColor, 'border-white']" :href="url"> {{ label }}</a>
 </template>
 
 <script>
@@ -37,14 +37,20 @@
 
 <style scoped>
   .button {
-    display: inline-block;
-    vertical-align: middle;
-    padding: 0.5rem;
-    outline: none;
-    border: none;
-    cursor: pointer;
-    border-radius: 5px;
+    display: block;
     font-size: 1rem;
-    font-weight: 700;
+    font-weight: 500;
+    padding: 0.25rem 1.5rem;
+    border-radius: 100px;
+    border: none;
+    text-decoration: none;
+  }
+
+  .button:hover {
+    cursor: pointer;
+  }
+
+  .border-white {
+    border: 1px solid var(--color-text);
   }
 </style>
