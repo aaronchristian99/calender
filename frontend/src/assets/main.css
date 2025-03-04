@@ -38,6 +38,23 @@ a:hover {
   min-height: 58px;
 }
 
+.calendar-header {
+  background-color: var(--color-background-input);
+}
+
+.period ul, .navigation button {
+  background-color: var(--color-background-button) !important;
+}
+
+.period ul li {
+  color: var(--color-text) !important;
+}
+
+.cv-header-day {
+  background-color: var(--color-background-input);
+  color: var(--color-text-input);
+}
+
 .cv-day {
   position: relative;
 }
@@ -56,6 +73,8 @@ a:hover {
   height: 100%;
   padding: 5px;
   z-index: -1;
+  background-color: var(--color-background-input);
+  color: var(--color-text-input);
 }
 .highlight-today {
   background-color: var(--color-background-button);

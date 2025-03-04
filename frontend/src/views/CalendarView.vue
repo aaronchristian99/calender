@@ -55,31 +55,42 @@
 </script>
 
 <template>
-  <section class="calendar-operations-wrapper">
-    <Button label="Add new Event" :href="createEventHref" type="a" />
-    <Button label="Download" @click="downloadEvents" />
-    <Button label="Upload" @click="uploadEvent" />
-  </section>
-  <Calendar :show-date="showDate"
-            :displayPeriodUom="period"
-            :items="events"
-            class="calendar theme-default holiday-us-official">
-    <template #header="{ headerProps }">
-      <CalendarViewHeader :header-props="headerProps" @input="setShowDate" @changeView="changeView" />
-    </template>
-    <template #day-content="{ day }">
-      <div class="day-cell" :day :class="{ 'highlight-today': isToday(day) }">
-        {{ day.getDate() }}
-      </div>
-    </template>
-  </Calendar>
-  <router-view />
+  <article class="container bg-black calender-container">
+    <section class="calendar-operations-wrapper">
+      <Button label="Add new Event" colour="bg-black" text-color="white" :href="createEventHref" type="a" />
+      <Button label="Upload" colour="bg-violet" text-color="white" type="button" @click="uploadEvent" />
+    </section>
+    <section class="calender-wrapper">
+      <Calendar :show-date="showDate"
+                :displayPeriodUom="period"
+                :items="events"
+                class="calendar theme-default holiday-us-official">
+        <template #header="{ headerProps }">
+          <CalendarViewHeader :header-props="headerProps" @input="setShowDate" @changeView="changeView" />
+        </template>
+        <template #day-content="{ day }">
+          <div class="day-cell" :day :class="{ 'highlight-today': isToday(day) }">
+            {{ day.getDate() }}
+          </div>
+        </template>
+      </Calendar>
+    </section>
+    <router-view />
+  </article>
 </template>
 
 <style scoped>
-  .calendar {
-    background: #333;
-    border-radius: 8px;
+  .calender-container {
+    width: 100%;
+    height: 100%;
+    padding: 0 1.5rem;
+  }
+
+  .calender-wrapper .calendar {
+    background: var(--color-background);
+    border-radius: 10px;
+    width: 100%;
+    height: 100%;
   }
 
   .calendar-operations-wrapper {
@@ -89,5 +100,6 @@
     justify-content: flex-start;
     align-items: center;
     gap: 1rem;
+    padding: 2rem 0;
   }
 </style>
