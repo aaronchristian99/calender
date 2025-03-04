@@ -1,18 +1,58 @@
 @import './base.css';
 
 #app {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
+  max-width: 100%;
+  min-height: 100vh;
+  height: 100vh;
   font-weight: normal;
 }
 
-a,
-.green {
-  text-decoration: none;
-  color: hsla(160, 100%, 37%, 1);
+main {
+  height: 100%;
+}
+
+a {
+  text-decoration: underline;
+  color: var(--color-link);
   transition: 0.4s;
-  padding: 3px;
+}
+
+a:hover {
+  color: var(--color-text);
+  cursor: pointer;
+}
+
+.input-wrapper {
+  margin-bottom: 1rem;
+}
+
+.input-wrapper input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border-radius: 12px;
+  background-color: var(--color-background-input);
+  border: none;
+  color: var(--color-text-input);
+  font-size: 1rem;
+  line-height: 1.5rem;
+  min-height: 58px;
+}
+
+.calendar-header {
+  background-color: var(--color-background-input);
+}
+
+.period ul, .navigation button {
+  background-color: var(--color-background-button) !important;
+}
+
+.period ul li {
+  color: var(--color-text) !important;
+}
+
+.cv-header-day {
+  background-color: var(--color-background-input);
+  color: var(--color-text-input);
 }
 
 .cv-day {
@@ -24,7 +64,7 @@ a,
 }
 
 .cv-item {
-  color: #000;
+  color: var(--color-text);
 }
 
 .day-cell {
@@ -33,27 +73,10 @@ a,
   height: 100%;
   padding: 5px;
   z-index: -1;
+  background-color: var(--color-background-input);
+  color: var(--color-text-input);
 }
 .highlight-today {
-  background-color: hsla(160, 100%, 37%, 1);
-  color: #fff;
-}
-
-@media (hover: hover) {
-  a:hover {
-    background-color: hsla(160, 100%, 37%, 0.2);
-  }
-}
-
-@media (min-width: 1024px) {
-  body {
-    display: flex;
-    place-items: center;
-  }
-
-  #app {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    padding: 0 2rem;
-  }
+  background-color: var(--color-background-button);
+  color: var(--color-text);
 }
