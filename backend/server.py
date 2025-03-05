@@ -1,11 +1,12 @@
 import json
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from Controllers.EventController import EventController
-
+from Controllers.LoginController import LoginController
 
 class RequestHandler(BaseHTTPRequestHandler):
     def __init__(self, *args, **kwargs):
         self.eventController = EventController()
+        self.loginController = LoginController()
         super().__init__(*args, **kwargs)
 
     def do_POST(self):
@@ -32,6 +33,8 @@ class RequestHandler(BaseHTTPRequestHandler):
 
             response = self.eventController.deleteEvent(event_id)
             self.send_json_response(response)
+        elif self.path == '/api/login':
+            response = self.login
         else:
             self.send_error(404, "Not Found")
 
