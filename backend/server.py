@@ -34,7 +34,11 @@ class RequestHandler(BaseHTTPRequestHandler):
             response = self.eventController.deleteEvent(event_id)
             self.send_json_response(response)
         elif self.path == '/api/login':
-            response = self.login
+            response = self.loginController.login(data)
+            self.send_json_response(response)
+        elif self.path == '/api/user/create':
+            response = self.loginController.createUser(data)
+            self.send_json_response(response)
         else:
             self.send_error(404, "Not Found")
 

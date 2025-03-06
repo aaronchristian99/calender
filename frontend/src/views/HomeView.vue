@@ -7,15 +7,11 @@
       <section class="bg-black w-50 flex flex-row align-center h-full">
         <h1 class="mb-4">Sign In</h1>
         <form class="form-container mx-auto max-w-365">
-          <div class="input-wrapper">
-            <input v-model="username" type="text" placeholder="Username" />
-          </div>
-          <div class="input-wrapper">
-            <input v-model="password" type="password" placeholder="Password" />
-          </div>
+          <Input v-model="username" type="text" placeholder-text="Username" />
+          <Input v-model="password" type="password" placeholder-text="Password" />
           <div class="flex flex-row justify-start gap-3 mt-4">
             <Button label="Log In" type="button" colour="bg-violet" text-color="white" @click="submitForm" />
-            <Button label="Sign Up" type="a" colour="bg-black" text-color="white" url="" />
+            <Button label="Sign Up" type="a" colour="bg-black" text-color="white" route-name="signUp" />
           </div>
           <p class="mt-4"><a href="">Forgot your password?</a></p>
         </form>
@@ -26,11 +22,14 @@
 
 <script setup>
   import { ref } from "vue";
+  import { useRouter } from "vue-router";
   import axios from "axios";
   import Button from "@/components/Button.vue";
+  import Input from "@/components/Input.vue";
 
   const username = ref("");
   const password = ref("");
+  const router = useRouter();
 
   const submitForm = async (e) => {
     e.preventDefault();
@@ -40,9 +39,11 @@
       password: password.value
     }).then((res) => {
       if(res.status === 200) {
-        this.$router.push({ name: 'calender' });
+        router.push({ name: 'calendar' });
       }
-    })
+    }).catch((err) => {
+      console.log(err);
+    });
   }
 </script>
 

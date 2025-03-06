@@ -18,12 +18,12 @@ class User(Base):
 
     @classmethod
     def create(cls, user):
-        hasedPassword = bcrypt.hashpw(user.get('password'), bcrypt.gensalt()).decode()
+        hashedPassword = bcrypt.hashpw(user.get('password').encode(), bcrypt.gensalt()).decode()
         newUser = User(
-            first_name=user.get('first_name'),
-            last_name=user.get('last_name'),
+            first_name=user.get('firstName'),
+            last_name=user.get('lastName'),
             username=user.get('username'),
-            password=hasedPassword,
+            password=hashedPassword,
             created_at=datetime.datetime.utcnow(),
             updated_at=datetime.datetime.utcnow()
         )
@@ -34,12 +34,12 @@ class User(Base):
 
     @classmethod
     def update(cls, user):
-        hasedPassword = bcrypt.hashpw(user.get('password'), bcrypt.gensalt()).decode()
+        hashedPassword = bcrypt.hashpw(user.get('password').encode(), bcrypt.gensalt()).decode()
         updatedUser = getsession().query(cls).filter_by(id=user.id).update({
             'first_name': user.first_name,
             'last_name': user.last_name,
             'username': user.username,
-            'password': hasedPassword,
+            'password': hashedPassword,
             'updated_at': datetime.datetime.utcnow(),
         })
         getsession().commit()
@@ -47,8 +47,8 @@ class User(Base):
         return updatedUser.id
 
     @classmethod
-    def getByUsername(cls, username):
-        user = getsession().query(cls).filter_by(username=username).first()
+    def get_by_username(cls, username):
+        user = getsession().query(cls).filter_by(username = username).first()
         return cls.to_dict(user)
 
     @classmethod

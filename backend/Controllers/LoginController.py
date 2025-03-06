@@ -5,8 +5,12 @@ class LoginController:
     def __init__(self):
         pass
 
-    def login(self, username, password):
-        user = User.getByUsername(username)
+    def createUser(self, data):
+        user_id = User.create(data)
+        return user_id
+
+    def login(self, data):
+        user = User.get_by_username(data.get('username'))
 
         if not user:
             return {
@@ -14,11 +18,11 @@ class LoginController:
                 'message': 'User not found'
             }
 
-        if bcrypt.checkpw(password.encode(), user.password.encode()):
+        if bcrypt.checkpw(data.get('password').encode(), user.get('password').encode()):
             return {
                 'success': True,
                 'message': 'Login successful',
-                'user_id': user.id
+                'user': user
             }
         else:
             return {

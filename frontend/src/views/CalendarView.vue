@@ -57,7 +57,7 @@
 <template>
   <article class="container bg-black calender-container">
     <section class="calendar-operations-wrapper">
-      <Button label="Add new Event" colour="bg-black" text-color="white" :href="createEventHref" type="a" />
+      <Button label="Add new Event" colour="bg-black" text-color="white" route-name="" type="a" />
       <Button label="Upload" colour="bg-violet" text-color="white" type="button" @click="uploadEvent" />
     </section>
     <section class="calender-wrapper">

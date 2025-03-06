@@ -3,6 +3,7 @@ import HomeView from '../views/HomeView.vue'
 import CalendarView from '../views/CalendarView.vue'
 import EventForm from "@/views/EventForm.vue";
 import Event from "@/views/Event.vue";
+import SignupForm from "@/views/SignupForm.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -11,6 +12,11 @@ const router = createRouter({
       path: '/',
       name: 'home',
       component: HomeView,
+    },
+    {
+      path: '/sign-up',
+      name: 'signUp',
+      component: SignupForm
     },
     {
       path: '/about',
