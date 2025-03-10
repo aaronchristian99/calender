@@ -35,7 +35,7 @@
 </script>
 
 <template>
-  <section class="form-container">
+  <section class="form-container hidden">
     <div class="bg-green p-4" v-if="message !== ''">
       <p class="white">{{ message }}</p>
     </div>

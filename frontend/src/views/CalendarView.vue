@@ -2,10 +2,9 @@
   import { ref, onMounted } from "vue";
   import { useRouter } from "vue-router";
   import axios from "axios";
-  import { CalendarView as Calendar } from "vue-simple-calendar";
-  import CalendarViewHeader from "@/components/CalendarViewHeader.vue";
-  import "../../node_modules/vue-simple-calendar/dist/style.css";
   import Button from "@/components/Button.vue";
+  import CalendarScheduler from "@/components/CalendarScheduler.vue";
+  import EventForm from "@/components/EventForm.vue";
 
   const router = useRouter();
   const showDate = ref(new Date());
@@ -35,23 +34,6 @@
       console.log(error);
     }
   });
-
-  const setShowDate = (date) => {
-    showDate.value = date;
-  };
-
-  const changeView = (newPeriod) => {
-    period.value = newPeriod;
-  }
-
-  const isToday = (date) => {
-    const today = new Date();
-    return (
-      date.getDate() === today.getDate() &&
-      date.getMonth() === today.getMonth() &&
-      date.getFullYear() === today.getFullYear()
-    );
-  };
 </script>
 
 <template>
@@ -61,45 +43,25 @@
       <Button label="Upload" colour="bg-violet" text-color="white" type="button" @click="uploadEvent" />
     </section>
     <section class="calender-wrapper">
-      <Calendar :show-date="showDate"
-                :displayPeriodUom="period"
-                :items="events"
-                class="calendar theme-default holiday-us-official">
-        <template #header="{ headerProps }">
-          <CalendarViewHeader :header-props="headerProps" @input="setShowDate" @changeView="changeView" />
-        </template>
-        <template #day-content="{ day }">
-          <div class="day-cell" :day :class="{ 'highlight-today': isToday(day) }">
-            {{ day.getDate() }}
-          </div>
-        </template>
-      </Calendar>
+      <CalendarScheduler />
+      <EventForm />
     </section>
     <router-view />
   </article>
 </template>
 
 <style scoped>
-  .calender-container {
-    width: 100%;
-    height: 100%;
-    padding: 0 1.5rem;
-  }
-
-  .calender-wrapper .calendar {
-    background: var(--color-background);
-    border-radius: 10px;
-    width: 100%;
-    height: 100%;
-  }
-
   .calendar-operations-wrapper {
     display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    justify-content: flex-start;
+    flex-flow: row nowrap;
+    justify-content: center;
     align-items: center;
     gap: 1rem;
-    padding: 2rem 0;
+  }
+  .calender-wrapper {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+    align-items: center;
   }
 </style>
