@@ -17,7 +17,7 @@ class EventController:
 
     # id of event to edit and data to change it to
     def updateEvent(self, id, data):
-       data.id = Event.get(id)
+       data.id = id
        Event.update(data)
 
     def deleteEvent(self, id):
