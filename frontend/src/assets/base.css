@@ -125,3 +125,7 @@ body {
 .mb-4 {
   margin-bottom: 1.5rem;
 }
+
+.p-4 {
+  padding: 1.5rem;
+}

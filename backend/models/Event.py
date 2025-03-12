@@ -50,7 +50,7 @@ class Event(Base):
 
     @classmethod
     def get_by_id(cls, event_id):
-        event = getsession().query(cls).filter_by(id=event_id)
+        event = getsession().query(cls).filter_by(id=event_id).first()
         return cls.to_dict(event)
 
     @classmethod

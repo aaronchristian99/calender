@@ -3,7 +3,7 @@
           :class="['button', colour, textColor]">
     {{ label }}
   </button>
-  <a v-else :class="['button', colour, textColor, 'border-white']" :href="url"> {{ label }}</a>
+  <a v-else :class="['button', colour, textColor, 'border-white']" :href="resolvedUrl"> {{ label }}</a>
 </template>
 
 <script>
@@ -28,8 +28,14 @@
         type: String,
         default: 'a'
       },
-      url: {
+      routeName: {
         type: String
+      }
+    },
+    computed: {
+      resolvedUrl() {
+        if(!this.routeName) return '#';
+        return this.$router.resolve({ name: this.routeName }).href;
       }
     }
   }
