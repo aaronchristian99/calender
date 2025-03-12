@@ -1,19 +1,17 @@
 <template>
   <button v-if="type === 'button'" @click="$emit('click')"
           :class="['button', colour, textColor]">
-    {{ label }}
+    <slot></slot>
   </button>
-  <a v-else :class="['button', colour, textColor, 'border-white']" :href="resolvedUrl"> {{ label }}</a>
+  <a v-else :class="['button', colour, textColor, 'border-white']" :href="resolvedUrl">
+    <slot></slot>
+  </a>
 </template>
 
 <script>
   export default {
     name: 'Button',
     props: {
-      label: {
-        type: String,
-        required: true
-      },
       colour: {
         type: String,
         required: false,

@@ -43,7 +43,9 @@
           <Input v-model="password" type="password" placeholder-text="Password" />
           <Input v-model="passwordConfirm" type="password" placeholder-text="Confirm Password" />
           <div class="flex flex-row justify-center gap-3 mt-4">
-            <Button label="Submit" type="button" colour="bg-violet" text-color="white" @click="submitForm" />
+            <Button type="button" colour="bg-violet" text-color="white" @click="submitForm">
+              Submit
+            </Button>
           </div>
         </form>
       </section>

@@ -7,16 +7,14 @@
   import EventForm from "@/components/EventForm.vue";
 
   const router = useRouter();
-  const showDate = ref(new Date());
-  const period = ref('month');
   const events = ref([]);
-  const createEventHref = ref(router.resolve({ name: "createEvent" } ).href);
+  const isEventFormVisible = ref(false);
 
   onMounted(async () => {
     try {
       const response = await axios.get('/api/events');
 
-      if(response.status === 200) {
+      if(response && response.status === 200) {
         events.value = response.data.events.map(event => {
           return {
             id: event.id,
@@ -34,17 +32,22 @@
       console.log(error);
     }
   });
+
+  const toggleForm = () => {
+    isEventFormVisible.value = !isEventFormVisible.value;
+  };
 </script>
 
 <template>
   <article class="container bg-black calender-container">
     <section class="calendar-operations-wrapper">
-      <Button label="Add new Event" colour="bg-black" text-color="white" route-name="" type="a" />
-      <Button label="Upload" colour="bg-violet" text-color="white" type="button" @click="uploadEvent" />
+      <Button colour="bg-black" text-color="white" @click="toggleForm">
+        Add new Event
+      </Button>
     </section>
     <section class="calender-wrapper">
       <CalendarScheduler />
-      <EventForm />
+      <EventForm :is-visible="isEventFormVisible" />
     </section>
     <router-view />
   </article>
