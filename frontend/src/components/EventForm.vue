@@ -1,10 +1,179 @@
 <script setup>
-  import { ref } from "vue";
+  import { ref, computed, onMounted, useTemplateRef } from "vue";
+  import { Ckeditor } from "@ckeditor/ckeditor5-vue";
+  import { ClassicEditor, AutoImage, Autosave, BalloonToolbar, Base64UploadAdapter, BlockQuote, Bold,
+    CloudServices, Essentials, Heading, ImageBlock, ImageCaption, ImageInline, ImageInsert, ImageInsertViaUrl,
+    ImageResize, ImageStyle, ImageTextAlternative, ImageToolbar, ImageUpload, Indent, IndentBlock,
+    Italic, Link, LinkImage, MediaEmbed, Paragraph, Table, TableCaption, TableCellProperties,
+    TableColumnResize, TableProperties, TableToolbar, Underline } from 'ckeditor5';
   import VueDatePicker from "@vuepic/vue-datepicker";
   import "@vuepic/vue-datepicker/dist/main.css"
   import axios from "axios";
   import Button from "@/components/Button.vue";
   import Input from "@/components/Input.vue";
+  import "ckeditor5/ckeditor5.css";
+
+  // Ckeditor configuration
+  const LICENSE_KEY = 'GPL';
+  const editorMenuBar = useTemplateRef('editorMenuBarElement');
+  const editorWordCount = useTemplateRef('editorWordCountElement');
+  const isLayoutReady = ref(false);
+  const editor = ClassicEditor;
+  const config = computed(() => {
+    if (!isLayoutReady.value) {
+      return null;
+    }
+
+    return {
+      toolbar: {
+        items: [
+          'heading',
+          '|',
+          'bold',
+          'italic',
+          'underline',
+          '|',
+          'link',
+          'insertImage',
+          'mediaEmbed',
+          'insertTable',
+          'blockQuote',
+          '|',
+          'outdent',
+          'indent'
+        ],
+        shouldNotGroupWhenFull: false
+      },
+      plugins: [
+        AutoImage,
+        Autosave,
+        BalloonToolbar,
+        Base64UploadAdapter,
+        BlockQuote,
+        Bold,
+        CloudServices,
+        Essentials,
+        Heading,
+        ImageBlock,
+        ImageCaption,
+        ImageInline,
+        ImageInsert,
+        ImageInsertViaUrl,
+        ImageResize,
+        ImageStyle,
+        ImageTextAlternative,
+        ImageToolbar,
+        ImageUpload,
+        Indent,
+        IndentBlock,
+        Italic,
+        Link,
+        LinkImage,
+        MediaEmbed,
+        Paragraph,
+        Table,
+        TableCaption,
+        TableCellProperties,
+        TableColumnResize,
+        TableProperties,
+        TableToolbar,
+        Underline
+      ],
+      balloonToolbar: ['bold', 'italic', '|', 'link', 'insertImage'],
+      heading: {
+        options: [
+          {
+            model: 'paragraph',
+            title: 'Paragraph',
+            class: 'ck-heading_paragraph'
+          },
+          {
+            model: 'heading1',
+            view: 'h1',
+            title: 'Heading 1',
+            class: 'ck-heading_heading1'
+          },
+          {
+            model: 'heading2',
+            view: 'h2',
+            title: 'Heading 2',
+            class: 'ck-heading_heading2'
+          },
+          {
+            model: 'heading3',
+            view: 'h3',
+            title: 'Heading 3',
+            class: 'ck-heading_heading3'
+          },
+          {
+            model: 'heading4',
+            view: 'h4',
+            title: 'Heading 4',
+            class: 'ck-heading_heading4'
+          },
+          {
+            model: 'heading5',
+            view: 'h5',
+            title: 'Heading 5',
+            class: 'ck-heading_heading5'
+          },
+          {
+            model: 'heading6',
+            view: 'h6',
+            title: 'Heading 6',
+            class: 'ck-heading_heading6'
+          }
+        ]
+      },
+      image: {
+        toolbar: [
+          'toggleImageCaption',
+          'imageTextAlternative',
+          '|',
+          'imageStyle:inline',
+          'imageStyle:wrapText',
+          'imageStyle:breakText',
+          '|',
+          'resizeImage'
+        ]
+      },
+      initialData: '',
+      licenseKey: LICENSE_KEY,
+      link: {
+        addTargetToExternalLinks: true,
+        defaultProtocol: 'https://',
+        decorators: {
+          toggleDownloadable: {
+            mode: 'manual',
+            label: 'Downloadable',
+            attributes: {
+              download: 'file'
+            }
+          }
+        }
+      },
+      placeholder: 'Type or paste your content here!',
+      table: {
+        contentToolbar: ['tableColumn', 'tableRow', 'mergeTableCells', 'tableProperties', 'tableCellProperties']
+      }
+    };
+  });
+
+
+  onMounted(() => {
+    isLayoutReady.value = true;
+  });
+
+  function onReady(editor) {
+    [...editorWordCount.value.children].forEach(child => child.remove());
+
+    [...editorMenuBar.value.children].forEach(child => child.remove());
+
+    const wordCount = editor.plugins.get('WordCount');
+    editorWordCount.value.appendChild(wordCount.wordCountContainer);
+
+    editorMenuBar.value.appendChild(editor.ui.view.menuBarView.element);
+  }
 
   const props = defineProps({
     isVisible: Boolean,
@@ -17,7 +186,7 @@
   const date = ref();
   const message = ref('');
 
-  const toggleForm = () => {
+  const close = () => {
     emit('toggle-form'); // Emit toggle-form event to close the form
   };
 
@@ -47,59 +216,74 @@
 </script>
 
 <template>
-  <section :class="!isVisible ? 'hidden' : 'form-container'">
-    <div class="bg-green p-4" v-if="message !== ''">
-      <p class="white">{{ message }}</p>
-    </div>
-    <div class="flex justify-end items-center">
-      <Button type="button" @click="toggleForm" colour="bg-violet" text-color="white">
+  <Transition name="slide">
+    <section v-if="isVisible" class="form-container">
+      <div class="bg-green p-4" v-if="message !== ''">
+        <p class="white">{{ message }}</p>
+      </div>
+      <Button class="p-4" type="button" @click="close" colour="bg-violet" text-color="white">
         <font-awesome-icon icon="xmark" />
       </Button>
-    </div>
-    <form>
-      <Input v-model="title" type="text" placeholder-text="Title" :is-required="true" />
-      <Input v-model="description" type="textarea" placeholder-text="Description" :is-required="true" />
-      <Input v-model="location" type="text" placeholder-text="Location" :is-required="true" />
-      <VueDatePicker v-model="date" range dark :clearable="true" placeholder="Select the dates" />
-      <Button class="mt-4"
-              type="button"
-              colour="bg-violet"
-              text-color="white"
-              @click="submitForm">
-        Submit
-      </Button>
-    </form>
-  </section>
+      <form>
+        <Input v-model="title" type="text" placeholder-text="Title" :is-required="true" />
+        <Input v-model="location" type="text" placeholder-text="Location" :is-required="true" />
+        <VueDatePicker v-model="date"
+                       range
+                       dark
+                       position="left"
+                       auto-position="bottom"
+                       :clearable="true"
+                       :enable-time-picker="true"
+                       :auto-apply="true"
+                       :text-input="false"
+                       placeholder="Select the dates"
+                       :ui="{
+                         input: 'date-input',
+                         calendarCell: 'date-calendar-cell'
+                       }" />
+        <div class="main-container">
+          <div class="editor-container editor-container_classic-editor editor-container_include-word-count" ref="editorContainerElement">
+            <div class="editor-container__editor">
+              <div ref="editorElement">
+                <ckeditor v-if="editor && config" :modelValue="config.initialData" :editor="editor" :config="config" @ready="onReady" />
+              </div>
+            </div>
+            <div class="editor_container__word-count" ref="editorWordCountElement"></div>
+          </div>
+        </div>
+        <Button class="mt-4"
+                type="button"
+                colour="bg-violet"
+                text-color="white"
+                @click="submitForm">
+          Submit
+        </Button>
+      </form>
+    </section>
+  </Transition>
 </template>
 
 <style scoped>
   .form-container {
     position: relative;
+    max-width: 650px;
     display: flex;
-    flex-flow: row nowrap;
+    flex-flow: column nowrap;
     justify-content: center;
-    align-items: center;
+    align-items: end;
+    right: 0;
     padding: 0 2rem;
-    animation: moveFromRight 0.3s ease-in-out forwards;
   }
   form {
     width: 100%;
     margin-top: 2rem;
   }
-  input, textarea {
-    width: 100%;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    padding: 0.5rem;
-    font-size: 1rem;
-    resize: none;
+  .slide-enter-active,
+  .slide-leave-active {
+    transition: right 0.3s ease-out;
   }
-  @keyframes moveFromRight {
-    0% {
-      right: -500px;
-    }
-    100% {
-      right: 0;
-    }
+  .slide-enter-from,
+  .slide-leave-to {
+    right: -100%;
   }
 </style>

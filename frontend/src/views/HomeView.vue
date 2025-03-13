@@ -4,7 +4,7 @@
       <section class="bg-violet w-50 h-full">
         <!-- LOGO goes here -->
       </section>
-      <section class="bg-black w-50 flex flex-row align-center h-full">
+      <section class="bg-black w-50 flex flex-column justify-center align-center h-full">
         <h1 class="mb-4">Sign In</h1>
         <form class="form-container mx-auto max-w-365">
           <Input v-model="username" type="text" placeholder-text="Username" />

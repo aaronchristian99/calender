@@ -41,13 +41,13 @@
 <template>
   <article class="container bg-black calender-container">
     <section class="calendar-operations-wrapper">
-      <Button colour="bg-black" text-color="white" @click="toggleForm">
+      <Button type="button" colour="bg-violet" text-color="white" @click="toggleForm">
         Add new Event
       </Button>
     </section>
     <section class="calender-wrapper">
       <CalendarScheduler />
-      <EventForm :is-visible="isEventFormVisible" />
+      <EventForm :is-visible="isEventFormVisible" @toggle-form="toggleForm" />
     </section>
     <router-view />
   </article>
