@@ -48,7 +48,7 @@ h1 {
   color: var(--color-text);
 }
 
-p {
+p, label {
   font-size: 1rem;
   font-weight: 400;
   color: var(--color-text);
@@ -125,8 +125,16 @@ p {
   margin: 0 auto;
 }
 
+.gap-2 {
+  gap: 0.5rem
+}
+
 .gap-3 {
   gap: 1rem;
+}
+
+.gap-4 {
+  gap: 1.5rem;
 }
 
 .mt-4 {

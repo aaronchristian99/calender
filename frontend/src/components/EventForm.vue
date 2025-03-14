@@ -15,7 +15,7 @@
 
   // Ckeditor configuration
   const LICENSE_KEY = 'GPL';
-  const editorMenuBar = useTemplateRef('editorMenuBarElement');
+  // const editorMenuBar = useTemplateRef('editorMenuBarElement');
   const editorWordCount = useTemplateRef('editorWordCountElement');
   const isLayoutReady = ref(false);
   const editor = ClassicEditor;
@@ -167,7 +167,7 @@
   function onReady(editor) {
     [...editorWordCount.value.children].forEach(child => child.remove());
 
-    [...editorMenuBar.value.children].forEach(child => child.remove());
+    // [...editorMenuBar.value.children].forEach(child => child.remove());
 
     const wordCount = editor.plugins.get('WordCount');
     editorWordCount.value.appendChild(wordCount.wordCountContainer);
@@ -185,6 +185,7 @@
   const location = ref('');
   const date = ref();
   const message = ref('');
+  const type = ref('')
 
   const close = () => {
     emit('toggle-form'); // Emit toggle-form event to close the form
@@ -225,8 +226,18 @@
         <font-awesome-icon icon="xmark" />
       </Button>
       <form>
-        <Input v-model="title" type="text" placeholder-text="Title" :is-required="true" />
-        <Input v-model="location" type="text" placeholder-text="Location" :is-required="true" />
+        <Input v-model="title" type="text" placeholder="Title" :required="true" />
+        <Input v-model="location" type="text" placeholder="Location" :required="true" />
+        <div class="input-type-wrapper flex flex-row justify-start align-center gap-4">
+          <div class="flex flex-row justify-start align-center gap-2">
+            <Input name="type" v-model="type" type="radio" value="private" :required="true" />
+            <label for="private-type">Private</label>
+          </div>
+          <div class="flex flex-row justify-start align-center gap-2">
+            <Input name="type" v-model="type" type="radio" value="public" :required="true" />
+            <label for="public-type">Public</label>
+          </div>
+        </div>
         <VueDatePicker v-model="date"
                        range
                        dark
@@ -245,7 +256,7 @@
           <div class="editor-container editor-container_classic-editor editor-container_include-word-count" ref="editorContainerElement">
             <div class="editor-container__editor">
               <div ref="editorElement">
-                <ckeditor v-if="editor && config" :modelValue="config.initialData" :editor="editor" :config="config" @ready="onReady" />
+                <ckeditor v-if="editor && config" v-model="description" :editor="editor" :config="config" @ready="onReady" />
               </div>
             </div>
             <div class="editor_container__word-count" ref="editorWordCountElement"></div>
@@ -277,6 +288,12 @@
   form {
     width: 100%;
     margin-top: 2rem;
+  }
+  .input-type-wrapper {
+    margin-bottom: 1rem;
+  }
+  .input-type-wrapper .input-wrapper {
+    margin-bottom: 0;
   }
   .slide-enter-active,
   .slide-leave-active {
