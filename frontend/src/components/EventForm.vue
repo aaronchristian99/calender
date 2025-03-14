@@ -11,6 +11,7 @@
   import axios from "axios";
   import Button from "@/components/Button.vue";
   import Input from "@/components/Input.vue";
+  import SelectDropdown from "@/components/SelectDropdown.vue";
   import "ckeditor5/ckeditor5.css";
 
   // Ckeditor configuration
@@ -227,7 +228,8 @@
       </Button>
       <form>
         <Input v-model="title" type="text" placeholder="Title" :required="true" />
-        <Input v-model="location" type="text" placeholder="Location" :required="true" />
+<!--        <Input v-model="location" type="text" placeholder="Location" :required="true" />-->
+        <SelectDropdown v-model="location" placeholder="Location" />
         <div class="input-type-wrapper flex flex-row justify-start align-center gap-4">
           <div class="flex flex-row justify-start align-center gap-2">
             <Input name="type" v-model="type" type="radio" value="private" :required="true" />

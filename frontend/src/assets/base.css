@@ -48,7 +48,7 @@ h1 {
   color: var(--color-text);
 }
 
-p, label {
+p, li, label {
   font-size: 1rem;
   font-weight: 400;
   color: var(--color-text);
@@ -139,6 +139,10 @@ p, label {
 
 .mt-4 {
   margin-top: 1.5rem;
+}
+
+.mb-0 {
+  margin-bottom: 0;
 }
 
 .mb-4 {
