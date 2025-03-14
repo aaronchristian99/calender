@@ -1,30 +1,41 @@
 <script setup>
-  import { ref, useAttrs, computed } from 'vue'
+  import { ref, useAttrs, watch, defineProps } from 'vue'
   import Input from './Input.vue'
 
   const attrs = useAttrs();
   const emit = defineEmits(["update:modelValue"]);
+  const props = defineProps({
+    modelValue: String,
+    fetchOptions: Function
+  });
   const searchQuery = ref('');
   const options = ref([]);
+  const isOpen = ref(false);
 
-  const initAutoComplete = async () => {
-    if(searchQuery.value.length >= 2) {
-      const response = await fetch(`https://api.opencagedata.com/geocode/v1/json?q=${encodeURIComponent(searchQuery.value)}&key=dff04552b6b4486b956bde7409e0bb06&limit=5`);
-      const data = await response.json();
-      options.value = data.results.map(result => result.formatted);
+  watch(searchQuery, async (newValue) => {
+    if(isOpen.value){
+      isOpen.value = false;
+      return;
     }
-  }
+
+    if(newValue.length >= 2 && props.fetchOptions) {
+      options.value = await props.fetchOptions(newValue);
+    } else {
+      options.value = [];
+    }
+  });
 
   const selectOption = (option) => {
     emit("update:modelValue", option);
     searchQuery.value = option;
     options.value = [];
+    isOpen.value = true;
   }
 </script>
 
 <template>
-  <Input v-model="searchQuery" @input="initAutoComplete" v-bind="attrs" />
-  <ul class="options-wrapper" v-if="options.length">
+  <Input v-model="searchQuery" @input="fetchOptions" v-bind="attrs" />
+  <ul class="options-wrapper" v-if="options.length && !isOpen">
     <li class="option-text" v-for="(option, index) in options" :key="index" @click="selectOption(option)">
       {{ option }}
     </li>

@@ -192,6 +192,12 @@
     emit('toggle-form'); // Emit toggle-form event to close the form
   };
 
+  const fetchLocations = async (query) => {
+    const response = await fetch(`https://api.opencagedata.com/geocode/v1/json?q=${encodeURIComponent(query)}&key=dff04552b6b4486b956bde7409e0bb06&limit=5`);
+    const data = await response.json();
+    return data.results.map(result => result.formatted);
+  }
+
   const submitForm = async (e) => {
     e.preventDefault();
 
@@ -228,8 +234,7 @@
       </Button>
       <form>
         <Input v-model="title" type="text" placeholder="Title" :required="true" />
-<!--        <Input v-model="location" type="text" placeholder="Location" :required="true" />-->
-        <SelectDropdown v-model="location" placeholder="Location" />
+        <SelectDropdown v-model="location" placeholder="Location" :fetch-options="fetchLocations" />
         <div class="input-type-wrapper flex flex-row justify-start align-center gap-4">
           <div class="flex flex-row justify-start align-center gap-2">
             <Input name="type" v-model="type" type="radio" value="private" :required="true" />
