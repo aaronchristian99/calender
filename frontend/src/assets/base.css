@@ -4,7 +4,6 @@
   --color-background-input: rgb(37, 38, 43);
   --color-background-button: rgb(142, 71, 255);
 
-  --color-heading: #fff;
   --color-text: #fff;
   --color-link: rgb(188, 191, 255);
   --color-text-input: rgb(165, 165, 165);
@@ -41,6 +40,18 @@ body {
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+h1 {
+  font-size: 4rem;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+p {
+  font-size: 1rem;
+  font-weight: 400;
+  color: var(--color-text);
 }
 
 .bg-black {
@@ -128,4 +139,8 @@ body {
 
 .p-4 {
   padding: 1.5rem;
+}
+
+.hidden {
+  display: none;
 }

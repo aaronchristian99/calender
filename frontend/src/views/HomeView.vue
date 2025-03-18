@@ -10,8 +10,12 @@
           <Input v-model="username" type="text" placeholder-text="Username" />
           <Input v-model="password" type="password" placeholder-text="Password" />
           <div class="flex flex-row justify-start gap-3 mt-4">
-            <Button label="Log In" type="button" colour="bg-violet" text-color="white" @click="submitForm" />
-            <Button label="Sign Up" type="a" colour="bg-black" text-color="white" route-name="signUp" />
+            <Button type="button" colour="bg-violet" text-color="white" @click="submitForm">
+              Log In
+            </Button>
+            <Button type="a" colour="bg-black" text-color="white" route-name="signUp">
+              Sign Up
+            </Button>
           </div>
           <p class="mt-4"><a href="">Forgot your password?</a></p>
         </form>

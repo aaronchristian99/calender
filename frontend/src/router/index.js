@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import CalendarView from '../views/CalendarView.vue'
-import EventForm from "@/views/EventForm.vue";
+import EventForm from "@/components/EventForm.vue";
 import Event from "@/views/Event.vue";
 import SignupForm from "@/views/SignupForm.vue";
 
