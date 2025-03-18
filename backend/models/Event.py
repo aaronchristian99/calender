@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, DateTime, Text
+from sqlalchemy import Column, Integer, String, DateTime, Text, ARR
 from sqlalchemy.orm import sessionmaker
 from models import Base
 from database_config import getsession
@@ -73,3 +73,14 @@ class Event(Base):
             'updated_at': event.updated_at.isoformat(),
             'deleted_at': event.deleted_at.isoformat() if event.deleted_at else None
         }
+    
+
+    tags = ['work', 'other', 'important', 'urgent', 'fun', 'budget', 'meeting', 'salary', 'party', 'project', 'assignment', 'conference'] # add any new tags here
+    @classmethod
+    def get_description_tags(cls, event): #returns a list of tags in the description
+        tags = {}
+        for word in event.description.split(' '):
+            for tag in cls.tags:
+                if tag in word.lower():
+                    tags.append(tag)
+        return tags
