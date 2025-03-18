@@ -7,8 +7,8 @@
       <section class="bg-black w-50 flex flex-column justify-center align-center h-full">
         <h1 class="mb-4">Sign In</h1>
         <form class="form-container mx-auto max-w-365">
-          <Input v-model="username" type="text" placeholder-text="Username" />
-          <Input v-model="password" type="password" placeholder-text="Password" />
+          <Input v-model="username" type="text" placeholder="Username" />
+          <Input v-model="password" type="password" placeholder="Password" />
           <div class="flex flex-row justify-start gap-3 mt-4">
             <Button type="button" colour="bg-violet" text-color="white" @click="submitForm">
               Log In
@@ -43,7 +43,10 @@
       password: password.value
     }).then((res) => {
       if(res.status === 200) {
-        router.push({ name: 'calendar' });
+        if(res.data.user) {
+          localStorage.setItem("user", res.data.user);
+          router.push({ name: 'calendar' });
+        }
       }
     }).catch((err) => {
       console.log(err);

@@ -177,7 +177,7 @@
   }
 
   const props = defineProps({
-    isVisible: Boolean,
+    isVisible: Boolean
   });
   const emit = defineEmits(['toggle-form']);
 
@@ -185,17 +185,40 @@
   const description = ref('');
   const location = ref('');
   const date = ref();
+  const type = ref('');
+  const collaborators = ref([]);
   const message = ref('');
-  const type = ref('')
+  let loading = ref('false');
+  let success = ref('false');
 
   const close = () => {
     emit('toggle-form'); // Emit toggle-form event to close the form
   };
 
   const fetchLocations = async (query) => {
-    const response = await fetch(`https://api.opencagedata.com/geocode/v1/json?q=${encodeURIComponent(query)}&key=dff04552b6b4486b956bde7409e0bb06&limit=5`);
-    const data = await response.json();
-    return data.results.map(result => result.formatted);
+    const response = await axios.get('https://api.opencagedata.com/geocode/v1/json', {
+      params: {
+        q: encodeURIComponent(query),
+        key: 'dff04552b6b4486b956bde7409e0bb06',
+        limit: 5
+      }
+    });
+
+    if(response && response.status === 200) {
+      return response.data.results.map(result => result.formatted);
+    }
+  }
+
+  const fetchUsers = async (query) => {
+    const response = await axios.get('/api/user', {
+      params: {
+        q: encodeURIComponent(query)
+      }
+    });
+
+    if(response && response.status === 200) {
+      return response.data.users.map(user => `${user.first_name} ${user.last_name}`);
+    }
   }
 
   const submitForm = async (e) => {
@@ -205,19 +228,24 @@
       title: title.value,
       description: description.value,
       location: location.value,
-      date: date.value,
+      start_at: date.value[0],
+      end_at: date.value[1],
+      type: type.value
     }).then((res) => {
+      loading.value = true;
       if(res.status === 200) {
+        loading.value = false;
         title.value = '';
         description.value = '';
         location.value = '';
         date.value = '';
+        success.value = true;
         message.value = 'Event is successfully created!';
-        this.$router.push({ name: 'calendar' });
       } else {
         message.value = 'There was an error creating your event!';
       }
     }). catch(error => {
+      loading.value = false;
       console.log(error);
     });
   }
@@ -228,55 +256,66 @@
     <section v-if="isVisible" class="form-container">
       <div class="bg-green p-4" v-if="message !== ''">
         <p class="white">{{ message }}</p>
-      </div>
-      <Button class="p-4" type="button" @click="close" colour="bg-violet" text-color="white">
-        <font-awesome-icon icon="xmark" />
-      </Button>
-      <form>
-        <Input v-model="title" type="text" placeholder="Title" :required="true" />
-        <SelectDropdown v-model="location" placeholder="Location" :fetch-options="fetchLocations" />
-        <div class="input-type-wrapper flex flex-row justify-start align-center gap-4">
-          <div class="flex flex-row justify-start align-center gap-2">
-            <Input name="type" v-model="type" type="radio" value="private" :required="true" />
-            <label for="private-type">Private</label>
-          </div>
-          <div class="flex flex-row justify-start align-center gap-2">
-            <Input name="type" v-model="type" type="radio" value="public" :required="true" />
-            <label for="public-type">Public</label>
-          </div>
-        </div>
-        <VueDatePicker v-model="date"
-                       range
-                       dark
-                       position="left"
-                       auto-position="bottom"
-                       :clearable="true"
-                       :enable-time-picker="true"
-                       :auto-apply="true"
-                       :text-input="false"
-                       placeholder="Select the dates"
-                       :ui="{
-                         input: 'date-input',
-                         calendarCell: 'date-calendar-cell'
-                       }" />
-        <div class="main-container">
-          <div class="editor-container editor-container_classic-editor editor-container_include-word-count" ref="editorContainerElement">
-            <div class="editor-container__editor">
-              <div ref="editorElement">
-                <ckeditor v-if="editor && config" v-model="description" :editor="editor" :config="config" @ready="onReady" />
-              </div>
-            </div>
-            <div class="editor_container__word-count" ref="editorWordCountElement"></div>
-          </div>
-        </div>
-        <Button class="mt-4"
+        <Button v-if="success"
+                class="mt-4"
                 type="button"
                 colour="bg-violet"
                 text-color="white"
-                @click="submitForm">
-          Submit
+                @click="close">
+          Close
         </Button>
-      </form>
+      </div>
+      <template v-if="success">
+        <Button class="p-4" type="button" @click="close" colour="bg-violet" text-color="white">
+          <font-awesome-icon icon="xmark" />
+        </Button>
+        <form>
+          <Input v-model="title" type="text" placeholder="Title" :required="true" />
+          <SelectDropdown v-model="location" placeholder="Location" :fetch-options="fetchLocations" />
+          <div class="input-type-wrapper flex flex-row justify-start align-center gap-4">
+            <div class="flex flex-row justify-start align-center gap-2">
+              <Input name="type" v-model="type" type="radio" value="private" :required="true" />
+              <label for="private-type">Private</label>
+            </div>
+            <div class="flex flex-row justify-start align-center gap-2">
+              <Input name="type" v-model="type" type="radio" value="public" :required="true" />
+              <label for="public-type">Public</label>
+            </div>
+          </div>
+          <VueDatePicker v-model="date"
+                         range
+                         dark
+                         position="left"
+                         auto-position="bottom"
+                         :clearable="true"
+                         :enable-time-picker="true"
+                         :auto-apply="true"
+                         :text-input="false"
+                         placeholder="Select the dates"
+                         :ui="{
+                         input: 'date-input',
+                         calendarCell: 'date-calendar-cell'
+                       }" />
+          <div class="main-container">
+            <div class="editor-container editor-container_classic-editor editor-container_include-word-count" ref="editorContainerElement">
+              <div class="editor-container__editor">
+                <div ref="editorElement">
+                  <ckeditor v-if="editor && config" v-model="description" :editor="editor" :config="config" @ready="onReady" />
+                </div>
+              </div>
+              <div class="editor_container__word-count" ref="editorWordCountElement"></div>
+            </div>
+          </div>
+          <SelectDropdown v-model="collaborators" placeholder="Collaborators" :fetch-options="fetchUsers" />
+          <Button class="mt-4"
+                  type="button"
+                  colour="bg-violet"
+                  text-color="white"
+                  @click="submitForm">
+            Submit
+          </Button>
+        </form>
+      </template>
     </section>
   </Transition>
 </template>

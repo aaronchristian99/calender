@@ -36,12 +36,12 @@
     <article class="container">
       <section class="bg-black w-full h-full p-4">
         <form class="form-container mx-auto max-w-365">
-          <Input v-model="firstName" type="text" placeholder-text="First name" />
-          <Input v-model="lastName" type="text" placeholder-text="Last name" />
-          <Input v-model="email" type="email" placeholder-text="Email" />
-          <Input v-model="username" type="text" placeholder-text="Username" />
-          <Input v-model="password" type="password" placeholder-text="Password" />
-          <Input v-model="passwordConfirm" type="password" placeholder-text="Confirm Password" />
+          <Input v-model="firstName" type="text" placeholder="First name" />
+          <Input v-model="lastName" type="text" placeholder="Last name" />
+          <Input v-model="email" type="email" placeholder="Email" />
+          <Input v-model="username" type="text" placeholder="Username" />
+          <Input v-model="password" type="password" placeholder="Password" />
+          <Input v-model="passwordConfirm" type="password" placeholder="Confirm Password" />
           <div class="flex flex-row justify-center gap-3 mt-4">
             <Button type="button" colour="bg-violet" text-color="white" @click="submitForm">
               Submit

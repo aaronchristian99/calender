@@ -1,5 +1,4 @@
 from sqlalchemy import Column, Integer, String, DateTime, Text
-from sqlalchemy.orm import sessionmaker
 from models import Base
 from database_config import getsession
 import datetime
@@ -11,25 +10,32 @@ class Event(Base):
     title = Column(String(255), nullable=False)
     description = Column(Text, nullable=False)
     location = Column(String(255), nullable=False)
-    time = Column(DateTime, nullable=False)
+    start_at = Column(DateTime, nullable=False)
+    end_at = Column(DateTime, nullable=False)
     created_at = Column(DateTime, nullable=False, default=datetime.datetime.utcnow)
     updated_at = Column(DateTime, nullable=False, default=datetime.datetime.utcnow)
     deleted_at = Column(DateTime, nullable=True)
 
     @classmethod
     def create(cls, event):
-        newEvent = Event(
-            title=event.get('title'),
-            description=event.get('description'),
-            location=event.get('location'),
-            time=event.get('date'),
-            created_at=datetime.datetime.utcnow(),
-            updated_at=datetime.datetime.utcnow()
-        )
-        getsession().add(newEvent)
-        getsession().commit()
+        session = getsession()
 
-        return newEvent.id
+        try:
+            newEvent = Event(
+                title=event.get('title'),
+                description=event.get('description'),
+                location=event.get('location'),
+                start_at=cls.parse_datetime(event.get('start_at')),
+                end_at=cls.parse_datetime(event.get('end_at')),
+                created_at=datetime.datetime.utcnow(),
+                updated_at=datetime.datetime.utcnow()
+            )
+            session.add(newEvent)
+            session.commit()
+            return newEvent.id
+        except Exception as e:
+            session.rollback()
+            return 'Error inserting event'
 
     @classmethod
     def update(cls, event):
@@ -37,7 +43,8 @@ class Event(Base):
             'title': event.title,
             'description': event.description,
             'location': event.location,
-            'time': event.time,
+            'start_at': event.start_at,
+            'end_at': event.end_at,
             'updated_at': datetime.datetime.utcnow(),
         })
 
@@ -68,8 +75,16 @@ class Event(Base):
             'title': event.title,
             'description': event.description,
             'location': event.location,
-            'time': event.time.isoformat() if event.time else None,
+            'start_at': event.start_at.isoformat() if event.start_at else None,
+            'end_at': event.end_at.isoformat() if event.end_at else None,
             'created_at': event.created_at.isoformat(),
             'updated_at': event.updated_at.isoformat(),
             'deleted_at': event.deleted_at.isoformat() if event.deleted_at else None
         }
+
+    @staticmethod
+    def parse_datetime(dt_str):
+        """ Convert ISO 8601 string to Python datetime object """
+        if dt_str:
+            return datetime.datetime.fromisoformat(dt_str.replace("Z", "+00:00")).replace(tzinfo=None)
+        return None

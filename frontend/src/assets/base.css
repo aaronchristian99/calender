@@ -48,7 +48,13 @@ h1 {
   color: var(--color-text);
 }
 
-p, li, label {
+h3 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+p, li, label, span {
   font-size: 1rem;
   font-weight: 400;
   color: var(--color-text);
@@ -92,8 +98,16 @@ p, li, label {
   justify-content: flex-start;
 }
 
+.justify-between {
+  justify-content: space-between;
+}
+
 .align-center {
   align-items: center;
+}
+
+.align-self-end {
+  align-self: end;
 }
 
 .w-75 {
@@ -139,6 +153,10 @@ p, li, label {
 
 .mt-4 {
   margin-top: 1.5rem;
+}
+
+.mt-3 {
+  margin-top: 1rem;
 }
 
 .mb-0 {
