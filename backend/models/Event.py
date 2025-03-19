@@ -85,10 +85,10 @@ class Event(Base):
 
     
     @staticmethod
-    def get_description_tags(event): #returns a list of tags in the description
+    def get_description_tags(event_description): #returns a list of tags in the description
         possible_tags = ['work', 'other', 'important', 'urgent', 'fun', 'budget', 'meeting', 'salary', 'party', 'project', 'assignment', 'conference'] # add any new tags here
         tags = {}
-        for word in event.description.split(' '):
+        for word in event_description.split(' '):
             for tag in possible_tags:
                 if tag in word.lower():
                     tags.append(tag)
