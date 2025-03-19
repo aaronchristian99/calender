@@ -28,13 +28,13 @@ const router = createRouter({
       path: '/calendar',
       name: 'calendar',
       component: CalendarView,
-      beforeEnter: () => {
-        if(localStorage.getItem('user')) {
-          return true
-        }
-
-        return false;
-      }
+      // beforeEnter: () => {
+      //   if(localStorage.getItem('user')) {
+      //     return true
+      //   }
+      //
+      //   return false;
+      // }
     }
   ],
 })

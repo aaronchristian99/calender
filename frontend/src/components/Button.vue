@@ -56,6 +56,11 @@
     cursor: pointer;
   }
 
+  .button.bg-violet:hover {
+    background-color: var(--color-link);
+    color: #000;
+  }
+
   .button:has(.p-4) {
     border-radius: 10px;
   }

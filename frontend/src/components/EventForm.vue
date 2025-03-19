@@ -195,6 +195,7 @@
       location.value = props.event.location;
       type.value = props.event.type;
       description.value = props.event.description;
+      date.value = [props.event.start_at, props.event.end_at];
     }
   }
 
@@ -231,7 +232,15 @@
   const submitForm = async (e) => {
     e.preventDefault();
 
-    await axios.post("/api/event/create", {
+    let url = '';
+
+    if(props.event) {
+      url = '/api/event/update';
+    } else {
+      url = '/api/event/create';
+    }
+
+    await axios.post(url, {
       title: title.value,
       description: description.value,
       location: location.value,
@@ -273,19 +282,19 @@
         </Button>
       </div>
       <template v-if="success">
-        <Button class="p-4" type="button" @click="close" colour="bg-violet" text-color="white">
+        <Button class="p-4 icon-button" type="button" @click="close" colour="bg-violet" text-color="white">
           <font-awesome-icon icon="xmark" />
         </Button>
         <form>
-          <Input v-model="title" type="text" placeholder="Title" :required="true" :value="props.event ? props.event.title : ''" />
+          <Input v-model="title" type="text" placeholder="Title" :required="true" />
           <SelectDropdown v-model="location" placeholder="Location" :fetch-options="fetchLocations" />
           <div class="input-type-wrapper flex flex-row justify-start align-center gap-4">
             <div class="flex flex-row justify-start align-center gap-2">
-              <Input name="type" v-model="type" type="radio" value="private" :required="true" />
+              <Input name="type" v-model="type" type="radio" value="private" :required="true" :selected="type === 'private'" />
               <label for="private-type">Private</label>
             </div>
             <div class="flex flex-row justify-start align-center gap-2">
-              <Input name="type" v-model="type" type="radio" value="public" :required="true" />
+              <Input name="type" v-model="type" type="radio" value="public" :required="true" :selected="type === 'public'" />
               <label for="public-type">Public</label>
             </div>
           </div>
@@ -314,7 +323,7 @@
             </div>
           </div>
           <SelectDropdown class="mt-3" v-model="collaborators" placeholder="Collaborators" :fetch-options="fetchUsers" />
-          <Button class="mt-4"
+          <Button class="mt-4 ml-auto mr-0"
                   type="button"
                   colour="bg-violet"
                   text-color="white"
@@ -336,7 +345,7 @@
     justify-content: center;
     align-items: end;
     right: 0;
-    padding: 0 2rem;
+    padding: 2rem;
   }
   form {
     width: 100%;

@@ -97,6 +97,12 @@ a:hover {
   margin: 0 auto;
 }
 
+.icon-button {
+  width: clamp(2rem, 5vw, 4rem);
+  height: clamp(2rem, 5vw, 4rem);
+  border-radius: 100% !important;
+}
+
 .flex {
   display: flex;
 }
@@ -186,10 +192,30 @@ a:hover {
   margin-bottom: 1.5rem;
 }
 
+.mr-auto {
+  margin-right: auto;
+}
+
+.mr-0 {
+  margin-right: 0;
+}
+
+.ml-auto {
+  margin-left: auto;
+}
+
+.ml-0 {
+  margin-left: 0;
+}
+
 .p-4 {
   padding: 1.5rem;
 }
 
 .hidden {
-  display: none;
+  display: none !important;
+}
+
+.block {
+  display: block;
 }
