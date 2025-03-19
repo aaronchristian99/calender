@@ -30,28 +30,13 @@ const router = createRouter({
       path: '/calendar',
       name: 'calendar',
       component: CalendarView,
-      children: [
-        {
-          path: 'event',
-          children: [
-            {
-              path: 'create',
-              name: 'createEvent',
-              component: EventForm
-            },
-            {
-              path: 'edit/:id',
-              name: 'editEvent',
-              component: EventForm
-            },
-            {
-              path: ':id',
-              name: 'event',
-              component: Event
-            },
-          ]
-        }
-      ]
+      // beforeEnter: () => {
+      //   if(localStorage.getItem('user')) {
+      //     return true
+      //   }
+      //
+      //   return false;
+      // }
     }
   ],
 })

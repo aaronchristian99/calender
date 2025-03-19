@@ -1,9 +1,11 @@
 <template>
-  <button v-if="type === 'button'" @click="$emit('click')"
-          :class="['button', colour, textColor]">
+  <button v-if="type === 'button'"
+          :class="['button', colour, textColor ]">
     <slot></slot>
   </button>
-  <a v-else :class="['button', colour, textColor, 'border-white']" :href="resolvedUrl">
+  <a v-else
+     :class="['button', colour, textColor, 'border-white']"
+     :href="resolvedUrl">
     <slot></slot>
   </a>
 </template>
@@ -44,7 +46,7 @@
     display: block;
     font-size: 1rem;
     font-weight: 500;
-    padding: 0.25rem 1.5rem;
+    padding: 1rem 1.5rem;
     border-radius: 100px;
     border: none;
     text-decoration: none;
@@ -52,6 +54,10 @@
 
   .button:hover {
     cursor: pointer;
+  }
+
+  .button:has(.p-4) {
+    border-radius: 10px;
   }
 
   .border-white {

@@ -1,4 +1,7 @@
 from models.Event import Event
+from models.PrivateEvent import PrivateEvent
+from models.PublicEvent import PublicEvent
+
 
 class EventController:
     def __init__(self):
@@ -13,7 +16,19 @@ class EventController:
 
     def createEvent(self, data):
         event_id = Event.create(data)
-        return {'id': event_id}
+        public_event_id = None
+        private_event_id = None
+
+        if data.get('type') == 'public':
+            public_event_id = PublicEvent.create(event_id)
+        elif data.get('type') == 'private':
+            private_event_id = PrivateEvent.create(event_id)
+
+        return {
+            'id': event_id,
+            'public_event_id': public_event_id,
+            'private_event_id': private_event_id
+        }
 
     # id of event to edit and data to change it to
     def updateEvent(self, id, data):

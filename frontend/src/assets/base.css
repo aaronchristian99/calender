@@ -48,10 +48,27 @@ h1 {
   color: var(--color-text);
 }
 
-p {
+h3 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+p, li, label, span {
   font-size: 1rem;
   font-weight: 400;
   color: var(--color-text);
+}
+
+a {
+  text-decoration: underline;
+  color: var(--color-link);
+  transition: 0.4s;
+}
+
+a:hover {
+  color: var(--color-text);
+  cursor: pointer;
 }
 
 .bg-black {
@@ -60,6 +77,14 @@ p {
 
 .bg-violet {
   background-color: var(--color-background-button);
+}
+
+.text-light-violet {
+  color: var(--color-link);
+}
+
+.text-grey {
+  color: var(--color-text-input);
 }
 
 .white {
@@ -92,8 +117,16 @@ p {
   justify-content: flex-start;
 }
 
+.justify-between {
+  justify-content: space-between;
+}
+
 .align-center {
   align-items: center;
+}
+
+.align-self-end {
+  align-self: end;
 }
 
 .w-75 {
@@ -125,12 +158,28 @@ p {
   margin: 0 auto;
 }
 
+.gap-2 {
+  gap: 0.5rem
+}
+
 .gap-3 {
   gap: 1rem;
 }
 
+.gap-4 {
+  gap: 1.5rem;
+}
+
 .mt-4 {
   margin-top: 1.5rem;
+}
+
+.mt-3 {
+  margin-top: 1rem;
+}
+
+.mb-0 {
+  margin-bottom: 0;
 }
 
 .mb-4 {

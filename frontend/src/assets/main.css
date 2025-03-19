@@ -1,4 +1,5 @@
 @import './base.css';
+@import "./ckeditor.css";
 
 #app {
   max-width: 100%;
@@ -11,13 +12,35 @@ main {
   height: 100%;
 }
 
-a {
-  text-decoration: underline;
-  color: var(--color-link);
-  transition: 0.4s;
+.date-input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border-radius: 12px !important;
+  background-color: var(--color-background-input) !important;
+  border: none;
+  color: var(--color-text-input);
+  font-size: 1rem;
+  line-height: 1.5rem;
+  min-height: 58px;
 }
 
-a:hover {
-  color: var(--color-text);
-  cursor: pointer;
+.date-calendar-cell {
+  margin: auto;
+}
+
+.dp__outer_menu_wrap {
+  width: 100%;
+}
+
+.dp--tp-wrap {
+  margin: auto;
+}
+
+.date-menu {
+  width: 100%;
+  background-color: var(--color-background-input) !important;
+  border: none;
+  border-radius: 12px !important;
+  font-size: 1rem;
+  line-height: 1.5rem;
 }

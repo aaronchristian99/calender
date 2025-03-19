@@ -1,0 +1,90 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+
+@media print {
+    body {
+        margin: 0 !important;
+    }
+}
+
+.main-container {
+    font-family: 'Lato';
+    width: 100%;
+    margin-top: 1rem;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 12px;
+}
+
+.ck-sticky-panel__content {
+    border: none !important;
+}
+
+.ck-button, .ck-editor__top .ck-toolbar, .ck-list, .ck-dropdown__panel, .ck-balloon-panel {
+    background-color: var(--color-background-input) !important;
+    color: var(--color-text-input) !important;
+    border: none;
+}
+
+.ck-input, .ck-label, .ck-dialog, .ck-form__header__label, .ck-labeled-field-view__status {
+    background-color: var(--color-background-input) !important;
+    color: var(--color-text-input) !important;
+}
+
+.ck-editor__top .ck-toolbar {
+    padding: 0.5rem !important;
+    border-bottom: 1px solid var(--color-text-input) !important;
+    border-top-left-radius: 12px !important;
+    border-top-right-radius: 12px !important;
+}
+
+.ck-toolbar__separator {
+    background-color: var(--color-text-input) !important;
+}
+
+.ck-dropdown__panel {
+    border-color: var(--color-text-input) !important;
+}
+
+.ck-content {
+    font-family: 'Lato';
+    line-height: 1.6;
+    word-break: break-word;
+    min-height: 300px;
+}
+
+.editor-container_classic-editor .editor-container__editor {
+    width: 100%;
+}
+
+.editor_container__word-count .ck-word-count {
+    color: var(--color-text-input);
+    display: flex;
+    height: 20px;
+    gap: var(--ck-spacing-small);
+    justify-content: flex-end;
+    font-size: 1rem;
+    line-height: 1.5rem;
+    font-family: var(--ck-font-face);
+    padding: var(--ck-spacing-small) var(--ck-spacing-standard);
+}
+
+.editor-container_include-word-count.editor-container_classic-editor .editor_container__word-count {
+    border: none;
+    border-radius: 0 0 12px 12px;
+}
+
+.editor-container_include-word-count.editor-container_classic-editor .editor-container__editor .ck-editor .ck-editor__editable {
+    border: none;
+    border-radius: 0 0 12px 12px;
+    color: var(--color-text-input);
+    background-color: var(--color-background-input);
+}
+
+.ck-on {
+    background-color: var(--color-background-button) !important;
+    color: var(--color-text) !important;
+}
+
+.ck-powered-by-balloon {
+    display: none !important;
+}
