@@ -60,12 +60,31 @@ p, li, label, span {
   color: var(--color-text);
 }
 
+a {
+  text-decoration: underline;
+  color: var(--color-link);
+  transition: 0.4s;
+}
+
+a:hover {
+  color: var(--color-text);
+  cursor: pointer;
+}
+
 .bg-black {
   background-color: var(--color-background);
 }
 
 .bg-violet {
   background-color: var(--color-background-button);
+}
+
+.text-light-violet {
+  color: var(--color-link);
+}
+
+.text-grey {
+  color: var(--color-text-input);
 }
 
 .white {

@@ -12,17 +12,6 @@ main {
   height: 100%;
 }
 
-a {
-  text-decoration: underline;
-  color: var(--color-link);
-  transition: 0.4s;
-}
-
-a:hover {
-  color: var(--color-text);
-  cursor: pointer;
-}
-
 .date-input {
   width: 100%;
   padding: 0.75rem 1rem;
