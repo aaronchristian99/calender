@@ -25,7 +25,7 @@
     }).then(res => {
       if(res.status === 200){
         console.log(res);
-        router.push({ name: 'calender' });
+        router.push({ name: 'home' });
       }
     }).catch(err => console.log(err));
   }

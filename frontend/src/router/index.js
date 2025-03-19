@@ -1,8 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import CalendarView from '../views/CalendarView.vue'
-import EventForm from "@/components/EventForm.vue";
-import Event from "@/views/Event.vue";
 import SignupForm from "@/views/SignupForm.vue";
 
 const router = createRouter({
@@ -30,13 +28,13 @@ const router = createRouter({
       path: '/calendar',
       name: 'calendar',
       component: CalendarView,
-      // beforeEnter: () => {
-      //   if(localStorage.getItem('user')) {
-      //     return true
-      //   }
-      //
-      //   return false;
-      // }
+      beforeEnter: () => {
+        if(localStorage.getItem('user')) {
+          return true
+        }
+
+        return false;
+      }
     }
   ],
 })
