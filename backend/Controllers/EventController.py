@@ -9,6 +9,9 @@ class EventController:
 
     def getEvents(self):
         events = Event.get()
+        private_events = filter(PrivateEvent.is_private, events) # gets private events only
+        public_events = filter(PublicEvent.is_public, events) # gets public events only
+        events = public_events # + all private events that match the owner id
         return {'events': events}
 
     def getEventById(self, id):

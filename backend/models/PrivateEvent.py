@@ -17,3 +17,7 @@ class PrivateEvent(Base):
         getsession().commit()
 
         return newPrivateEvent.id
+    
+    @staticmethod
+    def is_private(event_id):
+        return getsession().query(PrivateEvent).filter_by(event_id=event_id).first() is not None
