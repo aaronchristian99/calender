@@ -6,11 +6,16 @@
     event: Object,
     isVisible: Boolean
   });
-  const emit = defineEmits(['toggle-view']);
+  const emit = defineEmits(['toggle-view', 'toggle-edit']);
 
   const close = () => {
     emit('toggle-view', null); // Emit toggle-view event to close the view
   };
+
+  const edit = () => {
+    emit('toggle-view', null);
+    emit('toggle-edit', props.event);
+  }
 
   const getDateString = (date) => {
     const options = {
@@ -27,7 +32,7 @@
   <Transition name="slide">
     <section v-if="isVisible" class="form-container">
       <div class="flex flex-row justify-end align-center gap-3 align-self-end">
-        <Button class="p-4" type="button" @click="close" colour="bg-violet" text-color="white">
+        <Button class="p-4" type="button" @click="edit" colour="bg-violet" text-color="white">
           <font-awesome-icon icon="pencil" />
         </Button>
         <Button class="p-4" type="button" @click="close" colour="bg-violet" text-color="white">

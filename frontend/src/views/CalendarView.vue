@@ -39,9 +39,11 @@
     //   }
     // });
 
-    const toggleForm = () => {
+    const toggleForm = (event = null) => {
+      selectedEvent.value = event;
       isEventFormVisible.value = !isEventFormVisible.value;
     };
+
     const toggleEvent = (event) => {
       selectedEvent.value = event;
       isEventVisible.value = !isEventVisible.value;
@@ -57,8 +59,8 @@
       </section>
       <section class="calender-wrapper">
         <CalendarScheduler :events="events" @toggle-view="toggleEvent" />
-        <EventForm :is-visible="isEventFormVisible" @toggle-form="toggleForm" />
-        <EventView :event="selectedEvent" :is-visible="isEventVisible" @toggle-view="toggleEvent" />
+        <EventForm :is-visible="isEventFormVisible" @toggle-form="toggleForm" :event="selectedEvent" />
+        <EventView :event="selectedEvent" :is-visible="isEventVisible" @toggle-view="toggleEvent" @toggle-edit="toggleForm" />
       </section>
       <router-view />
     </article>

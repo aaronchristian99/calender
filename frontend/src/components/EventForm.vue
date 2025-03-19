@@ -3,9 +3,9 @@
   import { Ckeditor } from "@ckeditor/ckeditor5-vue";
   import { ClassicEditor, AutoImage, Autosave, BalloonToolbar, Base64UploadAdapter, BlockQuote, Bold,
     CloudServices, Essentials, Heading, ImageBlock, ImageCaption, ImageInline, ImageInsert, ImageInsertViaUrl,
-    ImageResize, ImageStyle, ImageTextAlternative, ImageToolbar, ImageUpload, Indent, IndentBlock,
-    Italic, Link, LinkImage, MediaEmbed, Paragraph, Table, TableCaption, TableCellProperties,
-    TableColumnResize, TableProperties, TableToolbar, Underline } from 'ckeditor5';
+    ImageResize, ImageStyle, ImageTextAlternative, ImageToolbar, ImageUpload, Indent, IndentBlock, Italic, Link,
+    LinkImage, MediaEmbed, Paragraph, Table, TableCaption, TableCellProperties, TableColumnResize, TableProperties,
+    TableToolbar, Underline, WordCount } from 'ckeditor5';
   import VueDatePicker from "@vuepic/vue-datepicker";
   import "@vuepic/vue-datepicker/dist/main.css"
   import axios from "axios";
@@ -13,6 +13,12 @@
   import Input from "@/components/Input.vue";
   import SelectDropdown from "@/components/SelectDropdown.vue";
   import "ckeditor5/ckeditor5.css";
+
+  const props = defineProps({
+    isVisible: Boolean,
+    event: Object
+  });
+  const emit = defineEmits(['toggle-form']);
 
   // Ckeditor configuration
   const LICENSE_KEY = 'GPL';
@@ -78,7 +84,8 @@
         TableColumnResize,
         TableProperties,
         TableToolbar,
-        Underline
+        Underline,
+        WordCount
       ],
       balloonToolbar: ['bold', 'italic', '|', 'link', 'insertImage'],
       heading: {
@@ -160,6 +167,15 @@
     };
   });
 
+  const title = ref('');
+  const description = ref('');
+  const location = ref('');
+  const date = ref(null);
+  const type = ref('');
+  const collaborators = ref([]);
+  const message = ref('');
+  let loading = ref('false');
+  let success = ref('false');
 
   onMounted(() => {
     isLayoutReady.value = true;
@@ -172,24 +188,15 @@
 
     const wordCount = editor.plugins.get('WordCount');
     editorWordCount.value.appendChild(wordCount.wordCountContainer);
+    // editorMenuBar.value.appendChild(editor.ui.view.menuBarView.element);
 
-    editorMenuBar.value.appendChild(editor.ui.view.menuBarView.element);
+    if(props.event) {
+      title.value = props.event.title;
+      location.value = props.event.location;
+      type.value = props.event.type;
+      description.value = props.event.description;
+    }
   }
-
-  const props = defineProps({
-    isVisible: Boolean
-  });
-  const emit = defineEmits(['toggle-form']);
-
-  const title = ref('');
-  const description = ref('');
-  const location = ref('');
-  const date = ref();
-  const type = ref('');
-  const collaborators = ref([]);
-  const message = ref('');
-  let loading = ref('false');
-  let success = ref('false');
 
   const close = () => {
     emit('toggle-form'); // Emit toggle-form event to close the form
@@ -270,7 +277,7 @@
           <font-awesome-icon icon="xmark" />
         </Button>
         <form>
-          <Input v-model="title" type="text" placeholder="Title" :required="true" />
+          <Input v-model="title" type="text" placeholder="Title" :required="true" :value="props.event ? props.event.title : ''" />
           <SelectDropdown v-model="location" placeholder="Location" :fetch-options="fetchLocations" />
           <div class="input-type-wrapper flex flex-row justify-start align-center gap-4">
             <div class="flex flex-row justify-start align-center gap-2">
@@ -306,7 +313,7 @@
               <div class="editor_container__word-count" ref="editorWordCountElement"></div>
             </div>
           </div>
-          <SelectDropdown v-model="collaborators" placeholder="Collaborators" :fetch-options="fetchUsers" />
+          <SelectDropdown class="mt-3" v-model="collaborators" placeholder="Collaborators" :fetch-options="fetchUsers" />
           <Button class="mt-4"
                   type="button"
                   colour="bg-violet"
