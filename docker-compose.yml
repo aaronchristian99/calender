@@ -24,7 +24,8 @@ services:
     environment:
       - PYTHON_ENV=${ENVIRONMENT}
       - DATABASE_URL=${DB_URL}
-    command: ["/bin/sh", "/app/script.sh"]
+#    command: ["/bin/sh", "/app/script.sh"]
+    command: ["tail", "-f", "/dev/null"]
     depends_on:
       - mysql
 
