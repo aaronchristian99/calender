@@ -1,7 +1,10 @@
 from sqlalchemy import Column, Integer, String, DateTime, Text, ForeignKey
 from models import Base
+from models.PrivateEvent import PrivateEvent
+from models.PublicEvent import PublicEvent
 from database_config import getsession
 import datetime
+
 
 class Event(Base):
     __tablename__ = 'events'
@@ -65,7 +68,11 @@ class Event(Base):
         session = getsession()
 
         try:
-            events = getsession().query(cls).filter(Event.deleted_at.is_(None)).all()
+            events = (session.query(cls, PrivateEvent.id.label('private_event_id'), PublicEvent.id.label('public_event_id'))
+                            .outerjoin(PrivateEvent, Event.id == PrivateEvent.event_id)
+                            .outerjoin(PublicEvent, Event.id == PublicEvent.event_id)
+                            .filter(Event.deleted_at.is_(None))
+                            .all())
             return [cls.to_dict(event) for event in events]
         except Exception as e:
             session.rollback()
@@ -103,6 +110,13 @@ class Event(Base):
 
     @classmethod
     def to_dict(cls, event):
+        event_type = ''
+
+        if event.private_event_id is not None:
+            event_type = 'private'
+        elif event.public_event_type is not None:
+            event_type = 'public'
+
         return {
             'id': event.id,
             'title': event.title,
@@ -110,6 +124,8 @@ class Event(Base):
             'location': event.location,
             'start_at': event.start_at.isoformat() if event.start_at else None,
             'end_at': event.end_at.isoformat() if event.end_at else None,
+            'type': event_type,
+            'created_by': event.created_by,
             'created_at': event.created_at.isoformat(),
             'updated_at': event.updated_at.isoformat(),
             'deleted_at': event.deleted_at.isoformat() if event.deleted_at else None
