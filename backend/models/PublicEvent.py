@@ -17,3 +17,7 @@ class PublicEvent(Base):
         getsession().commit()
 
         return newPublicEvent.id
+    
+    @staticmethod
+    def is_public(event_id):
+        return getsession().query(PublicEvent).filter_by(event_id=event_id).first() is not None

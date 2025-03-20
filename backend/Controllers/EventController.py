@@ -9,6 +9,9 @@ class EventController:
 
     def getEvents(self):
         events = Event.get()
+        private_events = filter(PrivateEvent.is_private, events) # gets private events only
+        public_events = filter(PublicEvent.is_public, events) # gets public events only
+        events = public_events # + all private events that match the owner id
         return {'events': events}
 
     def getEventById(self, id):
@@ -30,8 +33,10 @@ class EventController:
             'private_event_id': private_event_id
         }
 
+    # id of event to edit and data to change it to
     def updateEvent(self, id, data):
-        pass
+       data.id = id
+       Event.update(data)
 
     def deleteEvent(self, id):
-        pass
+        Event.delete(id)

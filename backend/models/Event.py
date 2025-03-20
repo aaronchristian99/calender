@@ -81,6 +81,18 @@ class Event(Base):
             'updated_at': event.updated_at.isoformat(),
             'deleted_at': event.deleted_at.isoformat() if event.deleted_at else None
         }
+    
+
+    
+    @staticmethod
+    def get_description_tags(event_description): #returns a list of tags in the description
+        possible_tags = ['work', 'other', 'important', 'urgent', 'fun', 'budget', 'meeting', 'salary', 'party', 'project', 'assignment', 'conference'] # add any new tags here
+        tags = {}
+        for word in event_description.split(' '):
+            for tag in possible_tags:
+                if tag in word.lower():
+                    tags.append(tag)
+        return tags
 
     @staticmethod
     def parse_datetime(dt_str):
