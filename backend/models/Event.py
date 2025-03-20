@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, DateTime, Text
+from sqlalchemy import Column, Integer, String, DateTime, Text, ForeignKey
 from models import Base
 from database_config import getsession
 import datetime
@@ -12,6 +12,7 @@ class Event(Base):
     location = Column(String(255), nullable=False)
     start_at = Column(DateTime, nullable=False)
     end_at = Column(DateTime, nullable=False)
+    created_by = Column(Integer, ForeignKey('users.id', ondelete='CASCADE'), nullable=False)
     created_at = Column(DateTime, nullable=False, default=datetime.datetime.utcnow)
     updated_at = Column(DateTime, nullable=False, default=datetime.datetime.utcnow)
     deleted_at = Column(DateTime, nullable=True)
@@ -36,37 +37,69 @@ class Event(Base):
         except Exception as e:
             session.rollback()
             return 'Error inserting event'
+        finally:
+            session.close()
 
     @classmethod
     def update(cls, event):
-        updatedEvent = getsession().query(cls).filter_by(id=event.id).update({
-            'title': event.title,
-            'description': event.description,
-            'location': event.location,
-            'start_at': event.start_at,
-            'end_at': event.end_at,
-            'updated_at': datetime.datetime.utcnow(),
-        })
+        session = getsession()
 
-        return updatedEvent
+        try:
+            updatedEvent = session.query(cls).filter_by(id=event.id).update({
+                'title': event.title,
+                'description': event.description,
+                'location': event.location,
+                'start_at': event.start_at,
+                'end_at': event.end_at,
+                'updated_at': datetime.datetime.utcnow(),
+            })
+            return updatedEvent
+        except Exception as e:
+            session.rollback()
+            return 'Error updating event'
+        finally:
+            session.close()
 
     @classmethod
-    def get(cls):
-        events = getsession().query(cls).all()
-        return [cls.to_dict(event) for event in events]
+    def get_all(cls):
+        session = getsession()
+
+        try:
+            events = getsession().query(cls).filter(Event.deleted_at.is_(None)).all()
+            return [cls.to_dict(event) for event in events]
+        except Exception as e:
+            session.rollback()
+            return 'Error getting events'
+        finally:
+            session.close()
 
     @classmethod
     def get_by_id(cls, event_id):
-        event = getsession().query(cls).filter_by(id=event_id).first()
-        return cls.to_dict(event)
+        session = getsession()
+
+        try:
+            event = session.query(cls).filter(Event.id == event_id, Event.deleted_at.is_(None)).first()
+            return cls.to_dict(event)
+        except Exception as e:
+            session.rollback()
+            return 'Error getting event'
+        finally:
+            session.close()
 
     @classmethod
     def delete(cls, event_id):
-        deletedEvent = getsession().query(cls).filter_by(id=event_id).update({
-            'deleted_at': datetime.datetime.utcnow()
-        })
+        session = getsession()
 
-        return deletedEvent
+        try:
+            deletedEvent = getsession().query(cls).filter_by(id=event_id).update({
+                'deleted_at': datetime.datetime.utcnow()
+            })
+            return deletedEvent
+        except Exception as e:
+            session.rollback()
+            return 'Error deleting event'
+        finally:
+            session.close()
 
     @classmethod
     def to_dict(cls, event):
@@ -81,9 +114,7 @@ class Event(Base):
             'updated_at': event.updated_at.isoformat(),
             'deleted_at': event.deleted_at.isoformat() if event.deleted_at else None
         }
-    
 
-    
     @staticmethod
     def get_description_tags(event_description): #returns a list of tags in the description
         possible_tags = ['work', 'other', 'important', 'urgent', 'fun', 'budget', 'meeting', 'salary', 'party', 'project', 'assignment', 'conference'] # add any new tags here
