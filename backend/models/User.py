@@ -62,6 +62,23 @@ class User(Base):
             session.close()
 
     @classmethod
+    def get_all(cls):
+        session = getsession()
+
+        try:
+            users = session.query(cls).all()
+
+            if users is None:
+                raise Exception('No users found')
+
+            return [cls.to_dict(user) for user in users]
+        except Exception as e:
+            session.rollback()
+            raise
+        finally:
+            session.close()
+
+    @classmethod
     def get_by_username(cls, username):
         session = getsession()
 

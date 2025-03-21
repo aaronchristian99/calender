@@ -1,8 +1,8 @@
 from models.Event import Event
 from models.PrivateEvent import PrivateEvent
 from models.PublicEvent import PublicEvent
+from models.CollaboratedUser import CollaboratedUser
 from session_manager import SessionManager
-
 
 class EventController:
     def __init__(self):
@@ -34,6 +34,13 @@ class EventController:
             elif data.get('type') == 'private':
                 private_event_id = PrivateEvent.create(event_id)
 
+            if len(data.get('collaborated_users')) > 0:
+                for id in data.get('collaborated_users'):
+                    CollaboratedUser.create({
+                        'user_id': id,
+                        'event_id': event_id
+                    })
+
             return {
                 'id': event_id,
                 'public_event_id': public_event_id,
@@ -54,6 +61,15 @@ class EventController:
                 public_event_id = PublicEvent.create(event_id)
             elif data.get('type') == 'private':
                 private_event_id = PrivateEvent.create(event_id)
+
+            CollaboratedUser.delete_by_event(event_id)
+
+            if len(data.get('collaborated_users')) > 0:
+                for id in data.get('collaborated_users'):
+                    CollaboratedUser.create({
+                        'user_id': id,
+                        'event_id': event_id
+                    })
 
             return {
                 'id': event_id,

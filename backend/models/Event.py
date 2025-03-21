@@ -110,7 +110,7 @@ class Event(Base):
         session = getsession()
 
         try:
-            deletedEvent = getsession().query(cls).filter_by(id=event_id).update({
+            deletedEvent = session.query(cls).filter_by(id=event_id).update({
                 'deleted_at': datetime.datetime.utcnow()
             })
             return deletedEvent

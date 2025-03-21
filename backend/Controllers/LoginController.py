@@ -7,6 +7,11 @@ class LoginController:
     def __init__(self):
         pass
 
+    """
+        Create a user
+        @param data: The user data
+        @return: userId
+    """
     def createUser(self, data):
         try:
             user_id = User.create(data)
@@ -14,6 +19,11 @@ class LoginController:
         except Exception as e:
             return { 'error': f'Cannot create user: {str(e)}' }
 
+    """
+        Logging in the user
+        @param data: The user data
+        @return: success, message and user
+    """
     def login(self, data):
         try:
             user = User.get_by_username(data.get('username'))
@@ -32,6 +42,10 @@ class LoginController:
         except Exception as e:
             return { 'error': f'Cannot login: {str(e)}' }
 
+    """
+        logs out the user
+        @return: success, message and user
+    """
     def logout(self):
         try:
             SessionManager.remove('session_id')
@@ -42,3 +56,14 @@ class LoginController:
             }
         except Exception as e:
             return { 'error': f'Cannot logout: {str(e)}' }
+
+    """
+        Retrieves all users
+        @return: users
+    """
+    def getAllUsers(self):
+        try:
+            users = User.get_all()
+            return { 'users': users }
+        except Exception as e:
+            return { 'error': f'Cannot get users: {str(e)}' }
