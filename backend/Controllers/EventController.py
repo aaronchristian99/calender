@@ -1,6 +1,7 @@
 from models.Event import Event
 from models.PrivateEvent import PrivateEvent
 from models.PublicEvent import PublicEvent
+from session_manager import SessionManager
 
 
 class EventController:
@@ -8,8 +9,9 @@ class EventController:
         pass
 
     def getEvents(self):
+        user = SessionManager.get('user')
         try:
-            events = filter(lambda event: event.type == 'public' or (event.type == 'private' and event.created_by == user.id), Event.get_all())
+            events = filter(lambda event: event.type == 'public' or (event.type == 'private' and event.created_by == user.get('id')), Event.get_all())
             return {'events': events}
         except Exception as e:
             return { 'error': f'Error getting events: {str(e)}'}

@@ -45,7 +45,7 @@ class RequestHandler(BaseHTTPRequestHandler):
     def do_GET(self):
         if self.path == '/api/events':
             response = self.eventController.getEvents()
-            # self.send_json_response(response)
+            self.send_json_response(response)
         elif self.path.startswith('/api/event/get/'):
             event_id = self.extract_id(self.path, '/api/event/get/')
             if event_id is None:

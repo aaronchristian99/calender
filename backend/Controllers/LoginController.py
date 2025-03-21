@@ -1,5 +1,7 @@
 from models.User import User
+from session_manager.SessionManager import SessionManager
 import bcrypt
+
 
 class LoginController:
     def __init__(self):
@@ -20,6 +22,8 @@ class LoginController:
                 raise Exception('User not found')
 
             if bcrypt.checkpw(data.get('password').encode(), user.get('password').encode()):
+                SessionManager.add('session_id', str(hash(user.get('username'))))
+                SessionManager.add('user', user)
                 return {
                     'success': True,
                     'message': 'Login successful',
@@ -30,6 +34,8 @@ class LoginController:
 
     def logout(self):
         try:
+            SessionManager.remove('session_id')
+            SessionManager.remove('user')
             return {
                 'success': True,
                 'message': 'Logout successful'
