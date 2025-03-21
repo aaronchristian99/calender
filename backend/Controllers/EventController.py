@@ -8,32 +8,63 @@ class EventController:
         pass
 
     def getEvents(self):
-        events = Event.get_all()
-        return {'events': events}
+        try:
+            events = filter(lambda event: event.type == 'public' or (event.type == 'private' and event.created_by == user.id), Event.get_all())
+            return {'events': events}
+        except Exception as e:
+            return { 'error': f'Error getting events: {str(e)}'}
 
     def getEventById(self, id):
-        event = Event.get(id)
+        try:
+            event = Event.get_by_id(id)
+            return {'event': event}
+        except Exception as e:
+            return { 'error': f'Error getting events: {str(e)}'}
 
     def createEvent(self, data):
-        event_id = Event.create(data)
-        public_event_id = None
-        private_event_id = None
+        try:
+            event_id = Event.create(data)
+            public_event_id = None
+            private_event_id = None
 
-        if data.get('type') == 'public':
-            public_event_id = PublicEvent.create(event_id)
-        elif data.get('type') == 'private':
-            private_event_id = PrivateEvent.create(event_id)
+            if data.get('type') == 'public':
+                public_event_id = PublicEvent.create(event_id)
+            elif data.get('type') == 'private':
+                private_event_id = PrivateEvent.create(event_id)
 
-        return {
-            'id': event_id,
-            'public_event_id': public_event_id,
-            'private_event_id': private_event_id
-        }
+            return {
+                'id': event_id,
+                'public_event_id': public_event_id,
+                'private_event_id': private_event_id,
+                'message': 'Event created successfully'
+            }
+        except Exception as e:
+            return { 'error': f'Error getting events: {str(e)}'}
 
     # id of event to edit and data to change it to
-    def updateEvent(self, id, data):
-       data.id = id
-       Event.update(data)
+    def updateEvent(self, data):
+        try:
+            event_id = Event.update(data)
+            public_event_id = None
+            private_event_id = None
+
+            if data.get('type') == 'public':
+                public_event_id = PublicEvent.create(event_id)
+            elif data.get('type') == 'private':
+                private_event_id = PrivateEvent.create(event_id)
+
+            return {
+                'id': event_id,
+                'public_event_id': public_event_id,
+                'private_event_id': private_event_id,
+                'message': 'Event updated successfully'
+            }
+        except Exception as e:
+            return { 'error': f'Error updating events: {str(e)}'}
 
     def deleteEvent(self, id):
-        Event.delete(id)
+        try:
+            event_id = Event.delete(id)
+            return {'id': event_id, 'message': 'Event deleted successfully'}
+        except Exception as e:
+            return { 'error': f'Error deleting events: {str(e)}'}

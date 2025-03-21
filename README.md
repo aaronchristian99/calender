@@ -51,4 +51,7 @@ cd frontend
 ```
 npm run dev
 ```
--**Make sure python server is running before the frontend.**
+**Make sure python server is running before the frontend.**
+
+**If running on windows platform, ensure script.sh has line endings with 'LF' than 'CRLF'. You can manually convert it 
+by using Intellij, visual code, notepad++ or any IDE**

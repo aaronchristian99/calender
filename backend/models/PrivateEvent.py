@@ -10,14 +10,31 @@ class PrivateEvent(Base):
 
     @classmethod
     def create(cls, event_id):
-        newPrivateEvent = PrivateEvent(
-            event_id=event_id
-        )
-        getsession().add(newPrivateEvent)
-        getsession().commit()
+        session = getsession()
 
-        return newPrivateEvent.id
+        try:
+            newPrivateEvent = PrivateEvent(
+                event_id=event_id
+            )
+            session.add(newPrivateEvent)
+            session.commit()
+
+            return newPrivateEvent.id
+        except Exception as e:
+            session.rollback()
+            raise
+        finally:
+            session.close()
     
     @staticmethod
     def is_private(event_id):
-        return getsession().query(PrivateEvent).filter_by(event_id=event_id).first() is not None
+        session = getsession()
+
+        try:
+            private_event_id = session.query(PrivateEvent).filter_by(event_id=event_id).first()
+
+            return private_event_id if private_event_id is not None else False
+        except Exception as e:
+            raise
+        finally:
+            session.close()
