@@ -1,14 +1,15 @@
+@import "@fortawesome/fontawesome-free/css/all.css";
+@import "@fortawesome/fontawesome-free/css/fontawesome.css";
+
 /* semantic color variables for this project */
 :root {
-  --color-background: #000;
-  --color-background-input: rgb(37, 38, 43);
-  --color-background-button: rgb(142, 71, 255);
+  --color-black: #000;
+  --color-dark-grey: rgb(37, 38, 43);
+  --color-violet: rgb(142, 71, 255);
 
-  --color-text: #fff;
-  --color-link: rgb(188, 191, 255);
-  --color-text-input: rgb(165, 165, 165);
-
-  --color-link-hover: #fff;
+  --color-white: #fff;
+  --color-light-violet: rgb(188, 191, 255);
+  --color-light-grey: rgb(165, 165, 165);
 }
 
 *,
@@ -45,50 +46,50 @@ body {
 h1 {
   font-size: 4rem;
   font-weight: 700;
-  color: var(--color-text);
+  color: var(--color-white);
 }
 
 h3 {
   font-size: 2rem;
   font-weight: 700;
-  color: var(--color-text);
+  color: var(--color-white);
 }
 
 p, li, label, span {
   font-size: 1rem;
   font-weight: 400;
-  color: var(--color-text);
+  color: var(--color-white);
 }
 
 a {
   text-decoration: underline;
-  color: var(--color-link);
+  color: var(--color-light-violet);
   transition: 0.4s;
 }
 
 a:hover {
-  color: var(--color-text);
+  color: var(--color-white);
   cursor: pointer;
 }
 
 .bg-black {
-  background-color: var(--color-background);
+  background-color: var(--color-black);
 }
 
 .bg-violet {
-  background-color: var(--color-background-button);
+  background-color: var(--color-violet);
 }
 
 .text-light-violet {
-  color: var(--color-link);
+  color: var(--color-light-violet);
 }
 
 .text-grey {
-  color: var(--color-text-input);
+  color: var(--color-light-grey);
 }
 
 .white {
-  color: var(--color-text);
+  color: var(--color-white);
 }
 
 .container {
@@ -218,4 +219,142 @@ a:hover {
 
 .block {
   display: block;
+}
+
+.multiselect {
+  box-sizing: border-box !important;
+  position: relative;
+  width: 100%;
+  border-radius: 12px;
+  background-color: var(--color-dark-grey);
+  border: none;
+  color: var(--color-light-grey) !important;
+  font-size: 1rem;
+  line-height: 1.5rem;
+  min-height: 58px !important;
+}
+
+.multiselect__input {
+  background: var(--color-dark-grey) !important;
+  border: none;
+  color: var(--color-light-grey) !important;
+  font-size: 1rem !important;
+  line-height: 1.5rem !important;
+  min-height: unset !important;
+  height: calc(100% - 1.5rem);
+  margin-bottom: 0 !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+}
+
+.multiselect__input::placeholder {
+  color: var(--color-light-grey) !important;
+}
+
+.multiselect__input:focus {
+  border: none !important;
+}
+
+.multiselect__tags {
+  background-color: var(--color-dark-grey) !important;
+  color: var(--color-light-grey);
+  border: none !important;
+  padding: 0.75rem 1rem !important;
+  border-radius: 12px !important;
+  min-height: 58px !important;
+}
+
+.multiselect__tags-wrap {
+  display: flex !important;
+  align-items: center;
+  height: calc(100% - 1.5rem) !important;
+}
+
+.multiselect__tag {
+  display: flex;
+  align-items: center;
+  background: var(--color-light-violet) !important;
+  margin-bottom: 0 !important;
+  line-height: 1.5rem !important;
+  color: var(--color-black) !important;
+}
+
+.multiselect__tag span {
+  color: var(--color-black);
+}
+
+.multiselect__tag-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.multiselect__tag-icon::after {
+  content: '\f00d' !important;
+  color: var(--color-black) !important;
+  font-family: "Font Awesome 6 Free";
+  font-size: 1rem !important;
+  font-weight: 900;
+  line-height: 1.5rem !important;
+}
+
+.multiselect__select {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  top: 50% !important;
+  right: 1rem !important;
+  transform: translateY(-50%);
+}
+
+.multiselect--active .multiselect__select {
+  transform: rotateZ(180deg) translateY(50%) !important;
+  z-index: 1;
+}
+
+.multiselect__select::before {
+  content: '\f078' !important;
+  top: 0 !important;
+  left: 0 !important;
+  font-family: 'Font Awesome 6 Free';
+  font-size: 1rem;
+  font-weight: 900;
+  border: none !important;
+  color: var(--color-light-grey) !important;
+  margin-top: 0 !important;
+}
+
+.multiselect__placeholder {
+  margin-bottom: 0 !important;
+}
+
+.multiselect__content-wrapper {
+  margin-top: 1rem;
+  background: var(--color-dark-grey) !important;
+  color: var(--color-light-grey) !important;
+  border: none !important;
+  border-radius: 12px !important;
+  padding: 1rem 0 !important;
+  max-height: 300px !important;
+}
+
+.multiselect__option--highlight {
+  background: var(--color-violet) !important;
+}
+
+.multiselect__option--highlight:after {
+  background: var(--color-violet) !important;
+}
+
+.multiselect__option--selected {
+  background: var(--color-light-violet) !important;
+}
+
+.multiselect__option--selected span {
+  color: var(--color-black) !important;
+}
+
+.multiselect__option--selected::after {
+  background: var(--color-light-violet) !important;
+  color: var(--color-black) !important;
 }

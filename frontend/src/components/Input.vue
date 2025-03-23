@@ -31,9 +31,9 @@
     width: 100%;
     padding: 0.75rem 1rem;
     border-radius: 12px;
-    background-color: var(--color-background-input);
+    background-color: var(--color-dark-grey);
     border: none;
-    color: var(--color-text-input);
+    color: var(--color-light-grey);
     font-size: 1rem;
     line-height: 1.5rem;
     min-height: 58px;
@@ -45,13 +45,13 @@
     min-height: unset;
     -webkit-appearance: none;
     appearance: none;
-    background-color: var(--color-background-input);
+    background-color: var(--color-dark-grey);
     margin: 0;
     font: inherit;
-    color: var(--color-text-input);
+    color: var(--color-light-grey);
     width: 1.15rem;
     height: 1.15rem;
-    border: 1px solid var(--color-text-input);
+    border: 1px solid var(--color-light-grey);
     border-radius: 50%;
     padding: 0;
   }
@@ -63,7 +63,7 @@
     border-radius: 50%;
     transform: scale(0);
     transition: 120ms transform ease-in-out;
-    box-shadow: inset 1em 1em var(--color-background-button);
+    box-shadow: inset 1em 1em var(--color-violet);
   }
 
   input[type="radio"]:checked::before {

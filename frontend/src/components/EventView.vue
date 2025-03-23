@@ -83,7 +83,7 @@
   }
   .icon {
     font-size: 2rem;
-    color: var(--color-text-input);
+    color: var(--color-light-grey);
   }
   .slide-enter-active,
   .slide-leave-active {

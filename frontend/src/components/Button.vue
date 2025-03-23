@@ -57,7 +57,7 @@
   }
 
   .button.bg-violet:hover {
-    background-color: var(--color-link);
+    background-color: var(--color-light-violet);
     color: #000;
   }
 
@@ -66,6 +66,6 @@
   }
 
   .border-white {
-    border: 1px solid var(--color-text);
+    border: 1px solid var(--color-white);
   }
 </style>

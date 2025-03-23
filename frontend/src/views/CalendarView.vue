@@ -7,12 +7,14 @@
     import EventForm from "@/components/EventForm.vue";
     import EventView from "@/components/EventView.vue";
     import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
+    import Message from "@/components/Message.vue";
 
     const router = useRouter();
     const events = ref([]);
     let isEventFormVisible = ref(false);
     let isEventVisible = ref(false);
     const selectedEvent = ref(null);
+    const message = ref("");
 
     onMounted(async () => {
       try {
@@ -63,6 +65,7 @@
       </section>
       <router-view />
     </article>
+    <Message :message="message" />
   </template>
 
   <style scoped>

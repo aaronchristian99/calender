@@ -16,9 +16,9 @@ main {
   width: 100%;
   padding: 0.75rem 1rem;
   border-radius: 12px !important;
-  background-color: var(--color-background-input) !important;
+  background-color: var(--color-dark-grey) !important;
   border: none;
-  color: var(--color-text-input);
+  color: var(--color-light-grey);
   font-size: 1rem;
   line-height: 1.5rem;
   min-height: 58px;
@@ -38,7 +38,7 @@ main {
 
 .date-menu {
   width: 100%;
-  background-color: var(--color-background-input) !important;
+  background-color: var(--color-dark-grey) !important;
   border: none;
   border-radius: 12px !important;
   font-size: 1rem;

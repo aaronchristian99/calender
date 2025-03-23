@@ -10,6 +10,7 @@
     font-family: 'Lato';
     width: 100%;
     margin-top: 1rem;
+    margin-bottom: 1rem;
     margin-left: auto;
     margin-right: auto;
     border-radius: 12px;
@@ -20,29 +21,29 @@
 }
 
 .ck-button, .ck-editor__top .ck-toolbar, .ck-list, .ck-dropdown__panel, .ck-balloon-panel {
-    background-color: var(--color-background-input) !important;
-    color: var(--color-text-input) !important;
+    background-color: var(--color-dark-grey) !important;
+    color: var(--color-light-grey) !important;
     border: none;
 }
 
 .ck-input, .ck-label, .ck-dialog, .ck-form__header__label, .ck-labeled-field-view__status {
-    background-color: var(--color-background-input) !important;
-    color: var(--color-text-input) !important;
+    background-color: var(--color-dark-grey) !important;
+    color: var(--color-light-grey) !important;
 }
 
 .ck-editor__top .ck-toolbar {
     padding: 0.5rem !important;
-    border-bottom: 1px solid var(--color-text-input) !important;
+    border-bottom: 1px solid var(--color-light-grey) !important;
     border-top-left-radius: 12px !important;
     border-top-right-radius: 12px !important;
 }
 
 .ck-toolbar__separator {
-    background-color: var(--color-text-input) !important;
+    background-color: var(--color-light-grey) !important;
 }
 
 .ck-dropdown__panel {
-    border-color: var(--color-text-input) !important;
+    border-color: var(--color-light-grey) !important;
 }
 
 .ck-content {
@@ -57,7 +58,7 @@
 }
 
 .editor_container__word-count .ck-word-count {
-    color: var(--color-text-input);
+    color: var(--color-light-grey);
     display: flex;
     height: 20px;
     gap: var(--ck-spacing-small);
@@ -76,13 +77,13 @@
 .editor-container_include-word-count.editor-container_classic-editor .editor-container__editor .ck-editor .ck-editor__editable {
     border: none;
     border-radius: 0 0 12px 12px;
-    color: var(--color-text-input);
-    background-color: var(--color-background-input);
+    color: var(--color-light-grey);
+    background-color: var(--color-dark-grey);
 }
 
 .ck-on {
-    background-color: var(--color-background-button) !important;
-    color: var(--color-text) !important;
+    background-color: var(--color-violet) !important;
+    color: var(--color-white) !important;
 }
 
 .ck-powered-by-balloon {

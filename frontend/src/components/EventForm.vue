@@ -11,8 +11,10 @@
   import axios from "axios";
   import Button from "@/components/Button.vue";
   import Input from "@/components/Input.vue";
-  import SelectDropdown from "@/components/SelectDropdown.vue";
+  import Location from "@/components/Location.vue";
+  import Multiselect from "vue-multiselect";
   import "ckeditor5/ckeditor5.css";
+  import "vue-multiselect/dist/vue-multiselect.min.css";
 
   const props = defineProps({
     isVisible: Boolean,
@@ -172,13 +174,16 @@
   const location = ref('');
   const date = ref(null);
   const type = ref('');
+  const file = ref(null);
   const collaborators = ref([]);
+  const users = ref([]);
   const message = ref('');
   let loading = ref('false');
   let success = ref('false');
 
-  onMounted(() => {
+  onMounted(async () => {
     isLayoutReady.value = true;
+    users.value = await fetchUsers();
   });
 
   function onReady(editor) {
@@ -203,29 +208,16 @@
     emit('toggle-form'); // Emit toggle-form event to close the form
   };
 
-  const fetchLocations = async (query) => {
-    const response = await axios.get('https://api.opencagedata.com/geocode/v1/json', {
-      params: {
-        q: encodeURIComponent(query),
-        key: 'dff04552b6b4486b956bde7409e0bb06',
-        limit: 5
-      }
-    });
+  const fetchUsers = async () => {
+    const response = await axios.get('/api/users');
 
     if(response && response.status === 200) {
-      return response.data.results.map(result => result.formatted);
-    }
-  }
-
-  const fetchUsers = async (query) => {
-    const response = await axios.get('/api/user', {
-      params: {
-        q: encodeURIComponent(query)
-      }
-    });
-
-    if(response && response.status === 200) {
-      return response.data.users.map(user => `${user.first_name} ${user.last_name}`);
+      return response.data.users.map(user => {
+        return {
+          key: user.id,
+          value: `${user.first_name} ${user.last_name}`
+        }
+      });
     }
   }
 
@@ -246,7 +238,9 @@
       location: location.value,
       start_at: date.value[0],
       end_at: date.value[1],
-      type: type.value
+      type: type.value,
+      collaborators: collaborators.value,
+      file: file.value
     }).then((res) => {
       loading.value = true;
       if(res.status === 200) {
@@ -270,24 +264,13 @@
 <template>
   <Transition name="slide">
     <section v-if="isVisible" class="form-container">
-      <div class="bg-green p-4" v-if="message !== ''">
-        <p class="white">{{ message }}</p>
-        <Button v-if="success"
-                class="mt-4"
-                type="button"
-                colour="bg-violet"
-                text-color="white"
-                @click="close">
-          Close
-        </Button>
-      </div>
       <template v-if="success">
         <Button class="p-4 icon-button" type="button" @click="close" colour="bg-violet" text-color="white">
           <font-awesome-icon icon="xmark" />
         </Button>
         <form>
           <Input v-model="title" type="text" placeholder="Title" :required="true" />
-          <SelectDropdown v-model="location" placeholder="Location" :fetch-options="fetchLocations" />
+          <Location v-model="location" placeholder="Location" />
           <div class="input-type-wrapper flex flex-row justify-start align-center gap-4">
             <div class="flex flex-row justify-start align-center gap-2">
               <Input name="type" v-model="type" type="radio" value="private" :required="true" :selected="type === 'private'" />
@@ -322,7 +305,21 @@
               <div class="editor_container__word-count" ref="editorWordCountElement"></div>
             </div>
           </div>
-          <SelectDropdown class="mt-3" v-model="collaborators" placeholder="Collaborators" :fetch-options="fetchUsers" />
+          <Input v-model="file" type="file" accept=".pdf" placeholder="Upload PDF" :required="true" />
+          <Multiselect v-model="collaborators"
+                       class="multiselect"
+                       :multiple="true"
+                       :options="users"
+                       placeholder="Share event with user"
+                       openDirection="below"
+                       label="value"
+                       track-by="key"
+                       :required="true"
+                       :searchable="true"
+                       :preserve-search="true"
+                       :close-on-select="false"
+                       :clear-on-select="false">
+          </Multiselect>
           <Button class="mt-4 ml-auto mr-0"
                   type="button"
                   colour="bg-violet"

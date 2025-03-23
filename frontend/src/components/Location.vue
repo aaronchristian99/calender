@@ -1,12 +1,12 @@
 <script setup>
   import { ref, useAttrs, watch, defineProps } from 'vue'
   import Input from './Input.vue'
+  import axios from "axios";
 
   const attrs = useAttrs();
   const emit = defineEmits(["update:modelValue"]);
   const props = defineProps({
-    modelValue: String,
-    fetchOptions: Function
+    modelValue: String
   });
   const searchQuery = ref('');
   const options = ref([]);
@@ -18,12 +18,26 @@
       return;
     }
 
-    if(newValue.length >= 2 && props.fetchOptions) {
-      options.value = await props.fetchOptions(newValue);
+    if(newValue.length >= 2) {
+      options.value = await getLocations(newValue);
     } else {
       options.value = [];
     }
   });
+
+  const getLocations = async (query) => {
+    const response = await axios.get('https://api.opencagedata.com/geocode/v1/json', {
+      params: {
+        q: encodeURIComponent(query),
+        key: 'dff04552b6b4486b956bde7409e0bb06',
+        limit: 5
+      }
+    });
+
+    if(response && response.status === 200) {
+      return response.data.results.map(result => result.formatted);
+    }
+  }
 
   const selectOption = (option) => {
     emit("update:modelValue", option);
@@ -44,16 +58,16 @@
 
 <style scoped>
   .options-wrapper {
-    background-color: var(--color-background-input);
+    background-color: var(--color-dark-grey);
     border-radius: 12px;
     padding-left: 0;
     margin-bottom: 1rem;
   }
   .options-wrapper .option-text {
-    color: var(--color-text-input);
+    color: var(--color-light-grey);
     padding: 0.8rem;
     list-style: none;
-    border-bottom: 1px solid var(--color-text-input);
+    border-bottom: 1px solid var(--color-light-grey);
   }
   .options-wrapper .option-text:hover {
     cursor: pointer;

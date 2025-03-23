@@ -188,9 +188,9 @@ export default {
     width: 100%;
     padding: 0.75rem 1rem;
     border-radius: 12px;
-    background-color: var(--color-background-input);
+    background-color: var(--color-dark-grey);
     border: none;
-    color: var(--color-text-input);
+    color: var(--color-light-grey);
     font-size: 1rem;
     line-height: 1.5rem;
     min-height: 58px;
@@ -206,12 +206,12 @@ export default {
     top: 50%;
     transform: translateY(-50%);
     pointer-events: none; /* Prevent click interference */
-    color: var(--color-text-input); /* Match the theme */
+    color: var(--color-light-grey); /* Match the theme */
     font-size: 1.2rem;
   }
   .calendar {
     display: grid;
-    border: 1px solid var(--color-text-input);
+    border: 1px solid var(--color-light-grey);
     border-radius: 10px;
   }
   .calendar.month {
@@ -224,17 +224,17 @@ export default {
     font-size: 1.2rem;
     text-align: center;
     font-weight: 700;
-    color: var(--color-text);
-    border-right: 1px solid var(--color-text-input);
-    border-bottom: 1px solid var(--color-text-input);
+    color: var(--color-white);
+    border-right: 1px solid var(--color-light-grey);
+    border-bottom: 1px solid var(--color-light-grey);
     padding: 0.8rem;
   }
   .day-header:last-child {
     border-right: none;
   }
   .calendar-cell {
-    border-right: 1px solid var(--color-text-input);
-    border-bottom: 1px solid var(--color-text-input);
+    border-right: 1px solid var(--color-light-grey);
+    border-bottom: 1px solid var(--color-light-grey);
     padding: 10px;
     min-height: 120px;
     position: relative;
@@ -246,8 +246,8 @@ export default {
     border-bottom: none;
   }
   .event-badge {
-    background-color: var(--color-background-button);
-    color: var(--color-text-button);
+    background-color: var(--color-violet);
+    color: var(--color-whitebutton);
     padding: 4px 8px;
     border-radius: 5px;
     margin-top: 5px;
@@ -258,7 +258,7 @@ export default {
     cursor: pointer;
   }
   .today {
-    background-color: var(--color-background-button);
-    color: var(--color-text-button);
+    background-color: var(--color-violet);
+    color: var(--color-white);
   }
 </style>
