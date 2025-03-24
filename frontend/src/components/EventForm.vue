@@ -174,7 +174,7 @@
     description: '',
     location: '',
     date: null,
-    type: '',
+    type: 'private',
     file: null,
     collaborators: []
   });
@@ -247,6 +247,10 @@
       type: event.value.type,
       collaborated_users: event.value.collaborators,
       file: event.value.file
+    }, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
     }).then((res) => {
       loading.value = true;
       if(res.status === 200) {
@@ -282,11 +286,11 @@
           <Location v-model="event.location" placeholder="Location" />
           <div class="input-type-wrapper flex flex-row justify-start align-center gap-4">
             <div class="flex flex-row justify-start align-center gap-2">
-              <Input name="type" v-model="event.type" type="radio" value="private" :required="true" :selected="type === 'private'" />
+              <Input name="type" v-model="event.type" type="radio" value="private" :required="true" />
               <label for="private-type">Private</label>
             </div>
             <div class="flex flex-row justify-start align-center gap-2">
-              <Input name="type" v-model="event.type" type="radio" value="public" :required="true" :selected="type === 'public'" />
+              <Input name="type" v-model="event.type" type="radio" value="public" :required="true" />
               <label for="public-type">Public</label>
             </div>
           </div>

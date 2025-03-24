@@ -3,6 +3,10 @@ from models.PrivateEvent import PrivateEvent
 from models.PublicEvent import PublicEvent
 from models.CollaboratedUser import CollaboratedUser
 from session_manager import SessionManager
+from collections import Counter
+import os
+import PyPDF2
+
 
 class EventController:
     def __init__(self):
@@ -19,6 +23,7 @@ class EventController:
     def getEventById(self, id):
         try:
             event = Event.get_by_id(id)
+            tagCount, tags = self.getTags(id)
             return {'event': event}
         except Exception as e:
             return { 'error': f'Error getting events: {str(e)}'}
@@ -40,6 +45,13 @@ class EventController:
                         'user_id': id,
                         'event_id': event_id
                     })
+
+            if data.get('file'):
+                filename = f'event_{event_id}.pdf'
+                self.isDirectoryExists()
+                filepath = os.path.join('storage/app/files', filename)
+                with open(filepath, 'wb') as f:
+                    f.write(data.get('file').file.read())
 
             return {
                 'id': event_id,
@@ -86,3 +98,29 @@ class EventController:
             return {'id': event_id, 'message': 'Event deleted successfully'}
         except Exception as e:
             return { 'error': f'Error deleting events: {str(e)}'}
+
+    def isDirectoryExists(self):
+        if not os.path.exists('storage/app/files'):
+            os.makedirs('storage/app/files')
+
+    def getTags(self, id):
+        stop_words = {"a", "an", "and", "are", "as", "at", "be", "but", "by", "for", "from",
+                      "has", "he", "in", "is", "it", "its", "of", "on", "that", "the", "to",
+                      "was", "were", "will", "with"}
+        filepath = f'storage/app/files/event_{id}.pdf'
+
+        try:
+            with open(filepath, "rb") as pdf_file:
+                reader = PyPDF2.PdfReader(pdf_file)
+                text = ""
+                for page in reader.pages:
+                    text += page.extract_text()
+                words = text.lower().split()
+                filtered_words = [word for word in words if word not in stop_words]
+                word_count = len(filtered_words)
+                word_frequencies = Counter(filtered_words)
+                repeated_words = [word for word, count in word_frequencies.items() if count > 1]
+
+                return word_count, repeated_words
+        except Exception as e:
+            raise
