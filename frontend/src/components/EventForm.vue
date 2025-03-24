@@ -169,13 +169,15 @@
     };
   });
 
-  const title = ref('');
-  const description = ref('');
-  const location = ref('');
-  const date = ref(null);
-  const type = ref('');
-  const file = ref(null);
-  const collaborators = ref([]);
+  const event = ref({
+    title: '',
+    description: '',
+    location: '',
+    date: null,
+    type: '',
+    file: null,
+    collaborators: []
+  });
   const users = ref([]);
   const message = ref('');
   let loading = ref('false');
@@ -196,11 +198,11 @@
     // editorMenuBar.value.appendChild(editor.ui.view.menuBarView.element);
 
     if(props.event) {
-      title.value = props.event.title;
-      location.value = props.event.location;
-      type.value = props.event.type;
-      description.value = props.event.description;
-      date.value = [props.event.start_at, props.event.end_at];
+      event.value.title = props.event.title;
+      event.value.location = props.event.location;
+      event.value.type = props.event.type;
+      event.value.description = props.event.description;
+      event.value.date = [props.event.start_at, props.event.end_at];
     }
   }
 
@@ -221,34 +223,41 @@
     }
   }
 
+  const addFile = (e) => {
+    event.value.file = e.target.files[0];
+  }
+
   const submitForm = async (e) => {
     e.preventDefault();
 
     let url = '';
 
-    if(props.event) {
+    if(props.event === null) {
       url = '/api/event/update';
     } else {
       url = '/api/event/create';
     }
 
     await axios.post(url, {
-      title: title.value,
-      description: description.value,
-      location: location.value,
-      start_at: date.value[0],
-      end_at: date.value[1],
-      type: type.value,
-      collaborators: collaborators.value,
-      file: file.value
+      title: event.value.title,
+      description: event.value.description,
+      location: event.value.location,
+      start_at: event.value.date[0],
+      end_at: event.value.date[1],
+      type: event.value.type,
+      collaborated_users: event.value.collaborators,
+      file: event.value.file
     }).then((res) => {
       loading.value = true;
       if(res.status === 200) {
         loading.value = false;
-        title.value = '';
-        description.value = '';
-        location.value = '';
-        date.value = '';
+        event.value.title = '';
+        event.value.description = '';
+        event.value.location = '';
+        event.value.date = null;
+        event.value.type = '';
+        event.value.file = null;
+        event.value.collaborators = []
         success.value = true;
         message.value = 'Event is successfully created!';
       } else {
@@ -269,19 +278,19 @@
           <font-awesome-icon icon="xmark" />
         </Button>
         <form>
-          <Input v-model="title" type="text" placeholder="Title" :required="true" />
-          <Location v-model="location" placeholder="Location" />
+          <Input v-model="event.title" type="text" placeholder="Title" :required="true" />
+          <Location v-model="event.location" placeholder="Location" />
           <div class="input-type-wrapper flex flex-row justify-start align-center gap-4">
             <div class="flex flex-row justify-start align-center gap-2">
-              <Input name="type" v-model="type" type="radio" value="private" :required="true" :selected="type === 'private'" />
+              <Input name="type" v-model="event.type" type="radio" value="private" :required="true" :selected="type === 'private'" />
               <label for="private-type">Private</label>
             </div>
             <div class="flex flex-row justify-start align-center gap-2">
-              <Input name="type" v-model="type" type="radio" value="public" :required="true" :selected="type === 'public'" />
+              <Input name="type" v-model="event.type" type="radio" value="public" :required="true" :selected="type === 'public'" />
               <label for="public-type">Public</label>
             </div>
           </div>
-          <VueDatePicker v-model="date"
+          <VueDatePicker v-model="event.date"
                          range
                          dark
                          position="left"
@@ -299,14 +308,14 @@
             <div class="editor-container editor-container_classic-editor editor-container_include-word-count" ref="editorContainerElement">
               <div class="editor-container__editor">
                 <div ref="editorElement">
-                  <ckeditor v-if="editor && config" v-model="description" :editor="editor" :config="config" @ready="onReady" />
+                  <ckeditor v-if="editor && config" v-model="event.description" :editor="editor" :config="config" @ready="onReady" />
                 </div>
               </div>
               <div class="editor_container__word-count" ref="editorWordCountElement"></div>
             </div>
           </div>
-          <Input v-model="file" type="file" accept=".pdf" placeholder="Upload PDF" :required="true" />
-          <Multiselect v-model="collaborators"
+          <Input type="file" accept=".pdf" placeholder="Upload PDF" :required="true" @change="addFile" />
+          <Multiselect v-model="event.collaborators"
                        class="multiselect"
                        :multiple="true"
                        :options="users"
