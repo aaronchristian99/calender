@@ -1,6 +1,9 @@
+Flask
+Flask-CORS
 SQLAlchemy
+Werkzeug
 mysql-connector-python
 alembic
 python-dotenv
 bcrypt
-pyPDF2
+PyPDF2

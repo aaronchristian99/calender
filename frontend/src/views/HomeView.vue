@@ -44,7 +44,7 @@
     }).then((res) => {
       if(res.status === 200) {
         if(res.data.user) {
-          localStorage.setItem("user", res.data.user);
+          localStorage.setItem("user", JSON.stringify(res.data.user));
           router.push({ name: 'calendar' });
         }
       }

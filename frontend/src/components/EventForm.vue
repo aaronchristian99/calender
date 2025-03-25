@@ -20,7 +20,7 @@
     isVisible: Boolean,
     event: Object
   });
-  const emit = defineEmits(['toggle-form']);
+  const emit = defineEmits(['toggle-form', 'update-events']);
 
   // Ckeditor configuration
   const LICENSE_KEY = 'GPL';
@@ -214,7 +214,7 @@
     const response = await axios.get('/api/users');
 
     if(response && response.status === 200) {
-      return response.data.users.map(user => {
+      return response.data.users.filter(user => user.id !== JSON.parse(localStorage.getItem('user')).id).map(user => {
         return {
           key: user.id,
           value: `${user.first_name} ${user.last_name}`
@@ -246,7 +246,8 @@
       end_at: event.value.date[1],
       type: event.value.type,
       collaborated_users: event.value.collaborators,
-      file: event.value.file
+      file: event.value.file,
+      created_by: JSON.parse(localStorage.getItem('user')).id
     }, {
       headers: {
         'Content-Type': 'multipart/form-data'
@@ -264,6 +265,7 @@
         event.value.collaborators = []
         success.value = true;
         message.value = 'Event is successfully created!';
+        emit('update-events', res.data.event);
       } else {
         message.value = 'There was an error creating your event!';
       }

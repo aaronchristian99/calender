@@ -26,13 +26,12 @@
               id: event.id,
               title: event.title,
               location: event.location,
-              startDate: new Date(event.time),
-              endDate: new Date(event.time),
+              startDate: new Date(event.start_at),
+              endDate: new Date(event.end_at),
               tooltip: event.title,
-              url: router.resolve({ name: "event", params: { id: event.id } })
+              type: event.type
             }
           });
-          console.log(events.value);
         }
       } catch (error) {
         console.log(error);
@@ -49,6 +48,16 @@
       selectedEvent.value = event;
       isEventVisible.value = !isEventVisible.value;
     };
+
+    const updateEvents = (event) => {
+      const key = events.value.findIndex(e => e.id === event.id);
+
+      if(key === -1) {
+        events.value.push(event);
+      } else {
+        events.value[key] = event;
+      }
+    }
   </script>
 
   <template>
@@ -60,7 +69,7 @@
       </section>
       <section class="calender-wrapper">
         <CalendarScheduler :events="events" @toggle-view="toggleEvent(null)" />
-        <EventForm :is-visible="isEventFormVisible" @toggle-form="toggleForm(null)" :event="selectedEvent" />
+        <EventForm :is-visible="isEventFormVisible" @toggle-form="toggleForm(null)" :event="selectedEvent" @update-events="updateEvents" />
         <EventView :event="selectedEvent" :is-visible="isEventVisible" @toggle-view="toggleEvent" @toggle-edit="toggleForm" />
       </section>
       <router-view />

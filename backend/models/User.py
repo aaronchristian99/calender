@@ -1,6 +1,5 @@
 from sqlalchemy import Column, Integer, String, DateTime
-from models import Base
-from database_config import getsession
+from database import Base, db_session
 import datetime
 import bcrypt
 
@@ -18,94 +17,46 @@ class User(Base):
 
     @classmethod
     def create(cls, user):
-        session = getsession()
-
-        try:
-            hashedPassword = bcrypt.hashpw(user.get('password').encode(), bcrypt.gensalt()).decode()
-            newUser = User(
-                first_name=user.get('firstName'),
-                last_name=user.get('lastName'),
-                username=user.get('username'),
-                password=hashedPassword,
-                created_at=datetime.datetime.utcnow(),
-                updated_at=datetime.datetime.utcnow()
-            )
-            session.add(newUser)
-            session.commit()
-
-            return newUser.id
-        except Exception as e:
-            session.rollback()
-            raise
-        finally:
-            session.close()
+        hashedPassword = bcrypt.hashpw(user.get('password').encode(), bcrypt.gensalt()).decode()
+        newUser = User(
+            first_name=user.get('firstName'),
+            last_name=user.get('lastName'),
+            username=user.get('username'),
+            password=hashedPassword,
+            created_at=datetime.datetime.utcnow(),
+            updated_at=datetime.datetime.utcnow()
+        )
+        db_session.add(newUser)
+        return newUser.id
 
     @classmethod
     def update(cls, user):
-        session = getsession()
-
-        try:
-            hashedPassword = bcrypt.hashpw(user.get('password').encode(), bcrypt.gensalt()).decode()
-            updatedUser = session.query(cls).filter_by(id=user.id).update({
-                'first_name': user.first_name,
-                'last_name': user.last_name,
-                'username': user.username,
-                'password': hashedPassword,
-                'updated_at': datetime.datetime.utcnow(),
-            })
-            getsession().commit()
-            return updatedUser.id
-        except Exception as e:
-            session.rollback()
-            raise
-        finally:
-            session.close()
+        hashedPassword = bcrypt.hashpw(user.get('password').encode(), bcrypt.gensalt()).decode()
+        updatedUser = db_session.query(cls).filter_by(id=user.id).update({
+            'first_name': user.first_name,
+            'last_name': user.last_name,
+            'username': user.username,
+            'password': hashedPassword,
+            'updated_at': datetime.datetime.utcnow(),
+        })
+        return updatedUser.id
 
     @classmethod
     def get_all(cls):
-        session = getsession()
-
-        try:
-            users = session.query(cls).all()
-
-            if users is None:
-                raise Exception('No users found')
-
-            return [cls.to_dict(user) for user in users]
-        except Exception as e:
-            session.rollback()
-            raise
-        finally:
-            session.close()
+        users = db_session.query(cls).all()
+        return [cls.to_dict(user) for user in users]
 
     @classmethod
     def get_by_username(cls, username):
-        session = getsession()
-
-        try:
-            user = session.query(cls).filter_by(username = username).first()
-            return cls.to_dict(user)
-        except Exception as e:
-            session.rollback()
-            raise
-        finally:
-            session.close()
+        user = db_session.query(cls).filter_by(username = username).first()
+        return cls.to_dict(user)
 
     @classmethod
     def delete(cls, user_id):
-        session = getsession()
-
-        try:
-            deletedUser = session.query(cls).filter_by(id=user_id).update({
-                'deleted_at': datetime.datetime.utcnow()
-            })
-            session.commit()
-            return deletedUser.id
-        except Exception as e:
-            session.rollback()
-            raise
-        finally:
-            session.close()
+        deletedUser = db_session.query(cls).filter_by(id=user_id).update({
+            'deleted_at': datetime.datetime.utcnow()
+        })
+        return deletedUser.id
 
     @classmethod
     def to_dict(cls, user):

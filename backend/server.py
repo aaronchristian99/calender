@@ -1,86 +1,51 @@
-import json
-from http.server import HTTPServer, BaseHTTPRequestHandler
+from flask import Flask, request
 from Controllers.EventController import EventController
 from Controllers.LoginController import LoginController
 
-class RequestHandler(BaseHTTPRequestHandler):
-    def __init__(self, *args, **kwargs):
-        self.eventController = EventController()
-        self.loginController = LoginController()
-        super().__init__(*args, **kwargs)
+app = Flask(__name__)
+app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 
-    def do_POST(self):
-        content_length = int(self.headers['Content-Length'])
-        post_data = self.rfile.read(content_length)
-        data = json.loads(post_data)
+event_controller = EventController()
+login_controller = LoginController()
 
-        if self.path == '/api/event/create':
-            response = self.eventController.createEvent(data)
-            self.send_json_response(response)
-        elif self.path.startswith('/api/event/update/'):
-            event_id = self.extract_id(self.path, '/api/event/update/')
-            if event_id is None:
-                self.send_error(400, "Invalid ID")
-                return
+@app.route('/api/event/create', methods=['POST'])
+def create_event():
+    data = request.form.to_dict()
+    if 'file' in request.files:
+        data['file'] = request.files['file']
+    return event_controller.createEvent(data)
 
-            response = self.eventController.updateEvent(event_id, data)
-            self.send_json_response(response)
-        elif self.path.startswith('/api/event/delete/'):
-            event_id = self.extract_id(self.path, '/api/event/delete/')
-            if event_id is None:
-                self.send_error(400, "Invalid ID")
-                return
+@app.route('/api/event/update/<int:event_id>', methods=['POST'])
+def update_event(event_id):
+    data = request.json
+    data['id'] = event_id
+    return event_controller.updateEvent(data)
 
-            response = self.eventController.deleteEvent(event_id)
-            self.send_json_response(response)
-        elif self.path == '/api/login':
-            response = self.loginController.login(data)
-            self.send_json_response(response)
-        elif self.path == '/api/user/create':
-            response = self.loginController.createUser(data)
-            self.send_json_response(response)
-        else:
-            self.send_error(404, "Not Found")
+@app.route('/api/event/delete/<int:event_id>', methods=['DELETE'])
+def delete_event(event_id):
+    return event_controller.deleteEvent(event_id)
 
-    def do_GET(self):
-        if self.path == '/api/users':
-            response = self.loginController.getAllUsers()
-            self.send_json_response(response)
-        elif self.path == '/api/events':
-            response = self.eventController.getEvents()
-            self.send_json_response(response)
-        elif self.path.startswith('/api/event/get/'):
-            event_id = self.extract_id(self.path, '/api/event/get/')
-            if event_id is None:
-                self.send_error(400, "Invalid ID")
-                return
+@app.route('/api/event/get/<int:event_id>', methods=['GET'])
+def get_event(event_id):
+    return event_controller.getEventById(event_id)
 
-            response = self.eventController.getEventById(event_id)
-            self.send_json_response(response)
-        else:
-            self.send_error(404, "Not Found")
+@app.route('/api/events', methods=['GET'])
+def get_events():
+    return event_controller.getEvents()
 
-    def send_json_response(self, response):
-        print(response)
-        self.send_response(200)
-        self.send_header('Content-type', 'application/json')
-        self.end_headers()
-        self.wfile.write(json.dumps(response).encode('utf-8'))
+@app.route('/api/login', methods=['POST'])
+def login():
+    data = request.json
+    return login_controller.login(data)
 
-    @staticmethod
-    def extract_id(path, prefix):
-        """ Extracts an ID from the given path if it's correctly formatted. """
-        try:
-            event_id = path[len(prefix):]  # Remove the prefix from the path
-            return int(event_id) if event_id.isdigit() else None
-        except ValueError:
-            return None
+@app.route('/api/user/create', methods=['POST'])
+def create_user():
+    data = request.json
+    return login_controller.createUser(data)
 
-def run(server_class=HTTPServer, handler_class=RequestHandler, port=5000):
-    server_address = ('', port)
-    httpd = server_class(server_address, handler_class)
-    print(f'Starting server on port {port}...')
-    httpd.serve_forever()
+@app.route('/api/users', methods=['GET'])
+def get_users():
+    return login_controller.getAllUsers()
 
 if __name__ == '__main__':
-    run()
+    app.run(host='0.0.0.0', port=5000, debug=True)

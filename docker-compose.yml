@@ -3,7 +3,7 @@ services:
     container_name: vue
     build:
       context: ./
-      dockerfile: Dockerfile
+      dockerfile: frontend/Dockerfile
     volumes:
       - ./nginx.conf:/etc/nginx/conf.d/default.conf
     ports:
@@ -13,8 +13,9 @@ services:
 
   python:
     container_name: python
-    image: python:latest
-    working_dir: /app
+    build:
+      context: ./
+      dockerfile: backend/Dockerfile
     ports:
       - "5000:5000"
     volumes:
@@ -22,7 +23,6 @@ services:
     environment:
       - PYTHON_ENV=${ENVIRONMENT}
       - DATABASE_URL=${DB_URL}
-    command: ["/bin/sh", "/app/script.sh"]
     depends_on:
       - mysql
 
