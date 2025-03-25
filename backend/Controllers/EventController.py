@@ -17,7 +17,9 @@ class EventController:
         try:
             user = session.get('user')
             events = filter(lambda event: event.type == 'public' or (event.type == 'private' and event.created_by == user.get('id')), Event.get_all())
-            return jsonify({'events': events}), 200
+            return jsonify({
+                'events': list(events)
+            }), 200
         except Exception as e:
             return jsonify({ 'error': f'Error getting events: {str(e)}'}), 500
 
@@ -52,12 +54,13 @@ class EventController:
                 })
                 index += 1
 
-            if data.get('file'):
+            if 'file' in data:
+                file = data.get('file')
                 filename = f'event_{event_id}.pdf'
                 self.isDirectoryExists()
                 filepath = os.path.join('storage/app/files', filename)
                 with open(filepath, 'wb') as f:
-                    f.write(data.get('file').file.read())
+                    f.write(file.read())
 
             return jsonify({
                 'id': event_id,
