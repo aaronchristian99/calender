@@ -1,8 +1,8 @@
+from flask import flash
 from sqlalchemy import Column, Integer, String, DateTime, Text, ForeignKey
-from models import Base
 from models.PrivateEvent import PrivateEvent
 from models.PublicEvent import PublicEvent
-from database_config import getsession
+from database import Base, db_session
 import datetime
 
 
@@ -22,95 +22,58 @@ class Event(Base):
 
     @classmethod
     def create(cls, event):
-        session = getsession()
-
-        try:
-            newEvent = Event(
-                title=event.get('title'),
-                description=event.get('description'),
-                location=event.get('location'),
-                start_at=cls.parse_datetime(event.get('start_at')),
-                end_at=cls.parse_datetime(event.get('end_at')),
-                created_by=event.get('created_by'),
-                created_at=datetime.datetime.utcnow(),
-                updated_at=datetime.datetime.utcnow()
-            )
-            session.add(newEvent)
-            session.commit()
-            return newEvent.id
-        except Exception as e:
-            session.rollback()
-            raise
+        newEvent = Event(
+            title=event.get('title'),
+            description=event.get('description'),
+            location=event.get('location'),
+            start_at=cls.parse_datetime(event.get('start_at')),
+            end_at=cls.parse_datetime(event.get('end_at')),
+            created_by=event.get('created_by'),
+            created_at=datetime.datetime.utcnow(),
+            updated_at=datetime.datetime.utcnow()
+        )
+        db_session.add(newEvent)
+        db_session.commit()
+        return newEvent.id
 
 
     @classmethod
     def update(cls, event):
-        session = getsession()
-
-        try:
-            updatedEvent = session.query(cls).filter_by(id=event.id).update({
-                'title': event.title,
-                'description': event.description,
-                'location': event.location,
-                'start_at': event.start_at,
-                'end_at': event.end_at,
-                'updated_at': datetime.datetime.utcnow(),
-            })
-            return updatedEvent
-        except Exception as e:
-            session.rollback()
-            raise
+        updatedEvent = db_session.query(cls).filter_by(id=event.id).update({
+            'title': event.title,
+            'description': event.description,
+            'location': event.location,
+            'start_at': event.start_at,
+            'end_at': event.end_at,
+            'updated_at': datetime.datetime.utcnow(),
+        })
+        return updatedEvent
 
     @classmethod
     def get_all(cls):
-        session = getsession()
+        events = (db_session.query(cls, PrivateEvent.id.label('private_event_id'), PublicEvent.id.label('public_event_id'))
+                  .outerjoin(PrivateEvent, Event.id == PrivateEvent.event_id)
+                  .outerjoin(PublicEvent, Event.id == PublicEvent.event_id)
+                  .filter(Event.deleted_at.is_(None))
+                  .all())
+        return [cls.to_dict(event) for event in events]
 
-        try:
-            events = (session.query(cls, PrivateEvent.id.label('private_event_id'), PublicEvent.id.label('public_event_id'))
-                            .outerjoin(PrivateEvent, Event.id == PrivateEvent.event_id)
-                            .outerjoin(PublicEvent, Event.id == PublicEvent.event_id)
-                            .filter(Event.deleted_at.is_(None))
-                            .all())
-
-            if events is None:
-                raise Exception('No events found.')
-
-            return [cls.to_dict(event) for event in events]
-        except Exception as e:
-            session.rollback()
-            raise
 
     @classmethod
     def get_by_id(cls, event_id):
-        session = getsession()
-
-        try:
-            event = (session.query(cls, PrivateEvent.id.label('private_event_id'), PublicEvent.id.label('public_event_id'))
-                            .outerjoin(PrivateEvent, Event.id == PrivateEvent.event_id)
-                            .outerjoin(PublicEvent, Event.id == PublicEvent.event_id)
-                            .filter(Event.id == event_id, Event.deleted_at.is_(None))
-                            .first())
-
-            if event is None:
-                raise Exception('Event not found')
-
-            return cls.to_dict(event)
-        except Exception as e:
-            session.rollback()
-            raise
+        event = (db_session.query(cls, PrivateEvent.id.label('private_event_id'), PublicEvent.id.label('public_event_id'))
+                 .outerjoin(PrivateEvent, Event.id == PrivateEvent.event_id)
+                 .outerjoin(PublicEvent, Event.id == PublicEvent.event_id)
+                 .filter(Event.id == event_id, Event.deleted_at.is_(None))
+                 .first())
+        return cls.to_dict(event)
 
     @classmethod
     def delete(cls, event_id):
-        session = getsession()
-
-        try:
-            deletedEvent = session.query(cls).filter_by(id=event_id).update({
-                'deleted_at': datetime.datetime.utcnow()
-            })
-            return deletedEvent
-        except Exception as e:
-            session.rollback()
-            raise
+        deletedEvent = db_session.query(cls).filter_by(id=event_id).update({
+            'deleted_at': datetime.datetime.utcnow()
+        })
+        return deletedEvent
 
     @classmethod
     def to_dict(cls, event):

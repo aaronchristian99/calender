@@ -3,7 +3,8 @@ from models.PrivateEvent import PrivateEvent
 from models.PublicEvent import PublicEvent
 from models.CollaboratedEvent import CollaboratedEvent
 from collections import Counter
-from flask import jsonify, session
+from flask import jsonify, session, flash
+from database import db_session
 import os
 import PyPDF2
 import traceback
@@ -15,13 +16,16 @@ class EventController:
 
     def getEvents(self):
         try:
-            user = session.get('user')
-            events = filter(lambda event: event.type == 'public' or (event.type == 'private' and event.created_by == user.get('id')), Event.get_all())
+            user_id = session.get('user_id')
+            events = filter(lambda event: event['type'] == 'public' or (event['type'] == 'private' and event['created_by'] == user_id), Event.get_all())
             return jsonify({
                 'events': list(events)
             }), 200
         except Exception as e:
-            return jsonify({ 'error': f'Error getting events: {str(e)}'}), 500
+            return jsonify({
+                'error': f'Error getting events: {str(e)}',
+                'traceback': traceback.format_exc()
+            }), 500
 
     def getEventById(self, id):
         try:
@@ -32,11 +36,13 @@ class EventController:
                 'tagCount': tagCount,
                 'tags': tags}, 200)
         except Exception as e:
-            return jsonify({ 'error': f'Error getting events: {str(e)}'}), 500
+            return jsonify({
+                'error': f'Error getting events: {str(e)}',
+                'traceback': traceback.format_exc()
+            }), 500
 
     def createEvent(self, data):
         try:
-            print(f'session: {session}')
             event_id = Event.create(data)
             public_event_id = None
             private_event_id = None
@@ -62,6 +68,8 @@ class EventController:
                 with open(filepath, 'wb') as f:
                     f.write(file.read())
 
+            db_session.commit()
+
             return jsonify({
                 'id': event_id,
                 'public_event_id': public_event_id,
@@ -69,6 +77,7 @@ class EventController:
                 'message': 'Event created successfully'
             }, 200)
         except Exception as e:
+            db_session.rollback()
             return jsonify({
                 'error': f'Error creating event: {str(e)}',
                 'traceback': traceback.format_exc()
@@ -102,14 +111,20 @@ class EventController:
                 'message': 'Event updated successfully'
             }, 200)
         except Exception as e:
-            return jsonify({ 'error': f'Error updating events: {str(e)}'}), 500
+            return jsonify({
+                'error': f'Error updating events: {str(e)}',
+                'traceback': traceback.format_exc()
+            }), 500
 
     def deleteEvent(self, id):
         try:
             event_id = Event.delete(id)
             return jsonify({'id': event_id, 'message': 'Event deleted successfully'}), 200
         except Exception as e:
-            return jsonify({ 'error': f'Error deleting events: {str(e)}'}), 500
+            return jsonify({
+                'error': f'Error deleting events: {str(e)}',
+                'traceback': traceback.format_exc()
+            }), 500
 
     def isDirectoryExists(self):
         if not os.path.exists('storage/app/files'):

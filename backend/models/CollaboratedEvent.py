@@ -1,6 +1,5 @@
-from sqlalchemy import Column, Integer, String, DateTime, Text, ForeignKey
-from models import Base
-from database_config import getsession
+from sqlalchemy import Column, Integer, ForeignKey
+from database import Base, db_session
 
 
 class CollaboratedEvent(Base):
@@ -12,42 +11,19 @@ class CollaboratedEvent(Base):
 
     @classmethod
     def create(cls, data):
-        session = getsession()
-
-        try:
-            print(f'data: {data}')
-            newUser = CollaboratedEvent(
-                event_id=int(data['event_id']),
-                user_id=data['user_id']
-            )
-            session.add(newUser)
-            session.commit()
-        except Exception as e:
-            session.rollback()
-            raise
-
+        newUser = CollaboratedEvent(
+            event_id=int(data['event_id']),
+            user_id=data['user_id']
+        )
+        db_session.add(newUser)
 
     @classmethod
     def delete(cls, data):
-        session = getsession()
-
-        try:
-            deleteUser = session.query(cls).filter_by(event_id=data['event_id'], user_id=data['user_id']).first()
-            session.delete(deleteUser)
-            session.commit()
-        except Exception as e:
-            session.rollback()
-            raise
+        deleteUser = db_session.query(cls).filter_by(event_id=data['event_id'], user_id=data['user_id']).first()
+        db_session.delete(deleteUser)
 
 
     @classmethod
     def delete_by_event(cls, event_id):
-        session = getsession()
-
-        try:
-            deleteEvent = session.query(cls).filter_by(event_id=event_id).all()
-            session.delete(deleteEvent)
-            session.commit()
-        except Exception as e:
-            session.rollback()
-            raise
+        deleteEvent = db_session.query(cls).filter_by(event_id=event_id).all()
+        db_session.delete(deleteEvent)

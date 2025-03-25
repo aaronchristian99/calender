@@ -1,6 +1,6 @@
 Flask
 Flask-CORS
-Flask-SQLAlchemy
+SQLAlchemy
 Werkzeug
 mysql-connector-python
 alembic
