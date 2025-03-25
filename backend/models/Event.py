@@ -31,6 +31,7 @@ class Event(Base):
                 location=event.get('location'),
                 start_at=cls.parse_datetime(event.get('start_at')),
                 end_at=cls.parse_datetime(event.get('end_at')),
+                created_by=event.get('created_by'),
                 created_at=datetime.datetime.utcnow(),
                 updated_at=datetime.datetime.utcnow()
             )
@@ -40,8 +41,7 @@ class Event(Base):
         except Exception as e:
             session.rollback()
             raise
-        finally:
-            session.close()
+
 
     @classmethod
     def update(cls, event):
@@ -60,8 +60,6 @@ class Event(Base):
         except Exception as e:
             session.rollback()
             raise
-        finally:
-            session.close()
 
     @classmethod
     def get_all(cls):
@@ -81,8 +79,6 @@ class Event(Base):
         except Exception as e:
             session.rollback()
             raise
-        finally:
-            session.close()
 
     @classmethod
     def get_by_id(cls, event_id):
@@ -102,8 +98,6 @@ class Event(Base):
         except Exception as e:
             session.rollback()
             raise
-        finally:
-            session.close()
 
     @classmethod
     def delete(cls, event_id):
@@ -117,8 +111,6 @@ class Event(Base):
         except Exception as e:
             session.rollback()
             raise
-        finally:
-            session.close()
 
     @classmethod
     def to_dict(cls, event):
@@ -142,16 +134,6 @@ class Event(Base):
             'updated_at': event[0].updated_at.isoformat(),
             'deleted_at': event[0].deleted_at.isoformat() if event[0].deleted_at else None
         }
-
-    @staticmethod
-    def get_description_tags(event_description): #returns a list of tags in the description
-        possible_tags = ['work', 'other', 'important', 'urgent', 'fun', 'budget', 'meeting', 'salary', 'party', 'project', 'assignment', 'conference'] # add any new tags here
-        tags = {}
-        for word in event_description.split(' '):
-            for tag in possible_tags:
-                if tag in word.lower():
-                    tags.append(tag)
-        return tags
 
     @staticmethod
     def parse_datetime(dt_str):

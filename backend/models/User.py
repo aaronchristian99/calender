@@ -37,8 +37,7 @@ class User(Base):
         except Exception as e:
             session.rollback()
             raise
-        finally:
-            session.close()
+
 
     @classmethod
     def update(cls, user):
@@ -58,8 +57,6 @@ class User(Base):
         except Exception as e:
             session.rollback()
             raise
-        finally:
-            session.close()
 
     @classmethod
     def get_all(cls):
@@ -75,8 +72,6 @@ class User(Base):
         except Exception as e:
             session.rollback()
             raise
-        finally:
-            session.close()
 
     @classmethod
     def get_by_username(cls, username):
@@ -88,8 +83,6 @@ class User(Base):
         except Exception as e:
             session.rollback()
             raise
-        finally:
-            session.close()
 
     @classmethod
     def delete(cls, user_id):
@@ -104,8 +97,6 @@ class User(Base):
         except Exception as e:
             session.rollback()
             raise
-        finally:
-            session.close()
 
     @classmethod
     def to_dict(cls, user):

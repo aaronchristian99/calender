@@ -3,8 +3,8 @@ from models import Base
 from database_config import getsession
 
 
-class CollaboratedUser(Base):
-    __tablename__ = 'collaborated_users'
+class CollaboratedEvent(Base):
+    __tablename__ = 'collaborated_events'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     event_id = Column(Integer, ForeignKey('events.id', ondelete='CASCADE'), nullable=False)
@@ -15,8 +15,9 @@ class CollaboratedUser(Base):
         session = getsession()
 
         try:
-            newUser = CollaboratedUser(
-                event_id=data['event_id'],
+            print(f'data: {data}')
+            newUser = CollaboratedEvent(
+                event_id=int(data['event_id']),
                 user_id=data['user_id']
             )
             session.add(newUser)
@@ -24,8 +25,7 @@ class CollaboratedUser(Base):
         except Exception as e:
             session.rollback()
             raise
-        finally:
-            session.close()
+
 
     @classmethod
     def delete(cls, data):
@@ -38,8 +38,7 @@ class CollaboratedUser(Base):
         except Exception as e:
             session.rollback()
             raise
-        finally:
-            session.close()
+
 
     @classmethod
     def delete_by_event(cls, event_id):
@@ -52,5 +51,3 @@ class CollaboratedUser(Base):
         except Exception as e:
             session.rollback()
             raise
-        finally:
-            session.close()

@@ -1,11 +1,12 @@
 from models.Event import Event
 from models.PrivateEvent import PrivateEvent
 from models.PublicEvent import PublicEvent
-from models.CollaboratedUser import CollaboratedUser
-from session_manager import SessionManager
+from models.CollaboratedEvent import CollaboratedEvent
 from collections import Counter
+from flask import jsonify, session
 import os
 import PyPDF2
+import traceback
 
 
 class EventController:
@@ -13,38 +14,43 @@ class EventController:
         pass
 
     def getEvents(self):
-        user = SessionManager.get('user')
         try:
+            user = session.get('user')
             events = filter(lambda event: event.type == 'public' or (event.type == 'private' and event.created_by == user.get('id')), Event.get_all())
-            return {'events': events}
+            return jsonify({'events': events}), 200
         except Exception as e:
-            return { 'error': f'Error getting events: {str(e)}'}
+            return jsonify({ 'error': f'Error getting events: {str(e)}'}), 500
 
     def getEventById(self, id):
         try:
             event = Event.get_by_id(id)
             tagCount, tags = self.getTags(id)
-            return {'event': event}
+            return jsonify({
+                'event': event,
+                'tagCount': tagCount,
+                'tags': tags}, 200)
         except Exception as e:
-            return { 'error': f'Error getting events: {str(e)}'}
+            return jsonify({ 'error': f'Error getting events: {str(e)}'}), 500
 
     def createEvent(self, data):
         try:
+            print(f'session: {session}')
             event_id = Event.create(data)
             public_event_id = None
             private_event_id = None
+            index = 0
 
             if data.get('type') == 'public':
                 public_event_id = PublicEvent.create(event_id)
             elif data.get('type') == 'private':
                 private_event_id = PrivateEvent.create(event_id)
 
-            if len(data.get('collaborated_users')) > 0:
-                for id in data.get('collaborated_users'):
-                    CollaboratedUser.create({
-                        'user_id': id,
-                        'event_id': event_id
-                    })
+            while f'collaborated_users[{index}][key]' in data:
+                CollaboratedEvent.create({
+                    'user_id': data.get(f"collaborated_users[{index}][key]"),
+                    'event_id': event_id
+                })
+                index += 1
 
             if data.get('file'):
                 filename = f'event_{event_id}.pdf'
@@ -53,14 +59,17 @@ class EventController:
                 with open(filepath, 'wb') as f:
                     f.write(data.get('file').file.read())
 
-            return {
+            return jsonify({
                 'id': event_id,
                 'public_event_id': public_event_id,
                 'private_event_id': private_event_id,
                 'message': 'Event created successfully'
-            }
+            }, 200)
         except Exception as e:
-            return { 'error': f'Error getting events: {str(e)}'}
+            return jsonify({
+                'error': f'Error creating event: {str(e)}',
+                'traceback': traceback.format_exc()
+            }), 500
 
     # id of event to edit and data to change it to
     def updateEvent(self, data):
@@ -68,36 +77,36 @@ class EventController:
             event_id = Event.update(data)
             public_event_id = None
             private_event_id = None
+            index = 0
 
             if data.get('type') == 'public':
                 public_event_id = PublicEvent.create(event_id)
             elif data.get('type') == 'private':
                 private_event_id = PrivateEvent.create(event_id)
 
-            CollaboratedUser.delete_by_event(event_id)
+            CollaboratedEvent.delete_by_event(event_id)
 
-            if len(data.get('collaborated_users')) > 0:
-                for id in data.get('collaborated_users'):
-                    CollaboratedUser.create({
-                        'user_id': id,
-                        'event_id': event_id
-                    })
+            while f'collaborated_users[{index}][key]' in data:
+                CollaboratedEvent.create({
+                    'user_id': id,
+                    'event_id': event_id
+                })
 
-            return {
+            return jsonify({
                 'id': event_id,
                 'public_event_id': public_event_id,
                 'private_event_id': private_event_id,
                 'message': 'Event updated successfully'
-            }
+            }, 200)
         except Exception as e:
-            return { 'error': f'Error updating events: {str(e)}'}
+            return jsonify({ 'error': f'Error updating events: {str(e)}'}), 500
 
     def deleteEvent(self, id):
         try:
             event_id = Event.delete(id)
-            return {'id': event_id, 'message': 'Event deleted successfully'}
+            return jsonify({'id': event_id, 'message': 'Event deleted successfully'}), 200
         except Exception as e:
-            return { 'error': f'Error deleting events: {str(e)}'}
+            return jsonify({ 'error': f'Error deleting events: {str(e)}'}), 500
 
     def isDirectoryExists(self):
         if not os.path.exists('storage/app/files'):

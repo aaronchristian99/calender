@@ -23,8 +23,7 @@ class PrivateEvent(Base):
         except Exception as e:
             session.rollback()
             raise
-        finally:
-            session.close()
+
     
     @staticmethod
     def is_private(event_id):
@@ -36,5 +35,3 @@ class PrivateEvent(Base):
             return private_event_id if private_event_id is not None else False
         except Exception as e:
             raise
-        finally:
-            session.close()

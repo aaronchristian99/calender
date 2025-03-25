@@ -1,11 +1,11 @@
+from flask import jsonify, session
 from models.User import User
-from session_manager import SessionManager
 import bcrypt
 
 
 class LoginController:
     def __init__(self):
-        self.session_manager = SessionManager()
+        pass
 
     """
         Create a user
@@ -15,9 +15,9 @@ class LoginController:
     def createUser(self, data):
         try:
             user_id = User.create(data)
-            return { 'user_id': user_id }
+            return jsonify({ 'user_id': user_id }), 200
         except Exception as e:
-            return { 'error': f'Cannot create user: {str(e)}' }
+            return jsonify({ 'error': f'Cannot create user: {str(e)}' }), 500
 
     """
         Logging in the user
@@ -32,15 +32,16 @@ class LoginController:
                 raise Exception('User not found')
 
             if bcrypt.checkpw(data.get('password').encode(), user.get('password').encode()):
-                self.session_manager.add('session_id', str(hash(user.get('username'))))
-                self.session_manager.add('user', user)
-                return {
+                session['session_id'] = str(hash(user.get('username')))
+                session['user_id'] = user.get('id')
+                session.permanent = True
+                return jsonify({
                     'success': True,
                     'message': 'Login successful',
                     'user': user
-                }
+                }), 200
         except Exception as e:
-            return { 'error': f'Cannot login: {str(e)}' }
+            return jsonify({ 'error': f'Cannot login: {str(e)}' }), 500
 
     """
         logs out the user
@@ -48,14 +49,14 @@ class LoginController:
     """
     def logout(self):
         try:
-            self.session_manager.remove('session_id')
-            self.session_manager.remove('user')
-            return {
+            session.pop('session_id', None)
+            session.pop('user', None)
+            return jsonify({
                 'success': True,
                 'message': 'Logout successful'
-            }
+            }), 200
         except Exception as e:
-            return { 'error': f'Cannot logout: {str(e)}' }
+            return jsonify({ 'error': f'Cannot logout: {str(e)}' }), 500
 
     """
         Retrieves all users
@@ -64,6 +65,6 @@ class LoginController:
     def getAllUsers(self):
         try:
             users = User.get_all()
-            return { 'users': users }
+            return jsonify({ 'users': users }), 200
         except Exception as e:
-            return { 'error': f'Cannot get users: {str(e)}' }
+            return jsonify({ 'error': f'Cannot get users: {str(e)}' }), 500

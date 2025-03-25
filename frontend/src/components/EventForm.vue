@@ -246,7 +246,8 @@
       end_at: event.value.date[1],
       type: event.value.type,
       collaborated_users: event.value.collaborators,
-      file: event.value.file
+      file: event.value.file,
+      created_by: JSON.parse(localStorage.getItem('user')).id
     }, {
       headers: {
         'Content-Type': 'multipart/form-data'

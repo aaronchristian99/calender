@@ -22,8 +22,7 @@ class PublicEvent(Base):
         except Exception as e:
             session.rollback()
             raise
-        finally:
-            session.close()
+
     
     @staticmethod
     def is_public(event_id):
@@ -35,5 +34,3 @@ class PublicEvent(Base):
         except Exception as e:
             session.rollback()
             raise
-        finally:
-            session.close()
