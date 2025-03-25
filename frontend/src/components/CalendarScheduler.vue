@@ -72,7 +72,8 @@ export default {
       calendar: [],
       selectedDate: null,
       view: 'month',
-      currentDate: new Date()
+      currentDate: new Date(),
+      today: new Date()
     };
   },
   created() {
@@ -110,9 +111,9 @@ export default {
       this.currentDate = new Date(targetYear, targetMonth, this.currentDate.getDate());
     },
     isToday(date) {
-      return date.getDate() === this.currentDate.getDate() &&
-        date.getMonth() === this.currentDate.getMonth() &&
-        date.getFullYear() === this.currentDate.getFullYear();
+      return date.getDate() === this.today.getDate() &&
+        date.getMonth() === this.today.getMonth() &&
+        date.getFullYear() === this.today.getFullYear();
     },
     changeView() {
       console.log(this.view);
@@ -158,7 +159,6 @@ export default {
   computed: {
     currentDate() {
       const options = {
-        day: 'numeric',
         month: 'long',
         year: 'numeric'
       };
