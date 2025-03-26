@@ -38,6 +38,10 @@ def login():
     data = request.json
     return login_controller.login(data)
 
+@app.route('/api/logout', methods=['GET'])
+def logout():
+    return login_controller.logout()
+
 @app.route('/api/user/create', methods=['POST'])
 def create_user():
     data = request.json

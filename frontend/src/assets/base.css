@@ -3,7 +3,7 @@
 
 /* semantic color variables for this project */
 :root {
-  --color-black: #000;
+  --color-black: #1C1324;
   --color-dark-grey: rgb(37, 38, 43);
   --color-violet: rgb(142, 71, 255);
 
@@ -51,6 +51,12 @@ h1 {
 
 h3 {
   font-size: 2rem;
+  font-weight: 700;
+  color: var(--color-white);
+}
+
+h4 {
+  font-size: 1.5rem;
   font-weight: 700;
   color: var(--color-white);
 }
@@ -130,6 +136,10 @@ a:hover {
 
 .justify-start {
   justify-content: flex-start;
+}
+
+.justify-end {
+  justify-content: flex-end;
 }
 
 .justify-between {

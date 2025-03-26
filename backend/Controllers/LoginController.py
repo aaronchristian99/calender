@@ -1,6 +1,7 @@
 from flask import jsonify, session
 from models.User import User
 import bcrypt
+import traceback
 
 
 class LoginController:
@@ -17,7 +18,10 @@ class LoginController:
             user_id = User.create(data)
             return jsonify({ 'user_id': user_id }), 200
         except Exception as e:
-            return jsonify({ 'error': f'Cannot create user: {str(e)}' }), 500
+            return jsonify({
+                'error': f'Cannot create user: {str(e)}',
+                'traceback': traceback.format_exc()
+            }), 500
 
     """
         Logging in the user
@@ -41,7 +45,10 @@ class LoginController:
                     'user': user
                 }), 200
         except Exception as e:
-            return jsonify({ 'error': f'Cannot login: {str(e)}' }), 500
+            return jsonify({
+                'error': f'Cannot login: {str(e)}',
+                'traceback': traceback.format_exc()
+            }), 500
 
     """
         logs out the user
@@ -56,7 +63,10 @@ class LoginController:
                 'message': 'Logout successful'
             }), 200
         except Exception as e:
-            return jsonify({ 'error': f'Cannot logout: {str(e)}' }), 500
+            return jsonify({
+                'error': f'Cannot logout: {str(e)}',
+                'traceback': traceback.format_exc()
+            }), 500
 
     """
         Retrieves all users
@@ -67,4 +77,7 @@ class LoginController:
             users = User.get_all()
             return jsonify({ 'users': users }), 200
         except Exception as e:
-            return jsonify({ 'error': f'Cannot get users: {str(e)}' }), 500
+            return jsonify({
+                'error': f'Cannot get users: {str(e)}',
+                'traceback': traceback.format_exc()
+            }), 500
