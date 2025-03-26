@@ -17,7 +17,17 @@ class EventController:
     def getEvents(self):
         try:
             user_id = session.get('user_id')
-            events = filter(lambda event: event['type'] == 'public' or (event['type'] == 'private' and event['created_by'] == user_id), Event.get_all())
+            events = Event.get_all()
+            filtered_events = []
+
+            for event in events:
+                users = [user['user_id'] for user in CollaboratedEvent.get_by_event(event['id'])]
+
+                if (user_id in users or
+                    event['type'] == 'public' or
+                    (event['type'] == 'private' and event['created_by'] == user_id)):
+                    filtered_events.append(event)
+
             return jsonify({
                 'events': list(events)
             }), 200
@@ -30,11 +40,14 @@ class EventController:
     def getEventById(self, id):
         try:
             event = Event.get_by_id(id)
+            users = CollaboratedEvent.get_by_event(id)
             tagCount, tags = self.getTags(id)
             return jsonify({
                 'event': event,
                 'tagCount': tagCount,
-                'tags': tags}, 200)
+                'tags': tags,
+                'users': users
+            }), 200
         except Exception as e:
             return jsonify({
                 'error': f'Error getting events: {str(e)}',
@@ -68,14 +81,14 @@ class EventController:
                 with open(filepath, 'wb') as f:
                     f.write(file.read())
 
+            event = Event.get_by_id(event_id)
+
             db_session.commit()
 
             return jsonify({
-                'id': event_id,
-                'public_event_id': public_event_id,
-                'private_event_id': private_event_id,
+                'event': event,
                 'message': 'Event created successfully'
-            }, 200)
+            }), 200
         except Exception as e:
             db_session.rollback()
             return jsonify({
@@ -83,34 +96,44 @@ class EventController:
                 'traceback': traceback.format_exc()
             }), 500
 
-    # id of event to edit and data to change it to
     def updateEvent(self, data):
         try:
-            event_id = Event.update(data)
+            Event.update(data)
             public_event_id = None
             private_event_id = None
             index = 0
 
             if data.get('type') == 'public':
-                public_event_id = PublicEvent.create(event_id)
+                if PrivateEvent.is_private(data['id']):
+                    PrivateEvent.delete(data['id'])
+                if not PublicEvent.is_public(data['id']):
+                    public_event_id = PublicEvent.create(data['id'])
             elif data.get('type') == 'private':
-                private_event_id = PrivateEvent.create(event_id)
+                if PublicEvent.is_public(data['id']):
+                    PublicEvent.delete(data['id'])
+                if not PrivateEvent.is_private(data['id']):
+                    private_event_id = PrivateEvent.create(data['id'])
 
-            CollaboratedEvent.delete_by_event(event_id)
+            CollaboratedEvent.delete_by_event(data['id'])
 
             while f'collaborated_users[{index}][key]' in data:
                 CollaboratedEvent.create({
-                    'user_id': id,
-                    'event_id': event_id
+                    'user_id': data.get(f"collaborated_users[{index}][key]"),
+                    'event_id': data['id']
                 })
 
+            event = Event.get_by_id(data['id'])
+            users = CollaboratedEvent.get_by_event(data['id'])
+
+            db_session.commit()
+
             return jsonify({
-                'id': event_id,
-                'public_event_id': public_event_id,
-                'private_event_id': private_event_id,
+                'event': event,
+                'users': users,
                 'message': 'Event updated successfully'
             }, 200)
         except Exception as e:
+            db_session.rollback()
             return jsonify({
                 'error': f'Error updating events: {str(e)}',
                 'traceback': traceback.format_exc()
@@ -119,8 +142,13 @@ class EventController:
     def deleteEvent(self, id):
         try:
             event_id = Event.delete(id)
-            return jsonify({'id': event_id, 'message': 'Event deleted successfully'}), 200
+            db_session.commit()
+            return jsonify({
+                'id': event_id,
+                'message': 'Event deleted successfully'
+            }), 200
         except Exception as e:
+            db_session.rollback()
             return jsonify({
                 'error': f'Error deleting events: {str(e)}',
                 'traceback': traceback.format_exc()

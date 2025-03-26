@@ -1,7 +1,7 @@
-from flask import flash
 from sqlalchemy import Column, Integer, String, DateTime, Text, ForeignKey
 from models.PrivateEvent import PrivateEvent
 from models.PublicEvent import PublicEvent
+from models.CollaboratedEvent import CollaboratedEvent
 from database import Base, db_session
 import datetime
 
@@ -39,21 +39,21 @@ class Event(Base):
 
     @classmethod
     def update(cls, event):
-        updatedEvent = db_session.query(cls).filter_by(id=event.id).update({
-            'title': event.title,
-            'description': event.description,
-            'location': event.location,
-            'start_at': event.start_at,
-            'end_at': event.end_at,
+        db_session.query(cls).filter_by(id=event['id']).update({
+            'title': event['title'],
+            'description': event['description'],
+            'location': event['location'],
+            'start_at': cls.parse_datetime(event['start_at']),
+            'end_at': cls.parse_datetime(event['end_at']),
             'updated_at': datetime.datetime.utcnow(),
         })
-        return updatedEvent
 
     @classmethod
     def get_all(cls):
         events = (db_session.query(cls, PrivateEvent.id.label('private_event_id'), PublicEvent.id.label('public_event_id'))
                   .outerjoin(PrivateEvent, Event.id == PrivateEvent.event_id)
                   .outerjoin(PublicEvent, Event.id == PublicEvent.event_id)
+                  .outerjoin(CollaboratedEvent, Event.id == CollaboratedEvent.event_id)
                   .filter(Event.deleted_at.is_(None))
                   .all())
         return [cls.to_dict(event) for event in events]

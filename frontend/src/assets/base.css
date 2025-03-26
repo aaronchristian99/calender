@@ -108,6 +108,14 @@ a:hover {
   display: flex;
 }
 
+.wrap {
+  flex-wrap: wrap;
+}
+
+.nowrap {
+  flex-wrap: nowrap;
+}
+
 .flex-column {
   flex-direction: column;
 }

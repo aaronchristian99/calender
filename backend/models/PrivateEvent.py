@@ -18,5 +18,10 @@ class PrivateEvent(Base):
     
     @staticmethod
     def is_private(event_id):
-        private_event_id = db_session.query(PrivateEvent).filter_by(event_id=event_id).first()
-        return private_event_id if private_event_id is not None else False
+        private_event = db_session.query(PrivateEvent).filter_by(event_id=event_id).first()
+        return private_event.id if private_event is not None else False
+
+    @staticmethod
+    def delete(event_id):
+        private_event = db_session.query(PrivateEvent).filter_by(event_id=event_id).first()
+        db_session.delete(private_event)

@@ -1,5 +1,5 @@
 <script setup>
-  import { ref, computed, onMounted, useTemplateRef } from "vue";
+  import { ref, computed, onMounted, useTemplateRef, watch } from "vue";
   import { Ckeditor } from "@ckeditor/ckeditor5-vue";
   import { ClassicEditor, AutoImage, Autosave, BalloonToolbar, Base64UploadAdapter, BlockQuote, Bold,
     CloudServices, Essentials, Heading, ImageBlock, ImageCaption, ImageInline, ImageInsert, ImageInsertViaUrl,
@@ -196,15 +196,21 @@
     const wordCount = editor.plugins.get('WordCount');
     editorWordCount.value.appendChild(wordCount.wordCountContainer);
     // editorMenuBar.value.appendChild(editor.ui.view.menuBarView.element);
-
-    if(props.event) {
-      event.value.title = props.event.title;
-      event.value.location = props.event.location;
-      event.value.type = props.event.type;
-      event.value.description = props.event.description;
-      event.value.date = [props.event.start_at, props.event.end_at];
-    }
   }
+
+  watch(() => props.event, (newEvent) => {
+    if (newEvent) {
+      event.value = {
+        title: newEvent.title || '',
+        location: newEvent.location || '',
+        type: newEvent.type || 'private',
+        description: newEvent.description || '',
+        date: newEvent ? [newEvent.startDate, newEvent.endDate] : null,
+        file: newEvent.id ? `event_${newEvent.id}.pdf` : null,
+        collaborators: users.value.filter(user => newEvent.collaborators.includes(user.key))
+      };
+    }
+  });
 
   const close = () => {
     emit('toggle-form'); // Emit toggle-form event to close the form
@@ -231,11 +237,18 @@
     e.preventDefault();
 
     let url = '';
+    let headers = {};
 
-    if(props.event === null) {
-      url = '/api/event/update';
+    if(props.event) {
+      url = `/api/event/update/${props.event.id}`;
+      headers = {
+        'Content-Type': 'application/json'
+      }
     } else {
       url = '/api/event/create';
+      headers = {
+        'Content-Type': 'multipart/form-data'
+      }
     }
 
     await axios.post(url, {
@@ -249,25 +262,24 @@
       file: event.value.file,
       created_by: JSON.parse(localStorage.getItem('user')).id
     }, {
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      }
+      headers: headers
     }).then((res) => {
       loading.value = true;
       if(res.status === 200) {
         loading.value = false;
-        event.value.title = '';
-        event.value.description = '';
-        event.value.location = '';
-        event.value.date = null;
-        event.value.type = '';
-        event.value.file = null;
-        event.value.collaborators = []
+        event.value = {
+          title: '',
+          location: '',
+          type: 'private',
+          description: '',
+          date: null,
+          file: null,
+          collaborators: []
+        };
         success.value = true;
         message.value = 'Event is successfully created!';
         emit('update-events', res.data.event);
-      } else {
-        message.value = 'There was an error creating your event!';
+        close();
       }
     }). catch(error => {
       loading.value = false;
@@ -320,7 +332,11 @@
               <div class="editor_container__word-count" ref="editorWordCountElement"></div>
             </div>
           </div>
-          <Input type="file" accept=".pdf" placeholder="Upload PDF" :required="true" @change="addFile" />
+          <Input v-if="!props.event"
+                 type="file"
+                 accept=".pdf"
+                 placeholder="Upload PDF"
+                 @change="addFile" />
           <Multiselect v-model="event.collaborators"
                        class="multiselect"
                        :multiple="true"

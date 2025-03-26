@@ -18,5 +18,10 @@ class PublicEvent(Base):
     
     @staticmethod
     def is_public(event_id):
-        public_event_id = db_session.query(PublicEvent).filter_by(event_id=event_id).first()
-        return public_event_id if public_event_id is not None else False
+        public_event = db_session.query(PublicEvent).filter_by(event_id=event_id).first()
+        return public_event.id if public_event is not None else False
+
+    @staticmethod
+    def delete(event_id):
+        public_event = db_session.query(PublicEvent).filter_by(event_id=event_id).first()
+        db_session.delete(public_event)

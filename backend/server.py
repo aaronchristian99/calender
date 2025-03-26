@@ -25,7 +25,7 @@ def update_event(event_id):
 def delete_event(event_id):
     return event_controller.deleteEvent(event_id)
 
-@app.route('/api/event/get/<int:event_id>', methods=['GET'])
+@app.route('/api/event/<int:event_id>', methods=['GET'])
 def get_event(event_id):
     return event_controller.getEventById(event_id)
 
