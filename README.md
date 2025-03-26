@@ -1,6 +1,7 @@
 # Calendar Application
 
 ## Requirements
+- **Works on all operating systems as long as all dependecies are installed**
 - **Podman**  
   [Installation Guide](https://podman.io/docs/installation)
 
@@ -18,6 +19,7 @@ Before running the application make sure that Podman and Podman Compose are inst
 
 **_If you get this error `podman-compose not found in %PATH` please install `podman-compose` binary library._**
 
+**_If using Docker replace all commands with 'docker' instead of 'podman'_**
 1. Run:
    ```
    podman compose build --no-cache
