@@ -1,7 +1,7 @@
 # Calendar Application
 
 ## Requirements
-- **Works on all operating systems as long as all dependecies are installed**
+**Works on all operating systems as long as all dependecies are installed**
 - **Podman**  
   [Installation Guide](https://podman.io/docs/installation)
 
