@@ -5,6 +5,8 @@
   import Input from "../components/Input.vue";
   import Button from "../components/Button.vue";
   import kronos from "@/assets/kronos_signup.webp";
+  import {useLoaderStore} from "@/stores/loader.js";
+  import {useMessageStore} from "@/stores/message.js";
 
   const firstName = ref('');
   const lastName = ref('');
@@ -12,10 +14,14 @@
   const password = ref('');
   const passwordConfirm = ref('');
   const username = ref('');
+  const loaderStore = useLoaderStore();
+  const messageStore = useMessageStore();
   const router = useRouter();
 
   const submitForm = async(e) => {
     e.preventDefault();
+
+    loaderStore.setLoader(true);
 
     await axios.post('/api/user/create', {
       firstName: firstName.value,
@@ -25,10 +31,14 @@
       password: password.value
     }).then(res => {
       if(res.status === 200){
-        console.log(res);
+        loaderStore.setLoader(false)
+        messageStore.setMessage(res.data.message);
         router.push({ name: 'home' });
       }
-    }).catch(err => console.log(err));
+    }).catch(err => {
+      loaderStore.setLoader(false);
+      console.log(err)
+    });
   }
 
   const getRoute = (routeName) => {

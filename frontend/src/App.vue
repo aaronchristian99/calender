@@ -2,9 +2,15 @@
   import { RouterView, useRoute, useRouter } from 'vue-router'
   import Button from "@/components/Button.vue";
   import axios from "axios";
+  import Spinner from "@/components/Spinner.vue";
+  import {useLoaderStore} from "@/stores/loader.js";
+  import {useMessageStore} from "@/stores/message.js";
+  import Message from "@/components/Message.vue";
 
   const route = useRoute();
   const router = useRouter();
+  const loaderStore = useLoaderStore();
+  const messageStore = useMessageStore();
 
   const logout = async () => {
     const response = await axios.get('/api/logout')
@@ -16,6 +22,10 @@
       }
     }
   }
+
+  const closeMessage = () => {
+    messageStore.setMessage(null);
+  }
 </script>
 
 <template>
@@ -26,6 +36,8 @@
       </Button>
     </nav>
   </header>
+  <Spinner v-if="loaderStore.load" />
+  <Message :message="messageStore.message" @close-message="closeMessage" />
   <RouterView />
 </template>
 

@@ -35,13 +35,19 @@
   import Button from "@/components/Button.vue";
   import Input from "@/components/Input.vue";
   import logo from "@/assets/kronos.svg";
+  import {useLoaderStore} from "@/stores/loader.js";
+  import {useMessageStore} from "@/stores/message.js";
 
   const username = ref("");
   const password = ref("");
+  const loaderStore = useLoaderStore();
+  const messageStore = useMessageStore();
   const router = useRouter();
 
   const submitForm = async (e) => {
     e.preventDefault();
+
+    loaderStore.setLoader(true);
 
     await axios.post("/api/login", {
       username: username.value,
@@ -49,11 +55,14 @@
     }).then((res) => {
       if(res.status === 200) {
         if(res.data.user) {
+          loaderStore.setLoader(false);
+          messageStore.setMessage(res.data.message);
           localStorage.setItem("user", JSON.stringify(res.data.user));
           router.push({ name: 'calendar' });
         }
       }
     }).catch((err) => {
+      loaderStore.setLoader(false);
       console.log(err);
     });
   }

@@ -15,6 +15,8 @@
   import Multiselect from "vue-multiselect";
   import "ckeditor5/ckeditor5.css";
   import "vue-multiselect/dist/vue-multiselect.min.css";
+  import {useLoaderStore} from "@/stores/loader.js";
+  import {useMessageStore} from "@/stores/message.js";
 
   const props = defineProps({
     isVisible: Boolean,
@@ -179,9 +181,8 @@
     collaborators: []
   });
   const users = ref([]);
-  const message = ref('');
-  let loading = ref('false');
-  let success = ref('false');
+  const loaderStore = useLoaderStore();
+  const messageStore = useMessageStore();
 
   onMounted(async () => {
     isLayoutReady.value = true;
@@ -251,6 +252,8 @@
       }
     }
 
+    loaderStore.setLoader(true);
+
     await axios.post(url, {
       title: event.value.title,
       description: event.value.description,
@@ -264,9 +267,9 @@
     }, {
       headers: headers
     }).then((res) => {
-      loading.value = true;
       if(res.status === 200) {
-        loading.value = false;
+        loaderStore.setLoader(false);
+        messageStore.setMessage(res.data.message);
         event.value = {
           title: '',
           location: '',
@@ -276,13 +279,11 @@
           file: null,
           collaborators: []
         };
-        success.value = true;
-        message.value = 'Event is successfully created!';
         emit('update-events', res.data.event);
         close();
       }
     }). catch(error => {
-      loading.value = false;
+      loaderStore.setLoader(false);
       console.log(error);
     });
   }
