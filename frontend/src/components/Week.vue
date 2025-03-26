@@ -82,11 +82,10 @@ export default {
     this.generateWeek();
   },
   methods: {
-    generateWeek(date = null) {
-      const targetDate = date !== null ? new Date(date) : this.currentDate;
-      const startOfWeek = targetDate.getDate() - targetDate.getDay();
-      const targetYear = targetDate.getFullYear();
-      const targetMonth = targetDate.getMonth();
+    generateWeek(date = this.today) {
+      const startOfWeek = date.getDate() - date.getDay();
+      const targetYear = date.getFullYear();
+      const targetMonth = date.getMonth();
 
       this.calendar = [];
       
@@ -95,7 +94,7 @@ export default {
         this.calendar.push(day);
       }
 
-      this.currentDate = new Date(targetYear, targetMonth, targetDate.getDate());
+      this.currentDate = new Date(targetYear, targetMonth, date.getDate());
 
       this.startOfWeek = this.calendar[0];
       this.endOfWeek = this.calendar[6]; 
