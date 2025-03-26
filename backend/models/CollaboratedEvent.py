@@ -26,4 +26,18 @@ class CollaboratedEvent(Base):
     @classmethod
     def delete_by_event(cls, event_id):
         deleteEvent = db_session.query(cls).filter_by(event_id=event_id).all()
-        db_session.delete(deleteEvent)
+
+        for event in deleteEvent:
+            db_session.delete(event)
+
+    @classmethod
+    def get_by_event(cls, event_id):
+        users = db_session.query(cls).filter_by(event_id=event_id).all()
+        return [user.to_dict() for user in users]
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'event_id': self.event_id,
+            'user_id': self.user_id,
+        }

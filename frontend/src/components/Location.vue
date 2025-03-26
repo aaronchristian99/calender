@@ -8,7 +8,7 @@
   const props = defineProps({
     modelValue: String
   });
-  const searchQuery = ref('');
+  const searchQuery = ref(props.modelValue || '');
   const options = ref([]);
   const isOpen = ref(false);
 
