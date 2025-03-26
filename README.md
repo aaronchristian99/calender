@@ -47,7 +47,7 @@ To develop frontend separately:
 ``` 
 cd frontend
 ```
--Run the development server:
+- Run the development server:
 ```
 npm run dev
 ```
@@ -55,3 +55,12 @@ npm run dev
 
 **If running on windows platform, ensure script.sh has line endings with 'LF' than 'CRLF'. You can manually convert it 
 by using Intellij, visual code, notepad++ or any IDE**
+
+## Bug Reports
+- Go to [Issues](https://github.com/aaronchristian99/calender/issues)
+- Click 'New Issue'
+- The title should sufficiently summarize the bug
+  - eg. "Adding event crashes program"
+- The description should include
+  - A descriptive guide to reproduce the bug
+  - Any extra details to narrow the source of the bug
