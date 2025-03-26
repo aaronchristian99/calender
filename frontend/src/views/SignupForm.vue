@@ -4,6 +4,7 @@
   import axios from "axios";
   import Input from "../components/Input.vue";
   import Button from "../components/Button.vue";
+  import kronos from "@/assets/kronos_signup.webp";
 
   const firstName = ref('');
   const lastName = ref('');
@@ -40,7 +41,8 @@
     <article class="container flex flex-row align-center">
       <section class="bg-black w-50 h-full p-4 flex flex-column justify-center align-center">
         <h1>Sign up now</h1>
-        <h3 class="mb-4 text-light-violet">Let the Cronos get you through the day!</h3>
+        <h3 class="text-light-violet">Kronos: Master Your Time, Embrace the Golden Age.</h3>
+        <p class="mb-4"><i>Inspired by the god of time and the mythical golden era he ruled</i></p>
         <form class="form-container mx-auto max-w-365">
           <Input v-model="firstName" type="text" placeholder="First name" />
           <Input v-model="lastName" type="text" placeholder="Last name" />
@@ -56,13 +58,20 @@
           </div>
         </form>
       </section>
-      <section class="bg-violet w-50 h-full">
-        <!-- LOGO goes here -->
+      <section class="flex justify-center align-center bg-violet w-50 h-full">
+        <img :src="kronos" class="image" alt="kronos" />
       </section>
     </article>
   </main>
 </template>
 
 <style scoped>
-
+  h3 {
+    text-align: center;
+  }
+  .image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
 </style>

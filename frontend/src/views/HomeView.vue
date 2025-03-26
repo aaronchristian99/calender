@@ -1,8 +1,12 @@
 <template>
   <main>
     <article class="container flex flex-row align-center">
-      <section class="bg-violet w-50 h-full">
-        <!-- LOGO goes here -->
+      <section class=" flex flex-column justify-center align-center bg-violet w-50 h-full">
+        <div>
+          <object class="logo" type="image/svg+xml" :data="logo"></object>
+        </div>
+        <h1>Kronos</h1>
+        <h4><i>Master Your Time, Embrace the Golden Age.</i></h4>
       </section>
       <section class="bg-black w-50 flex flex-column justify-center align-center h-full">
         <h1 class="mb-4">Sign In</h1>
@@ -30,6 +34,7 @@
   import axios from "axios";
   import Button from "@/components/Button.vue";
   import Input from "@/components/Input.vue";
+  import logo from "@/assets/kronos.svg";
 
   const username = ref("");
   const password = ref("");
@@ -55,5 +60,8 @@
 </script>
 
 <style scoped>
-
+  .logo {
+    width: clamp(15rem, 5vw, 20rem);
+    height: clamp(15rem, 5vw, 20rem);
+  }
 </style>
