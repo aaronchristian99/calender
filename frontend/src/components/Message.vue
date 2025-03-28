@@ -16,7 +16,7 @@
 </script>
 
 <template>
-  <div class="message-container flex justify-start align-center">
+  <div class="message-container flex justify-start align-center" v-if="message">
     <p class="message"> {{ message }} </p>
     <span class="close-message" @click="emit('close-message')">
       <font-awesome-icon icon="xmark" />

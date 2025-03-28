@@ -20,9 +20,6 @@ services:
       - "5000:5000"
     volumes:
       - ./backend:/app
-    environment:
-      - PYTHON_ENV=${ENVIRONMENT}
-      - DATABASE_URL=${DB_URL}
     depends_on:
       - mysql
 
@@ -30,10 +27,10 @@ services:
     container_name: mysql
     image: mysql:latest
     environment:
-      MYSQL_DATABASE: calender
-      MYSQL_USER: hjmram
-      MYSQL_PASSWORD: j62£6O40{6^1
-      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
     ports:
       - "3306:3306"
     volumes:

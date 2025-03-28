@@ -17,6 +17,7 @@
   import "vue-multiselect/dist/vue-multiselect.min.css";
   import {useLoaderStore} from "@/stores/loader.js";
   import {useMessageStore} from "@/stores/message.js";
+  import {useUserStore} from "@/stores/user.js";
 
   const props = defineProps({
     isVisible: Boolean,
@@ -183,6 +184,8 @@
   const users = ref([]);
   const loaderStore = useLoaderStore();
   const messageStore = useMessageStore();
+  const userStore = useUserStore();
+  const user = userStore.getUser();
 
   onMounted(async () => {
     isLayoutReady.value = true;
@@ -221,7 +224,7 @@
     const response = await axios.get('/api/users');
 
     if(response && response.status === 200) {
-      return response.data.users.filter(user => user.id !== JSON.parse(localStorage.getItem('user')).id).map(user => {
+      return response.data.users.filter(u => u.id !== user.id).map(user => {
         return {
           key: user.id,
           value: `${user.first_name} ${user.last_name}`
@@ -263,7 +266,7 @@
       type: event.value.type,
       collaborated_users: event.value.collaborators,
       file: event.value.file,
-      created_by: JSON.parse(localStorage.getItem('user')).id
+      created_by: user.id
     }, {
       headers: headers
     }).then((res) => {

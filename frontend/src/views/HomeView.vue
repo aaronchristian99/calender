@@ -35,13 +35,15 @@
   import Button from "@/components/Button.vue";
   import Input from "@/components/Input.vue";
   import logo from "@/assets/kronos.svg";
-  import {useLoaderStore} from "@/stores/loader.js";
-  import {useMessageStore} from "@/stores/message.js";
+  import { useLoaderStore } from "@/stores/loader.js";
+  import { useMessageStore } from "@/stores/message.js";
+  import { useUserStore } from "@/stores/user.js";
 
   const username = ref("");
   const password = ref("");
   const loaderStore = useLoaderStore();
   const messageStore = useMessageStore();
+  const userStore = useUserStore();
   const router = useRouter();
 
   const submitForm = async (e) => {
@@ -57,7 +59,7 @@
         if(res.data.user) {
           loaderStore.setLoader(false);
           messageStore.setMessage(res.data.message);
-          localStorage.setItem("user", JSON.stringify(res.data.user));
+          userStore.setUser(res.data.user);
           router.push({ name: 'calendar' });
         }
       }

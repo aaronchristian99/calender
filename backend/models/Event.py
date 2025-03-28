@@ -2,7 +2,7 @@ from sqlalchemy import Column, Integer, String, DateTime, Text, ForeignKey
 from models.PrivateEvent import PrivateEvent
 from models.PublicEvent import PublicEvent
 from models.CollaboratedEvent import CollaboratedEvent
-from database import Base, db_session
+from config.database import Base, db_session
 import datetime
 
 

@@ -17,7 +17,7 @@
 
     if (response && response.status === 200){
       if(response.data.success){
-        localStorage.removeItem("user");
+        messageStore.setMessage(null);
         await router.push({name: 'home'});
       }
     }
@@ -37,7 +37,7 @@
     </nav>
   </header>
   <Spinner v-if="loaderStore.load" />
-  <Message :message="messageStore.message" @close-message="closeMessage" />
+  <Message :message="messageStore.message" @close-message="closeMessage" v-if="messageStore.message" />
   <RouterView />
 </template>
 

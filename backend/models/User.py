@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Integer, String, DateTime
-from database import Base, db_session
+from config.database import Base, db_session
 import datetime
 import bcrypt
 

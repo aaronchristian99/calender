@@ -1,13 +1,15 @@
 <script setup>
-  import { ref, defineProps, defineEmits } from "vue";
+  import { defineProps, defineEmits } from "vue";
   import Button from "@/components/Button.vue";
+  import { useUserStore } from "@/stores/user.js";
 
   const props = defineProps({
     event: Object,
     isVisible: Boolean
   });
   const emit = defineEmits(['toggle-view', 'toggle-edit']);
-  const user = ref(JSON.parse(localStorage.getItem("user")));
+  const userStore = useUserStore();
+  const user = userStore.getUser();
 
   const close = () => {
     emit('toggle-view', null); // Emit toggle-view event to close the view

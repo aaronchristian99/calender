@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Integer, ForeignKey
-from database import Base, db_session
+from config.database import Base, db_session
 
 class PrivateEvent(Base):
     __tablename__ = 'private_events'

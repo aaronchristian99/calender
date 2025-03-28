@@ -4,7 +4,7 @@ from models.PublicEvent import PublicEvent
 from models.CollaboratedEvent import CollaboratedEvent
 from collections import Counter
 from flask import jsonify, session, flash
-from database import db_session
+from config.database import db_session
 import os
 import PyPDF2
 import traceback

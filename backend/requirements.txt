@@ -7,3 +7,5 @@ alembic
 python-dotenv
 bcrypt
 PyPDF2
+psycopg2-binary
+pyodbc
