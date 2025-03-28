@@ -2,12 +2,13 @@
 export default {
   name: "Month",
   props: {
-    events: Array
+    events: Array,
+    date: Date
   },
   data() {
     return {
       currentDate: new Date(),
-      days: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+      days: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
       calendar: [],
     }
   },
@@ -16,34 +17,49 @@ export default {
   },
   methods: {
     generateCalendar(year = null, month = null) {
-      const targetYear = year !== null ? year : this.currentDate.getFullYear();
-      const targetMonth = month !== null ? month : this.currentDate.getMonth();
+      const targetYear = year ?? this.currentDate.getFullYear();
+      const targetMonth = month ?? this.currentDate.getMonth();
+
       const firstDayOfMonth = new Date(targetYear, targetMonth, 1);
       const lastDayOfMonth = new Date(targetYear, targetMonth + 1, 0);
-      const firstDayOfWeek = firstDayOfMonth.getDay();
+
+      const firstDayOfWeek = firstDayOfMonth.getDay(); // Day index (0 - Sunday, 6 - Saturday)
       const totalDays = lastDayOfMonth.getDate();
-      const totalCells = Math.ceil((firstDayOfWeek + totalDays) / 7) * 7;
 
       this.calendar = [];
 
-      // Fill empty spaces before first day of the month
-      for (let i = 0; i < firstDayOfWeek; i++) {
-        this.calendar.push(null);
+      // Helper function to format the date
+      const formatDate = (date) => {
+        const options = { month: "short", day: "numeric" };
+        return date.toLocaleDateString("en-US", options);
+      };
+
+      // Fill previous month's days only if needed
+      if (firstDayOfWeek > 0) {
+        const prevMonthLastDate = new Date(targetYear, targetMonth, 0).getDate();
+        for (let i = firstDayOfWeek - 1; i >= 0; i--) {
+          const prevDate = new Date(targetYear, targetMonth - 1, prevMonthLastDate - i);
+          this.calendar.push({ date: prevDate, label: prevDate.getDate(), isOtherMonth: true });
+        }
       }
 
-      // Fill actual days of the month
-      let tempDate = new Date(firstDayOfMonth);
-      while (tempDate <= lastDayOfMonth) {
-        this.calendar.push(new Date(tempDate));
-        tempDate.setDate(tempDate.getDate() + 1);
+      // Fill current month days
+      for (let i = 1; i <= totalDays; i++) {
+        const currDate = new Date(targetYear, targetMonth, i);
+        const label = i === 1 ? formatDate(currDate) : i;
+        this.calendar.push({ date: currDate, label, isOtherMonth: false });
       }
 
-      // Fill empty spaces after last day of the month
-      while (this.calendar.length < totalCells) {
-        this.calendar.push(null);
-      }
+      // Determine if we need extra rows to complete the last week
+      const totalCells = this.calendar.length;
+      const remainingCells = totalCells % 7 !== 0 ? 7 - (totalCells % 7) : 0;
 
-      this.currentDate = new Date(targetYear, targetMonth, this.currentDate.getDate());
+      // Fill next month's days only if required to complete the last week
+      for (let i = 1; i <= remainingCells; i++) {
+        const nextDate = new Date(targetYear, targetMonth + 1, i);
+        const label = i === 1 ? formatDate(nextDate) : i;
+        this.calendar.push({ date: nextDate, label, isOtherMonth: true });
+      }
     },
     isToday(date) {
       return date.getDate() === this.currentDate.getDate() &&
@@ -61,40 +77,49 @@ export default {
       });
     }
   },
+  watch: {
+    date(newDate) {
+      const changedDate = new Date(newDate);
+      this.generateCalendar(changedDate.getFullYear(), changedDate.getMonth());
+    }
+  }
 }
 </script>
 
 <template>
-  <div v-for="day in days" :key="day" class="day-header">{{ day }}</div>
+  <div v-for="(day, index) in days"
+       :key="day"
+       class="day-header"
+       :class="{ 'no-border-right': (index + 1) % 7 === 0 }">
+    {{ day }}
+  </div>
   <div v-for="(date, index) in calendar"
        :key="index"
-       class="calendar-cell"
+       class="calendar-cell flex justify-center"
        :class="{
              'no-border-right': (index + 1) % 7 === 0,
              'no-border-bottom': index >= calendar.length - 7,
-             'today': date && isToday(date)
            }">
-    <p class="date-number" v-if="date">{{ date.getDate() }}</p>
-    <div v-for="event in getEventsForDate(date)"
+    <p class="date-number flex justify-center align-center" :class="{ 'today': date && isToday(date.date)}" v-if="date">
+      {{ date.label }}
+    </p>
+    <div v-for="event in getEventsForDate(date.date)"
          :key="event.id"
-         class="event-badge"
+         class="event-badge flex justify-start gap-2"
          @click="$emit('toggle-view', event.id)">
-      <p>
-        {{ event.title }}
-      </p>
+      <div class="dot"></div>
+      <p>{{ event.title }}</p>
     </div>
   </div>
 </template>
 
 <style scoped>
   .day-header {
-    font-size: 1.2rem;
+    font-size: 1rem;
     text-align: center;
-    font-weight: 700;
-    color: var(--color-white);
+    font-weight: 400;
+    color: var(--color-light-grey);
     border-right: 1px solid var(--color-light-grey);
-    border-bottom: 1px solid var(--color-light-grey);
-    padding: 0.8rem;
   }
   .day-header:last-child {
     border-right: none;
@@ -102,8 +127,8 @@ export default {
   .calendar-cell {
     border-right: 1px solid var(--color-light-grey);
     border-bottom: 1px solid var(--color-light-grey);
-    padding: 10px;
-    min-height: 120px;
+    padding: 5px 10px;
+    min-height: 150px;
     position: relative;
   }
   .no-border-right {
@@ -128,5 +153,19 @@ export default {
   .today {
     background-color: var(--color-violet);
     color: var(--color-white);
+  }
+  .date-number {
+    min-width: 2rem;
+    width: max-content;
+    height: 2rem;
+    border-radius: 50%;
+    margin-top: 3px;
+    margin-bottom: 3px;
+  }
+  .dot {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background-color: var(--color-light-violet);
   }
 </style>

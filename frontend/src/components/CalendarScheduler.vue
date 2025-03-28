@@ -19,7 +19,7 @@
       </div>
       <div class="flex flex-row justify-start align-center gap-2">
         <div class="select-wrapper">
-          <select v-model="view" @change="changeView">
+          <select v-model="view">
             <option value="day">Day</option>
             <option value="week">Week</option>
             <option value="month">Month</option>
@@ -30,9 +30,9 @@
       </div>
     </div>
     <div :class="`calendar ${view}`">
-      <Day v-if="view === 'day'" :events="events" />
-      <Month v-if="view === 'month'" :events="events" />
-      <Year v-if="view === 'year'" :events="events" />
+      <Day v-if="view === 'day'" :events="events" :date="currentDate" />
+      <Month v-if="view === 'month'" :events="events" :date="currentDate" />
+      <Year v-if="view === 'year'" :events="events" :date="currentDate" />
     </div>
   </div>
 </template>
@@ -60,26 +60,45 @@
     },
     methods: {
       previousPeriod() {
-        let newMonth = this.currentDate.getMonth() - 1;
-        let newYear = this.currentDate.getFullYear();
+        let newDate = new Date(this.currentDate);
 
-        if (newMonth < 0) {
-          newMonth = 11;
-          newYear -= 1;
+        switch (this.view) {
+          case 'day':
+            newDate.setDate(newDate.getDate() - 1);
+            break;
+          case 'week':
+            newDate.setDate(newDate.getDate() - 7);
+            break;
+          case 'month':
+            newDate.setMonth(newDate.getMonth() - 1);
+            break;
+          case 'year':
+            newDate.setFullYear(newDate.getFullYear() - 1);
+            break;
         }
 
-        this.generateCalendar(newYear, newMonth);
+        this.currentDate = newDate;
       },
-      nextPeriod() {
-        let newMonth = this.currentDate.getMonth() + 1;
-        let newYear = this.currentDate.getFullYear();
 
-        if (newMonth > 11) {
-          newMonth = 0;
-          newYear += 1;
+      nextPeriod() {
+        let newDate = new Date(this.currentDate);
+
+        switch (this.view) {
+          case 'day':
+            newDate.setDate(newDate.getDate() + 1);
+            break;
+          case 'week':
+            newDate.setDate(newDate.getDate() + 7);
+            break;
+          case 'month':
+            newDate.setMonth(newDate.getMonth() + 1);
+            break;
+          case 'year':
+            newDate.setFullYear(newDate.getFullYear() + 1);
+            break;
         }
 
-        this.generateCalendar(newYear, newMonth);
+        this.currentDate = newDate;
       },
       goToToday() {
         const today = new Date();

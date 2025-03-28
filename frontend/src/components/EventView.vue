@@ -9,7 +9,7 @@
   });
   const emit = defineEmits(['toggle-view', 'toggle-edit']);
   const userStore = useUserStore();
-  const user = userStore.getUser();
+  const user = userStore.getUser;
 
   const close = () => {
     emit('toggle-view', null); // Emit toggle-view event to close the view

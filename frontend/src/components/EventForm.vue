@@ -185,7 +185,7 @@
   const loaderStore = useLoaderStore();
   const messageStore = useMessageStore();
   const userStore = useUserStore();
-  const user = userStore.getUser();
+  const user = userStore.getUser;
 
   onMounted(async () => {
     isLayoutReady.value = true;

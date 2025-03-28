@@ -1,11 +1,18 @@
 <template>
   <div class="day-view">
     <div class="schedule-column">
+      <div class="date-wrapper">
+        <p class="text-center" :class="{ 'today-text': isToday }">{{ days[currentTime.getDay()] }}</p>
+        <h3 class="flex justify-center align-center"
+            :class="{ 'today-background': isToday }">
+          {{ currentTime.getDate() }}
+        </h3>
+      </div>
       <div v-for="hour in hours" :key="hour" class="schedule-slot">
         <p class="hour-label">{{ formatHour(hour) }}</p>
         <div class="grid-line"></div>
       </div>
-      <div class="current-time-line" :style="currentTimeStyle">
+      <div class="current-time-line" :style="currentTimeStyle" v-if="isToday">
         <div class="dot"></div>
         <div class="short-line"></div>
       </div>
@@ -20,12 +27,14 @@
 export default {
   name: 'Day',
   props: {
-    events: Array
+    events: Array,
+    date: Date
   },
   data() {
     return {
       hours: Array.from({ length: 24 }, (_, i) => i),
       currentTime: new Date(),
+      days: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
     };
   },
   computed: {
@@ -35,7 +44,7 @@ export default {
       const percentage = (totalMinutes / (24 * 60)) * 100;
       return { top: `${percentage}%` };
     },
-    eventStyle(event) {
+    eventStyle() {
       return (event) => {
         const start = new Date(event.startTime);
         const end = new Date(event.endTime);
@@ -48,6 +57,12 @@ export default {
           height: `${height}%`,
         };
       };
+    },
+    isToday() {
+      const today = new Date();
+      return today.getFullYear() === this.currentTime.getFullYear() &&
+            today.getMonth() === this.currentTime.getMonth() &&
+            today.getDate() === this.currentTime.getDate();
     }
   },
   mounted() {
@@ -64,6 +79,11 @@ export default {
       return `${formattedHour} ${period}`;
     },
   },
+  watch: {
+    date(newDate) {
+      this.currentTime = new Date(newDate);
+    }
+  }
 };
 </script>
 
@@ -137,5 +157,28 @@ export default {
     border-radius: 4px;
     font-size: 14px;
     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+  }
+
+  .date-wrapper {
+    width: max-content;
+    min-width: 3.5rem;
+    height: 3.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .text-center {
+    text-align: center;
+  }
+
+  .today-text {
+    color: var(--color-violet);
+  }
+
+  .today-background {
+    width: 100%;
+    height: 100%;
+    background-color: var(--color-violet);
+    color: var(--color-white);
+    border-radius: 50%;
   }
 </style>
