@@ -28,13 +28,13 @@ export default {
   name: 'Day',
   props: {
     events: Array,
-    date: Date
+    date: Date,
+    days: Array
   },
   data() {
     return {
       hours: Array.from({ length: 24 }, (_, i) => i),
-      currentTime: new Date(),
-      days: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+      currentTime: new Date()
     };
   },
   computed: {

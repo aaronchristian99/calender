@@ -3,12 +3,12 @@ export default {
   name: "Month",
   props: {
     events: Array,
-    date: Date
+    date: Date,
+    days: Array
   },
   data() {
     return {
       currentDate: new Date(),
-      days: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
       calendar: [],
     }
   },

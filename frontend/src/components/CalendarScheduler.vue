@@ -30,9 +30,9 @@
       </div>
     </div>
     <div :class="`calendar ${view}`">
-      <Day v-if="view === 'day'" :events="events" :date="currentDate" />
-      <Month v-if="view === 'month'" :events="events" :date="currentDate" />
-      <Year v-if="view === 'year'" :events="events" :date="currentDate" />
+      <Day v-if="view === 'day'" :events="events" :date="currentDate" :days="days" />
+      <Month v-if="view === 'month'" :events="events" :date="currentDate" :days="days" />
+      <Year v-if="view === 'year'" :events="events" :date="currentDate" :days="days" />
     </div>
   </div>
 </template>
@@ -55,7 +55,8 @@
       return {
         selectedDate: null,
         view: 'month',
-        currentDate: new Date()
+        currentDate: new Date(),
+        days: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
       };
     },
     methods: {
