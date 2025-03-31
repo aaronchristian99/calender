@@ -1,6 +1,7 @@
 # Calendar Application
 
 ## Requirements
+**Works on all operating systems as long as all dependecies are installed**
 - **Podman**  
   [Installation Guide](https://podman.io/docs/installation)
 
@@ -18,6 +19,7 @@ Before running the application make sure that Podman and Podman Compose are inst
 
 **_If you get this error `podman-compose not found in %PATH` please install `podman-compose` binary library._**
 
+**_If using Docker replace all commands with 'docker' instead of 'podman'_**
 1. Run:
    ```
    podman compose build --no-cache
@@ -47,7 +49,7 @@ To develop frontend separately:
 ``` 
 cd frontend
 ```
--Run the development server:
+- Run the development server:
 ```
 npm run dev
 ```
@@ -55,3 +57,12 @@ npm run dev
 
 **If running on windows platform, ensure script.sh has line endings with 'LF' than 'CRLF'. You can manually convert it 
 by using Intellij, visual code, notepad++ or any IDE**
+
+## Bug Reports
+- Go to [Issues](https://github.com/aaronchristian99/calender/issues)
+- Click 'New Issue'
+- The title should sufficiently summarize the bug
+  - eg. "Adding event crashes program"
+- The description should include
+  - A descriptive guide to reproduce the bug
+  - Any extra details to narrow the source of the bug
