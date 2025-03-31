@@ -295,75 +295,73 @@
 <template>
   <Transition name="slide">
     <section v-if="isVisible" class="form-container">
-      <template v-if="success">
-        <Button class="p-4 icon-button" type="button" @click="close" colour="bg-violet" text-color="white">
-          <font-awesome-icon icon="xmark" />
-        </Button>
-        <form>
-          <Input v-model="event.title" type="text" placeholder="Title" :required="true" />
-          <Location v-model="event.location" placeholder="Location" />
-          <div class="input-type-wrapper flex flex-row justify-start align-center gap-4">
-            <div class="flex flex-row justify-start align-center gap-2">
-              <Input name="type" v-model="event.type" type="radio" value="private" :required="true" />
-              <label for="private-type">Private</label>
-            </div>
-            <div class="flex flex-row justify-start align-center gap-2">
-              <Input name="type" v-model="event.type" type="radio" value="public" :required="true" />
-              <label for="public-type">Public</label>
-            </div>
+      <Button class="p-4 icon-button" type="button" @click="close" colour="bg-violet" text-color="white">
+        <font-awesome-icon icon="xmark" />
+      </Button>
+      <form>
+        <Input v-model="event.title" type="text" placeholder="Title" :required="true" />
+        <Location v-model="event.location" placeholder="Location" />
+        <div class="input-type-wrapper flex flex-row justify-start align-center gap-4">
+          <div class="flex flex-row justify-start align-center gap-2">
+            <Input name="type" v-model="event.type" type="radio" value="private" :required="true" />
+            <label for="private-type">Private</label>
           </div>
-          <VueDatePicker v-model="event.date"
-                         range
-                         dark
-                         position="left"
-                         auto-position="bottom"
-                         :clearable="true"
-                         :enable-time-picker="true"
-                         :auto-apply="true"
-                         :text-input="false"
-                         placeholder="Select the dates"
-                         :ui="{
+          <div class="flex flex-row justify-start align-center gap-2">
+            <Input name="type" v-model="event.type" type="radio" value="public" :required="true" />
+            <label for="public-type">Public</label>
+          </div>
+        </div>
+        <VueDatePicker v-model="event.date"
+                       range
+                       dark
+                       position="left"
+                       auto-position="bottom"
+                       :clearable="true"
+                       :enable-time-picker="true"
+                       :auto-apply="true"
+                       :text-input="false"
+                       placeholder="Select the dates"
+                       :ui="{
                          input: 'date-input',
                          calendarCell: 'date-calendar-cell'
                        }" />
-          <div class="main-container">
-            <div class="editor-container editor-container_classic-editor editor-container_include-word-count" ref="editorContainerElement">
-              <div class="editor-container__editor">
-                <div ref="editorElement">
-                  <ckeditor v-if="editor && config" v-model="event.description" :editor="editor" :config="config" @ready="onReady" />
-                </div>
+        <div class="main-container">
+          <div class="editor-container editor-container_classic-editor editor-container_include-word-count" ref="editorContainerElement">
+            <div class="editor-container__editor">
+              <div ref="editorElement">
+                <ckeditor v-if="editor && config" v-model="event.description" :editor="editor" :config="config" @ready="onReady" />
               </div>
-              <div class="editor_container__word-count" ref="editorWordCountElement"></div>
             </div>
+            <div class="editor_container__word-count" ref="editorWordCountElement"></div>
           </div>
-          <Input v-if="!props.event"
-                 type="file"
-                 accept=".pdf"
-                 placeholder="Upload PDF"
-                 @change="addFile" />
-          <Multiselect v-model="event.collaborators"
-                       class="multiselect"
-                       :multiple="true"
-                       :options="users"
-                       placeholder="Share event with user"
-                       openDirection="below"
-                       label="value"
-                       track-by="key"
-                       :required="true"
-                       :searchable="true"
-                       :preserve-search="true"
-                       :close-on-select="false"
-                       :clear-on-select="false">
-          </Multiselect>
-          <Button class="mt-4 ml-auto mr-0"
-                  type="button"
-                  colour="bg-violet"
-                  text-color="white"
-                  @click="submitForm">
-            Submit
-          </Button>
-        </form>
-      </template>
+        </div>
+        <Input v-if="!props.event"
+               type="file"
+               accept=".pdf"
+               placeholder="Upload PDF"
+               @change="addFile" />
+        <Multiselect v-model="event.collaborators"
+                     class="multiselect"
+                     :multiple="true"
+                     :options="users"
+                     placeholder="Share event with user"
+                     openDirection="below"
+                     label="value"
+                     track-by="key"
+                     :required="true"
+                     :searchable="true"
+                     :preserve-search="true"
+                     :close-on-select="false"
+                     :clear-on-select="false">
+        </Multiselect>
+        <Button class="mt-4 ml-auto mr-0"
+                type="button"
+                colour="bg-violet"
+                text-color="white"
+                @click="submitForm">
+          Submit
+        </Button>
+      </form>
     </section>
   </Transition>
 </template>

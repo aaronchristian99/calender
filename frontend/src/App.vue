@@ -41,7 +41,9 @@
     </nav>
   </header>
   <Spinner v-if="loaderStore.load" />
-  <Message :message="messageStore.message" @close-message="closeMessage" v-if="messageStore.message" />
+  <Transition>
+    <Message :message="messageStore.message" @close-message="closeMessage" v-if="messageStore.message" />
+  </Transition>
   <RouterView />
 </template>
 
@@ -55,5 +57,15 @@
     display: flex;
     width: 50px;
     height: 50px;
+  }
+
+  .v-enter-active,
+  .v-leave-active {
+    transition: opacity 0.5s ease;
+  }
+
+  .v-enter-from,
+  .v-leave-to {
+    opacity: 0;
   }
 </style>

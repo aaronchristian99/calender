@@ -36,6 +36,7 @@
     background: var(--color-light-violet);
     border-radius: 100px;
     padding: 0.75rem 1rem;
+    z-index: 1;
   }
   .message {
     color: var(--color-black);
