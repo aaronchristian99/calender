@@ -8,8 +8,10 @@
 
 <style scoped>
   .spinner-container {
-    position: relative;
-    background: rgba(28, 19, 36, 0.5);
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: rgba(28, 19, 36, 0.85);
     width: 100%;
     height: 100%;
   }

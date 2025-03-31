@@ -10,13 +10,13 @@
     if (newMessage && newMessage.trim() !== '') {
       setTimeout(() => {
         emit('close-message');
-      }, 5000);
+      }, 2000);
     }
   });
 </script>
 
 <template>
-  <div class="message-container flex justify-start align-center" v-if="message">
+  <div class="message-container flex justify-between align-center" v-if="message">
     <p class="message"> {{ message }} </p>
     <span class="close-message" @click="emit('close-message')">
       <font-awesome-icon icon="xmark" />
@@ -43,5 +43,8 @@
   .close-message {
     color: var(--color-black);
     margin-left: 0;
+  }
+  .close-message:hover {
+    cursor: pointer;
   }
 </style>

@@ -20,9 +20,9 @@ const router = createRouter({
       path: '/calendar',
       name: 'calendar',
       component: CalendarView,
-      // beforeEnter: () => {
-      //   return !!localStorage.getItem('user');
-      // }
+      beforeEnter: () => {
+        return !!localStorage.getItem('user');
+      }
     }
   ],
 })

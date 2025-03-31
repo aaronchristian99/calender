@@ -1,6 +1,6 @@
 <template>
   <main>
-    <article class="container flex flex-row align-center">
+    <article class="container h-full flex flex-row align-center">
       <section class=" flex flex-column justify-center align-center bg-violet w-50 h-full">
         <div>
           <object class="logo" type="image/svg+xml" :data="logo"></object>
