@@ -103,26 +103,9 @@ export default {
       const period = hour < 12 ? "AM" : "PM";
       const formattedHour = hour % 12 === 0 ? 12 : hour % 12;
       return `${formattedHour} ${period}`;
-    },
+    }
   },
   computed: {
-    currentDate() {
-      const startMonth = this.startOfWeek.getMonth();
-      const endMonth = this.endOfWeek.getMonth();
-      const startYear = this.startOfWeek.getFullYear();
-      const endYear = this.endOfWeek.getFullYear();
-
-      if (startMonth !== endMonth) {
-        const startMonthName = this.startOfWeek.toLocaleString('default', {month: 'long'});
-        const endMonthName = this.endOfWeek.toLocaleString('default', {month: 'long'});
-
-        if (startYear !== endYear) {
-          return `${startMonthName} ${startYear} - ${endMonthName} ${endYear}`;
-        }
-
-        return this.currentDate.toLocaleDateString(undefined, {month: 'long', year: 'numeric'});
-      }
-    },
     currentTimeStyle() {
       const now = new Date();
       const totalMinutes = now.getHours() * 60 + now.getMinutes();

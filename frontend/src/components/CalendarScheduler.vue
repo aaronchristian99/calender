@@ -14,7 +14,7 @@
           </Button>
         </div>
         <div class="current-date">
-          <h3>{{ currentDate }}</h3>
+          <h3>{{ formattedDate }}</h3>
         </div>
       </div>
       <div class="flex flex-row justify-start align-center gap-2">
@@ -30,10 +30,10 @@
       </div>
     </div>
     <div :class="`calendar mt-2 mb-2 ${view}`">
-      <Day v-if="view === 'day'" :events="events" :date="currentDate" :days="days" />
-      <Week v-if="view === 'week'" :events="events" :date="currentDate" :days="days" />
-      <Month v-if="view === 'month'" :events="events" :date="currentDate" :days="days" />
-      <Year v-if="view === 'year'" :events="events" :date="currentDate" :days="days" />
+      <Day v-if="view === 'day'" :events="events" :date="currentDate" :days="days" @toggle-view="toggleView" />
+      <Week v-if="view === 'week'" :events="events" :date="currentDate" :days="days" @toggle-view="toggleView" />
+      <Month v-if="view === 'month'" :events="events" :date="currentDate" :days="days" @toggle-view="toggleView" />
+      <Year v-if="view === 'year'" :events="events" :date="currentDate" :days="days" @toggle-view="toggleView" />
     </div>
   </div>
 </template>
@@ -107,9 +107,12 @@
         const today = new Date();
         this.generateCalendar(today.getFullYear(), today.getMonth());
       },
+      toggleView(eventId) {
+        this.$emit("toggle-view", eventId);
+      }
     },
     computed: {
-      currentDate() {
+      formattedDate() {
         const options = {
           day: 'numeric',
           month: 'long',

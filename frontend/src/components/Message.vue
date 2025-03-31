@@ -1,13 +1,13 @@
 <script setup>
-  import { defineProps, defineEmits, watch } from 'vue';
+  import { defineProps, defineEmits, onMounted } from 'vue';
 
   const props = defineProps({
     message: String
   });
   const emit = defineEmits(['close-message']);
 
-  watch(() => props.message, (newMessage) => {
-    if (newMessage && newMessage.trim() !== '') {
+  onMounted(() => {
+    if (props.message) {
       setTimeout(() => {
         emit('close-message');
       }, 2000);

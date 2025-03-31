@@ -177,5 +177,8 @@ class EventController:
                 repeated_words = [word for word, count in word_frequencies.items() if count > 1]
 
                 return word_count, repeated_words
+        except FileNotFoundError:
+            # Return an empty array for tags if the file is not found
+            return 0, []
         except Exception as e:
             raise

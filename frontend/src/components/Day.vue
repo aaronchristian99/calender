@@ -16,7 +16,11 @@
         <div class="dot"></div>
         <div class="short-line"></div>
       </div>
-      <div v-for="event in getEventsForDate(currentTime)" :key="event.id" class="event" :style="eventStyle(event)">
+      <div v-for="event in getEventsForDate(currentTime)"
+           :key="event.id"
+           class="event"
+           :style="eventStyle(event)"
+           @click="$emit('toggle-view', event.id)">
         <p>{{ event.title }}</p>
       </div>
     </div>
@@ -48,10 +52,15 @@ export default {
       return (event) => {
         const start = new Date(event.startDate);
         const end = new Date(event.endDate);
+        console.log(start.getHours());
         const startMinutes = start.getHours() * 60 + start.getMinutes();
+        console.log('start minutes: ', startMinutes);
         const endMinutes = end.getHours() * 60 + end.getMinutes();
+        console.log('end minutes: ', endMinutes);
         const top = (startMinutes / (24 * 60)) * 100;
         const height = ((endMinutes - startMinutes) / (24 * 60)) * 100;
+        console.log('top: ', top);
+        console.log('height: ', height);
         return {
           top: `calc(${top}% + 70px)`,
           height: `${height}%`,
