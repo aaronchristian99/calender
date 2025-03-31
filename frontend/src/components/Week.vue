@@ -1,53 +1,41 @@
 <template>
-  <div class="calendar-container">
-    <div class="calendar-header flex flex-row justify-between align-center">
-      <div class="flex flex-row justify-start align-center gap-4">
-        <Button type="button" colour="bg-violet" text-color="white" @click="goToToday">
-          Today
-        </Button>
-        <div class="flex flex-row justify-start align-center gap-2">
-          <Button type="button" colour="bg-violet" text-color="white" @click="previousWeek">
-            <font-awesome-icon icon="chevron-left" />
-          </Button>
-          <Button type="button" colour="bg-violet" text-color="white" @click="nextWeek">
-            <font-awesome-icon icon="chevron-right" />
-          </Button>
-        </div>
-        <div class="current-date">
-          <h3>{{ currentDate }}</h3>
-        </div>
-      </div>
-      <div class="flex flex-row justify-start align-center gap-2">
-        <div class="select-wrapper">
-          <select v-model="view" @change="changeView">
-            <option value="day">Day</option>
-            <option value="week">Week</option>
-            <option value="month">Month</option>
-            <option value="year">Year</option>
-          </select>
-          <font-awesome-icon icon="angle-down" class="select-icon" />
-        </div>
+  <div class="week-view">
+    <div class="schedule-column">
+      <div v-for="hour in hours" :key="hour" class="schedule-slot">
+        <p class="hour-label">{{ formatHour(hour) }}</p>
+        <div class="grid-line"></div>
       </div>
     </div>
-    <div :class="`calendar ${view}`">
-      <div v-for="day in days" :key="day" class="day-header">{{ day }}</div>
+    <div class="week-wrapper">
+      <div v-for="(day, index) in days"
+           :key="day"
+           class="day-header"
+           :class="{ 'no-border-right': (index + 1) % 7 === 0 }">
+        {{ day }}
+      </div>
       <div
         v-for="(date, index) in calendar"
         :key="index"
-        class="calendar-cell"
+        class="calendar-cell flex justify-center"
         :class="{
           'no-border-right': (index + 1) % 7 === 0,
-          'no-border-bottom': index >= calendar.length - 7,
-          'today': isToday(date)
+          'no-border-bottom': index >= calendar.length - 7
         }">
-        <p class="date-number" v-if="date">{{ date.getDate() }}</p>
+        <p class="date-number flex justify-center align-center"
+           :class="{ 'today': date && isToday(date) }"
+           v-if="date">
+          {{ date.getDate() }}
+        </p>
+        <div class="current-time-line" :style="currentTimeStyle" v-if="isToday(date)">
+          <div class="dot"></div>
+          <div class="short-line"></div>
+        </div>
         <div v-for="event in getEventsForDate(date)"
              :key="event.id"
-             class="event-badge"
-             @click="$emit('toggle-view', event)">
-          <p>
-            {{ event.title }}
-          </p>
+             class="event-badge flex justify-start gap-2"
+             @click="$emit('toggle-view', event.id)">
+          <div class="dot"></div>
+          <p>{{ event.title }}</p>
         </div>
       </div>
     </div>
@@ -55,40 +43,36 @@
 </template>
 
 <script>
-import Button from "@/components/Button.vue";
-import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
 
 export default {
-  components: {FontAwesomeIcon, Button},
   props: {
     events: {
       type: Array,
       required: true
-    }
+    },
+    days: Array,
+    date: Date,
   },
   data() {
     return {
-      days: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
       calendar: [],
-      selectedDate: null,
-      view: 'week',
       currentDate: new Date(),
-      today: new Date(),
+      hours: Array.from({ length: 24 }, (_, i) => i),
       startOfWeek: new Date(),
-      endOfWeek: new Date(),
+      endOfWeek: new Date()
     };
   },
   created() {
     this.generateWeek();
   },
   methods: {
-    generateWeek(date = this.today) {
+    generateWeek(date = this.currentDate) {
       const startOfWeek = date.getDate() - date.getDay();
       const targetYear = date.getFullYear();
       const targetMonth = date.getMonth();
 
       this.calendar = [];
-      
+
       for (let i = 0; i < 7; i++) {
         const day = new Date(targetYear, targetMonth, startOfWeek + i);
         this.calendar.push(day);
@@ -97,28 +81,12 @@ export default {
       this.currentDate = new Date(targetYear, targetMonth, date.getDate());
 
       this.startOfWeek = this.calendar[0];
-      this.endOfWeek = this.calendar[6]; 
+      this.endOfWeek = this.calendar[6];
     },
     isToday(date) {
-      return date.getDate() === this.today.getDate() &&
-        date.getMonth() === this.today.getMonth() &&
-        date.getFullYear() === this.today.getFullYear();
-    },
-    changeView() {
-      console.log(this.view);
-    },
-    previousWeek() {
-      const newDate = new Date(this.currentDate);
-      newDate.setDate(newDate.getDate() - 7);
-      this.generateWeek(newDate);
-    },
-    nextWeek() {
-      const newDate = new Date(this.currentDate);
-      newDate.setDate(newDate.getDate() + 7);
-      this.generateWeek(newDate);
-    },
-    goToToday() {
-      this.generateWeek();
+      return date.getDate() === this.currentDate.getDate() &&
+        date.getMonth() === this.currentDate.getMonth() &&
+        date.getFullYear() === this.currentDate.getFullYear();
     },
     getEventsForDate(date) {
       if (!date) {
@@ -131,7 +99,12 @@ export default {
           eventDate.getMonth() === date.getMonth() &&
           eventDate.getFullYear() === date.getFullYear();
       });
-    }
+    },
+    formatHour(hour) {
+      const period = hour < 12 ? "AM" : "PM";
+      const formattedHour = hour % 12 === 0 ? 12 : hour % 12;
+      return `${formattedHour} ${period}`;
+    },
   },
   computed: {
     currentDate() {
@@ -141,79 +114,109 @@ export default {
       const endYear = this.endOfWeek.getFullYear();
 
       if (startMonth !== endMonth) {
-        const startMonthName = this.startOfWeek.toLocaleString('default', { month: 'long' });
-        const endMonthName = this.endOfWeek.toLocaleString('default', { month: 'long' });
+        const startMonthName = this.startOfWeek.toLocaleString('default', {month: 'long'});
+        const endMonthName = this.endOfWeek.toLocaleString('default', {month: 'long'});
 
-      if (startYear !== endYear) {
-        return `${startMonthName} ${startYear} - ${endMonthName} ${endYear}`;
+        if (startYear !== endYear) {
+          return `${startMonthName} ${startYear} - ${endMonthName} ${endYear}`;
+        }
+
+        return this.currentDate.toLocaleDateString(undefined, {month: 'long', year: 'numeric'});
       }
-      
-        return `${startMonthName} - ${endMonthName} ${startYear}`;
-      }
-        
-      return this.currentDate.toLocaleDateString(undefined, {month: 'long', year: 'numeric'});
+    },
+    currentTimeStyle() {
+      const now = new Date();
+      const totalMinutes = now.getHours() * 60 + now.getMinutes();
+      const percentage = (totalMinutes / (24 * 60)) * 100;
+      return { top: `calc(${percentage}% + 50px)` };
+    },
+  },
+  watch: {
+    date(newDate) {
+      this.generateWeek(new Date(newDate));
     }
   }
-};
+}
 </script>
 
 <style scoped>
-  .calendar-container {
-    max-width: 75vw;
-    width: 100%;
-    height: 100%;
-    margin: auto;
-    padding: 20px;
+  .week-view {
+    display: flex;
+    flex-flow: row nowrap;
+    overflow-y: auto;
   }
-  .calendar-header {
-    margin: 1rem 0;
-  }
-  .select-wrapper {
+  .schedule-column {
+    width: 50px;
+    display: flex;
+    flex-direction: column;
     position: relative;
-    display: inline-block;
-    width: 100%;
+    margin-top: 50px;
   }
-  .select-wrapper select {
-    width: 100%;
-    padding: 0.75rem 1rem;
-    border-radius: 12px;
-    background-color: var(--color-dark-grey);
-    border: none;
+
+  .schedule-slot {
+    display: flex;
+    align-items: center;
+    position: relative;
+    min-height: 80px;
+  }
+
+  .hour-label {
+    text-align: right;
+    padding-right: 10px;
+    font-size: 12px;
     color: var(--color-light-grey);
-    font-size: 1rem;
-    line-height: 1.5rem;
-    min-height: 58px;
-    appearance: none;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    padding-right: 3rem;
-    cursor: pointer;
   }
-  .select-wrapper .select-icon {
+
+  .current-time-line {
     position: absolute;
-    right: 1rem;
-    top: 50%;
-    transform: translateY(-50%);
-    pointer-events: none;
-    color: var(--color-light-grey);
-    font-size: 1.2rem;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: var(--color-light-violet);
+    display: flex;
+    align-items: center;
+    z-index: 10;
   }
-  .calendar {
+
+  .grid-line {
+    position: absolute;
+    width: calc(100vw - 90px);
+    z-index: 100;
+    right: 0;
+    left: 100%;
+    flex-grow: 1;
+    height: 1px;
+    background: var(--color-light-grey);
+  }
+
+  .short-line {
+    flex-grow: 1;
+    height: 2px;
+    background: var(--color-light-violet);
+  }
+
+  .dot {
+    width: 8px;
+    height: 8px;
+    background: var(--color-light-violet);
+    border-radius: 50%;
+    position: absolute;
+    left: -4px;
+  }
+  .week-wrapper {
+    width: 100%;
     display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    grid-template-rows: max-content 1fr;
     border: 1px solid var(--color-light-grey);
     border-radius: 10px;
   }
-  .calendar.week {
-    grid-template-columns: repeat(7, 1fr);
-  }
   .day-header {
-    font-size: 1.2rem;
+    font-size: 1rem;
     text-align: center;
-    font-weight: 700;
-    color: var(--color-white);
+    font-weight: 400;
+    color: var(--color-light-grey);
     border-right: 1px solid var(--color-light-grey);
-    border-bottom: 1px solid var(--color-light-grey);
-    padding: 0.8rem;
   }
   .day-header:last-child {
     border-right: none;
@@ -221,8 +224,7 @@ export default {
   .calendar-cell {
     border-right: 1px solid var(--color-light-grey);
     border-bottom: 1px solid var(--color-light-grey);
-    padding: 10px;
-    min-height: 120px;
+    padding: 5px 10px;
     position: relative;
   }
   .no-border-right {
@@ -232,13 +234,14 @@ export default {
     border-bottom: none;
   }
   .event-badge {
-    background-color: var(--color-violet);
-    color: var(--color-whitebutton);
+    background-color: var(--color-light-violet);
     padding: 4px 8px;
     border-radius: 5px;
     margin-top: 5px;
     font-size: 0.8rem;
-    text-align: center;
+  }
+  .event-badge p {
+    color: var(--color-black);
   }
   .event-badge:hover {
     cursor: pointer;
@@ -246,5 +249,19 @@ export default {
   .today {
     background-color: var(--color-violet);
     color: var(--color-white);
+  }
+  .date-number {
+    min-width: 2rem;
+    width: max-content;
+    height: 2rem;
+    border-radius: 50%;
+    margin-top: 3px;
+    margin-bottom: 3px;
+  }
+  .dot {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background-color: var(--color-light-violet);
   }
 </style>

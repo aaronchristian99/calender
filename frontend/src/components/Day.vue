@@ -77,7 +77,7 @@ export default {
       const period = hour < 12 ? "AM" : "PM";
       const formattedHour = hour % 12 === 0 ? 12 : hour % 12;
       return `${formattedHour} ${period}`;
-    },
+    }
   },
   watch: {
     date(newDate) {

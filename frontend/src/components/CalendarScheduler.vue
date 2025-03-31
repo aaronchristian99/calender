@@ -31,6 +31,7 @@
     </div>
     <div :class="`calendar ${view}`">
       <Day v-if="view === 'day'" :events="events" :date="currentDate" :days="days" />
+      <Week v-if="view === 'week'" :events="events" :date="currentDate" :days="days" />
       <Month v-if="view === 'month'" :events="events" :date="currentDate" :days="days" />
       <Year v-if="view === 'year'" :events="events" :date="currentDate" :days="days" />
     </div>
@@ -40,11 +41,12 @@
 <script>
   import Button from "@/components/Button.vue";
   import Day from "@/components/Day.vue";
+  import Week from "@/components/Week.vue";
   import Month from "@/components/Month.vue";
   import Year from "@/components/Year.vue";
 
   export default {
-    components: {Button, Day, Month,Year },
+    components: {Button, Day, Week, Month,Year },
     props: {
       events: {
         type: Array,
@@ -121,7 +123,6 @@
 
 <style scoped>
   .calendar-container {
-    max-width: 75vw;
     width: 100%;
     height: 100%;
     margin: auto;
@@ -160,7 +161,6 @@
     color: var(--color-light-grey); /* Match the theme */
     font-size: 1.2rem;
   }
-
   .month {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
