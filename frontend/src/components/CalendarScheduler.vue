@@ -1,15 +1,15 @@
 <template>
   <div class="calendar-container">
-    <div class="calendar-header flex flex-row justify-between align-center">
+    <div class="calendar-header mb-2 flex flex-row justify-between align-center">
       <div class="flex flex-row justify-start align-center gap-4">
         <Button type="button" colour="bg-violet" text-color="white" @click="goToToday">
           Today
         </Button>
         <div class="flex flex-row justify-start align-center gap-2">
-          <Button type="button" colour="bg-violet" text-color="white" @click="previousPeriod">
+          <Button type="button" colour="bg-violet" text-color="white" :icon="true" @click="previousPeriod">
             <font-awesome-icon icon="chevron-left" />
           </Button>
-          <Button type="button" colour="bg-violet" text-color="white" @click="nextPeriod">
+          <Button type="button" colour="bg-violet" text-color="white" :icon="true" @click="nextPeriod">
             <font-awesome-icon icon="chevron-right" />
           </Button>
         </div>
@@ -29,7 +29,7 @@
         </div>
       </div>
     </div>
-    <div :class="`calendar ${view}`">
+    <div :class="`calendar mt-2 mb-2 ${view}`">
       <Day v-if="view === 'day'" :events="events" :date="currentDate" :days="days" />
       <Week v-if="view === 'week'" :events="events" :date="currentDate" :days="days" />
       <Month v-if="view === 'month'" :events="events" :date="currentDate" :days="days" />
@@ -126,10 +126,7 @@
     width: 100%;
     height: 100%;
     margin: auto;
-    padding: 20px;
-  }
-  .calendar-header {
-    margin: 1rem 0;
+    padding: 0 20px;
   }
   .select-wrapper {
     position: relative;
@@ -166,5 +163,6 @@
     grid-template-columns: repeat(7, 1fr);
     border: 1px solid var(--color-light-grey);
     border-radius: 10px;
+    max-height: max-content;
   }
 </style>

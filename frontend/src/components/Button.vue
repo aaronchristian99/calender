@@ -1,6 +1,6 @@
 <template>
   <button v-if="type === 'button'"
-          :class="['button', colour, textColor ]">
+          :class="['button', colour, textColor, icon ? 'icon-button' : '' ]">
     <slot></slot>
   </button>
   <a v-else
@@ -30,6 +30,10 @@
       },
       routeName: {
         type: String
+      },
+      icon: {
+        type: Boolean,
+        default: false
       }
     },
     computed: {
@@ -46,7 +50,7 @@
     display: block;
     font-size: 1rem;
     font-weight: 500;
-    padding: 1rem 1.5rem;
+    padding: 0.8rem;
     border-radius: 100px;
     border: none;
     text-decoration: none;

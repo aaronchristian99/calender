@@ -32,9 +32,9 @@
         </div>
         <div v-for="event in getEventsForDate(date)"
              :key="event.id"
-             class="event-badge flex justify-start gap-2"
+             class="event"
+             :style="eventStyle(event)"
              @click="$emit('toggle-view', event.id)">
-          <div class="dot"></div>
           <p>{{ event.title }}</p>
         </div>
       </div>
@@ -84,20 +84,19 @@ export default {
       this.endOfWeek = this.calendar[6];
     },
     isToday(date) {
-      return date.getDate() === this.currentDate.getDate() &&
-        date.getMonth() === this.currentDate.getMonth() &&
-        date.getFullYear() === this.currentDate.getFullYear();
+      const today = new Date();
+      return date.getDate() === today.getDate() &&
+        date.getMonth() === today.getMonth() &&
+        date.getFullYear() === today.getFullYear();
     },
     getEventsForDate(date) {
-      if (!date) {
+      if(!date) {
         return;
       }
 
       return this.events.filter(event => {
-        const eventDate = new Date(event.start_at);
-        return eventDate.getDate() === date.getDate() &&
-          eventDate.getMonth() === date.getMonth() &&
-          eventDate.getFullYear() === date.getFullYear();
+        const eventDate = event.startDate;
+        return (eventDate.getDate() === date.getDate() && eventDate.getMonth() === date.getMonth() && eventDate.getFullYear() === date.getFullYear())
       });
     },
     formatHour(hour) {
@@ -130,6 +129,22 @@ export default {
       const percentage = (totalMinutes / (24 * 60)) * 100;
       return { top: `calc(${percentage}% + 50px)` };
     },
+    eventStyle() {
+      return (event) => {
+        console.log(event);
+        const start = new Date(event.startDate);
+        const end = new Date(event.endDate);
+        const startMinutes = start.getHours() * 60 + start.getMinutes();
+        const endMinutes = end.getHours() * 60 + end.getMinutes();
+        const top = (startMinutes / (24 * 60)) * 100;
+        const height = ((endMinutes - startMinutes) / (24 * 60)) * 100;
+        return {
+          top: `calc(${top}% + 52px)`,
+          height: `${height}%`,
+          backgroundColor: `var(${event.colour})`
+        };
+      };
+    }
   },
   watch: {
     date(newDate) {
@@ -233,17 +248,19 @@ export default {
   .no-border-bottom {
     border-bottom: none;
   }
-  .event-badge {
-    background-color: var(--color-light-violet);
-    padding: 4px 8px;
-    border-radius: 5px;
-    margin-top: 5px;
+  .event {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    min-height: 30px;
+    padding: 5px;
+    border-radius: 4px;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+  }
+  .event p {
     font-size: 0.8rem;
   }
-  .event-badge p {
-    color: var(--color-black);
-  }
-  .event-badge:hover {
+  .event:hover {
     cursor: pointer;
   }
   .today {
@@ -257,11 +274,5 @@ export default {
     border-radius: 50%;
     margin-top: 3px;
     margin-bottom: 3px;
-  }
-  .dot {
-    width: 0.5rem;
-    height: 0.5rem;
-    border-radius: 50%;
-    background-color: var(--color-light-violet);
   }
 </style>

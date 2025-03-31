@@ -30,12 +30,12 @@
 </script>
 
 <template>
-  <header class="bg-black p-3" v-if="!['home', 'signUp'].includes(route.name)">
+  <header class="bg-black p-2" v-if="!['home', 'signUp'].includes(route.name)">
     <nav class="flex flex-row justify-between align-center px-3">
       <div class="logo-wrapper">
         <object class="header-logo" type="image/svg+xml" :data="logo"></object>
       </div>
-      <Button class="p-4 icon-button" type="button" @click="logout" colour="bg-violet" text-color="white">
+      <Button class="justify-center align-center icon-button" type="button" @click="logout" colour="bg-violet" text-color="white">
         <font-awesome-icon icon="right-from-bracket" />
       </Button>
     </nav>
@@ -46,8 +46,14 @@
 </template>
 
 <style scoped>
-.header-logo {
-  width: clamp(5rem, 5vw, 10rem);
-  height: clamp(5rem, 5vw, 10rem);
-}
+  .header-logo {
+    width: 50px;
+    height: 50px;
+  }
+
+  .icon-button {
+    display: flex;
+    width: 50px;
+    height: 50px;
+  }
 </style>

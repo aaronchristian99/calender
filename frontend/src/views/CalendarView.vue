@@ -16,25 +16,105 @@
 
     onMounted(async () => {
       try {
-        const response = await axios.get('/api/events');
+        // const response = await axios.get('/api/events');
+        //
+        // if(response && response.status === 200){
+        //   events.value = response.data.events.map(event => {
+        //     return {
+        //       id: event.id,
+        //       title: event.title,
+        //       location: event.location,
+        //       startDate: new Date(event.start_at),
+        //       endDate: new Date(event.end_at),
+        //       tooltip: event.title,
+        //       type: event.type
+        //     }
+        //   });
+        // }
+        const tempEvents = [
+          {
+            "created_at": "2025-03-25T23:20:20",
+            "created_by": 1,
+            "deleted_at": null,
+            "description": "<p>This is event &nbsp;2. Making the event public</p>",
+            "end_at": "2025-03-30T13:00:00",
+            "id": 2,
+            "location": "Brampton, Ontario, Canada",
+            "start_at": "2025-03-28T16:00:00",
+            "title": "Event 2",
+            "type": "public",
+            "updated_at": "2025-03-26T00:34:11"
+          },
+          {
+            "created_at": "2025-03-25T23:29:05",
+            "created_by": 2,
+            "deleted_at": null,
+            "description": "<p>This is event 3 at OTU</p>",
+            "end_at": "2025-03-27T18:00:00",
+            "id": 3,
+            "location": "Oshawa, Ontario, Canada",
+            "start_at": "2025-03-27T14:00:00",
+            "title": "Event 3",
+            "type": "private",
+            "updated_at": "2025-03-25T23:29:05"
+          },
+          {
+            "created_at": "2025-03-26T00:35:33",
+            "created_by": 1,
+            "deleted_at": null,
+            "description": "<p>Adding last event in list updating this event</p>",
+            "end_at": "2025-03-29T04:35:00",
+            "id": 5,
+            "location": "49800 Toro, Spain",
+            "start_at": "2025-03-26T04:35:00",
+            "title": "Event 5",
+            "type": "private",
+            "updated_at": "2025-03-26T17:49:05"
+          },
+          {
+            "created_at": "2025-03-26T17:52:30",
+            "created_by": 1,
+            "deleted_at": null,
+            "description": "<p>This is a test event...</p><p>&nbsp;</p>",
+            "end_at": "2025-03-29T14:00:00",
+            "id": 6,
+            "location": "Ontario Tech University, 2000 Simcoe Street North, Oshawa, ON L1H 7K0, Canada",
+            "start_at": "2025-03-27T11:00:00",
+            "title": "Test Event",
+            "type": "private",
+            "updated_at": "2025-03-26T17:52:30"
+          }
+        ];
 
-        if(response && response.status === 200){
-          events.value = response.data.events.map(event => {
-            return {
-              id: event.id,
-              title: event.title,
-              location: event.location,
-              startDate: new Date(event.start_at),
-              endDate: new Date(event.end_at),
-              tooltip: event.title,
-              type: event.type
-            }
-          });
-        }
+        events.value = tempEvents.map(event => {
+          return {
+            id: event.id,
+            title: event.title,
+            location: event.location,
+            startDate: new Date(event.start_at),
+            endDate: new Date(event.end_at),
+            tooltip: event.title,
+            type: event.type,
+            colour: getColour()
+          }
+        })
       } catch (error) {
         console.log(error);
       }
     });
+
+    const getColour = () => {
+      const colors = [
+        '--color-blue',
+        '--color-pink',
+        '--color-lilac',
+        '--color-gray',
+        '--color-magenta',
+        '--color-cyan'
+      ];
+
+      return colors[Math.floor(Math.random() * colors.length)];
+    };
 
     const toggleForm = (event = null) => {
       selectedEvent.value = event;
@@ -127,20 +207,19 @@
 
   <style scoped>
     .calendar-operations-wrapper {
+      position: absolute;
+      bottom: 1rem;
+      right: 1rem;
       display: flex;
       flex-flow: row nowrap;
       justify-content: start;
       gap: 1rem;
+      z-index: 1;
     }
     .calender-wrapper {
       display: flex;
       flex-flow: row nowrap;
       justify-content: center;
       align-items: center;
-    }
-    #add-event {
-      position: absolute;
-      bottom: 1rem;
-      right: 1rem;
     }
   </style>

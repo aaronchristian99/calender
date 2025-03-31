@@ -3,13 +3,19 @@
 
 /* semantic color variables for this project */
 :root {
-  --color-black: #1C1324;
+  --color-black: rgb(28,19,36);
   --color-dark-grey: rgb(37, 38, 43);
   --color-violet: rgb(142, 71, 255);
-
-  --color-white: #fff;
+  --color-white: rgb(255,255,255);
   --color-light-violet: rgb(188, 191, 255);
   --color-light-grey: rgb(165, 165, 165);
+  --color-blue: rgb(79, 134, 247);
+  --color-pink: rgb(255, 77, 128);
+  --color-lilac: rgb(164, 156, 183);
+  --color-gray: rgb(139, 139, 158);
+  --color-off-white: rgb(237, 237, 247);
+  --color-magenta: rgb(144, 12, 63);
+  --color-cyan: rgb(137, 212, 207);
 }
 
 *,
@@ -104,9 +110,10 @@ a:hover {
 }
 
 .icon-button {
-  width: clamp(2rem, 5vw, 4rem);
-  height: clamp(2rem, 5vw, 4rem);
+  width: clamp(2rem, 2vw, 3rem);
+  height: clamp(2rem, 2vw, 3rem);
   border-radius: 100% !important;
+  padding: 0 !important;
 }
 
 .flex {
@@ -202,8 +209,16 @@ a:hover {
   margin-top: 1rem;
 }
 
+.mt-2 {
+  margin-top: 0.5rem;
+}
+
 .mb-0 {
   margin-bottom: 0;
+}
+
+.mb-2 {
+  margin-bottom: 0.5rem;
 }
 
 .mb-4 {
@@ -224,6 +239,10 @@ a:hover {
 
 .ml-0 {
   margin-left: 0;
+}
+
+.p-2 {
+  padding: 0.8rem;
 }
 
 .p-3 {

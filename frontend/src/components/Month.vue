@@ -95,7 +95,7 @@ export default {
   </div>
   <div v-for="(date, index) in calendar"
        :key="index"
-       class="calendar-cell flex justify-center"
+       class="calendar-cell"
        :class="{
              'no-border-right': (index + 1) % 7 === 0,
              'no-border-bottom': index >= calendar.length - 7,
@@ -105,9 +105,9 @@ export default {
     </p>
     <div v-for="event in getEventsForDate(date.date)"
          :key="event.id"
-         class="event-badge flex justify-start gap-2"
+         class="event-badge flex justify-start align-center gap-2"
          @click="$emit('toggle-view', event.id)">
-      <div class="dot"></div>
+      <div class="dot" :style="{ 'background-color': `var(${event.colour})` }"></div>
       <p>{{ event.title }}</p>
     </div>
   </div>
@@ -128,7 +128,8 @@ export default {
     border-right: 1px solid var(--color-light-grey);
     border-bottom: 1px solid var(--color-light-grey);
     padding: 5px 10px;
-    min-height: 150px;
+    height: 130px;
+    overflow-y: auto;
     position: relative;
   }
   .no-border-right {
@@ -138,34 +139,30 @@ export default {
     border-bottom: none;
   }
   .event-badge {
-    background-color: var(--color-light-violet);
-    padding: 4px 8px;
-    border-radius: 5px;
     margin-top: 5px;
-    font-size: 0.8rem;
   }
   .event-badge p {
-    color: var(--color-black);
+    color: var(--color-white);
+    font-size: 0.8rem;
   }
   .event-badge:hover {
     cursor: pointer;
   }
   .today {
-    background-color: var(--color-violet);
-    color: var(--color-white);
-  }
-  .date-number {
     min-width: 2rem;
     width: max-content;
     height: 2rem;
     border-radius: 50%;
-    margin-top: 3px;
-    margin-bottom: 3px;
+    background-color: var(--color-violet);
+    color: var(--color-white);
+  }
+  .date-number {
+    margin: 3px auto;
+    font-size: 0.8rem;
   }
   .dot {
     width: 0.5rem;
     height: 0.5rem;
     border-radius: 50%;
-    background-color: var(--color-light-violet);
   }
 </style>

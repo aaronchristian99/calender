@@ -16,8 +16,8 @@
         <div class="dot"></div>
         <div class="short-line"></div>
       </div>
-      <div v-for="event in events" :key="event.id" class="event" :style="eventStyle(event)">
-        {{ event.title }}
+      <div v-for="event in getEventsForDate(currentTime)" :key="event.id" class="event" :style="eventStyle(event)">
+        <p>{{ event.title }}</p>
       </div>
     </div>
   </div>
@@ -46,15 +46,16 @@ export default {
     },
     eventStyle() {
       return (event) => {
-        const start = new Date(event.startTime);
-        const end = new Date(event.endTime);
+        const start = new Date(event.startDate);
+        const end = new Date(event.endDate);
         const startMinutes = start.getHours() * 60 + start.getMinutes();
         const endMinutes = end.getHours() * 60 + end.getMinutes();
         const top = (startMinutes / (24 * 60)) * 100;
         const height = ((endMinutes - startMinutes) / (24 * 60)) * 100;
         return {
-          top: `${top}%`,
+          top: `calc(${top}% + 70px)`,
           height: `${height}%`,
+          backgroundColor: `var(${event.colour})`
         };
       };
     },
@@ -67,7 +68,6 @@ export default {
   },
   mounted() {
     this.updateTime();
-    setInterval(this.updateTime, 60000);
   },
   methods: {
     updateTime() {
@@ -77,6 +77,16 @@ export default {
       const period = hour < 12 ? "AM" : "PM";
       const formattedHour = hour % 12 === 0 ? 12 : hour % 12;
       return `${formattedHour} ${period}`;
+    },
+    getEventsForDate(date) {
+      if(!date) {
+        return;
+      }
+
+      return this.events.filter(event => {
+        const eventDate = event.startDate;
+        return (eventDate.getDate() === date.getDate() && eventDate.getMonth() === date.getMonth() && eventDate.getFullYear() === date.getFullYear())
+      });
     }
   },
   watch: {
@@ -157,6 +167,14 @@ export default {
     border-radius: 4px;
     font-size: 14px;
     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+  }
+
+  .event p {
+    font-size: 0.8rem;
+  }
+
+  .event:hover {
+    cursor: pointer;
   }
 
   .date-wrapper {
