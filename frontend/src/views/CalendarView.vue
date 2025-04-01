@@ -106,7 +106,16 @@
           colour: getColour()
         });
       } else {
-        events.value[key] = event;
+        events.value[key] = {
+          id: event.id,
+          title: event.title,
+          location: event.location,
+          startDate: new Date(event.start_at),
+          endDate: new Date(event.end_at),
+          tooltip: event.title,
+          type: event.type,
+          colour: getColour()
+        };
       }
     }
   </script>
