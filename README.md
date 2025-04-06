@@ -1,68 +1,114 @@
-# Calendar Application
+# Kronos
+
+## Project Overview
+A full-stack calendar scheduling web application with support for creating, updating, deleting, and viewing events. Built using Flask for the backend and Vue for the frontend, containerized with Podman for seamless cross-platform development.
+
+---
 
 ## Requirements
-**Works on all operating systems as long as all dependecies are installed**
-- **Podman**  
-  [Installation Guide](https://podman.io/docs/installation)
+**Works on all operating systems as long as all dependencies are installed**
 
-- **Podman Compose**  
-  [Installation Guide](https://github.com/containers/podman-compose)
+- **[Podman](https://podman.io/docs/installation)**
+- **[Podman Compose](https://github.com/containers/podman-compose)**
+- **[Python](https://www.python.org/downloads/)**
+- **[DataGrip (Optional)](https://www.jetbrains.com/datagrip/)** – for viewing/managing the database
 
-- **DataGrip**  
-  [Download DataGrip](https://www.jetbrains.com/datagrip/)
+---
 
-- **Python**  
-  [Download Python](https://www.python.org/downloads/)
+## Environment Variables
+
+Create a `.env` file in the root directory with the following:
+
+```env
+MYSQL_DATABASE=YOUR-DATABASE
+MYSQL_USER=YOUR-DATABASE-USER
+MYSQL_PASSWORD=YOUR-DATABASE-PASSWORD
+MYSQL_ROOT_PASSWORD=YOUR-DATABASE-ROOT-PASSWORD
+
+ENVIRONMENT=development
+```
+
+Create a `.env` file in the backend directory with the following:
+```env
+DB_CONNECTION=YOUR-DATABASE
+DB_NAME=YOUR-DATABASE-NAME
+DB_USER=YOUR-DATABASE-USER
+DB_PASSWORD=YOUR-DATABASE-PASSWORD
+DB_HOST=YOUR-DATABASE-HOST
+DB_PORT=YOUR-DATABASE-PORT
+```
+---
+
+## Project Structure
+
+```
+calendar/
+├── backend/               # Python backend
+├── frontend/              # Vue.js frontend
+├── .env                   # Environment variables
+├── docker-compose.yml     # Container configuration
+├── Dockerfile             # Python container image
+└── README.md
+```
+
+---
 
 ## How to Run the Application
-Before running the application make sure that Podman and Podman Compose are installed and configured correctly.
 
-**_If you get this error `podman-compose not found in %PATH` please install `podman-compose` binary library._**
+Before running the application, make sure that Podman and Podman Compose are installed and configured correctly.
 
-**_If using Docker replace all commands with 'docker' instead of 'podman'_**
-1. Run:
-   ```
-   podman compose build --no-cache
-   podman compose up -d
-    ```
-   
-2. Enter the Python container:
-    ```
-   podman exec -it python bash
-   ```
-   
-3. Inside the container, install dependencies and start the server:
-    ```
-    pip install -r requirements.txt
-    python3 server.py
-   ```
-   
-4. Open your browser and go to:
-    ```
-   http://localhost:8080
-   ```
-   
-**Note:**
-To develop frontend separately:
-- Instead of opening `localhost:8080`, open a terminal
-- Navigate to frontend directory:
-``` 
+> ⚠️ If you get the error `podman-compose not found in %PATH`, install the `podman-compose` binary.
+
+> 🐳 If using Docker instead, replace all `podman` commands with `docker`.
+
+### 1. Build and Run Containers
+
+```bash
+podman compose build --no-cache
+podman compose up -d
+```
+
+### 2. Enter the Python Container
+
+```bash
+podman exec -it python bash
+```
+
+### 3. Install Backend Dependencies & Start Server
+
+```bash
+pip install -r requirements.txt
+python3 server.py
+```
+
+### 4. Open in Browser
+
+```
+http://localhost:8080
+```
+
+---
+
+### For Frontend Development
+
+To run the frontend separately in development mode:
+
+```bash
 cd frontend
-```
-- Run the development server:
-```
 npm run dev
 ```
-**Make sure python server is running before the frontend.**
 
-**If running on windows platform, ensure script.sh has line endings with 'LF' than 'CRLF'. You can manually convert it 
-by using Intellij, visual code, notepad++ or any IDE**
+> Make sure the Python server is already running before starting the frontend.
+
+---
 
 ## Bug Reports
-- Go to [Issues](https://github.com/aaronchristian99/calender/issues)
-- Click 'New Issue'
-- The title should sufficiently summarize the bug
-  - eg. "Adding event crashes program"
-- The description should include
-  - A descriptive guide to reproduce the bug
-  - Any extra details to narrow the source of the bug
+
+1. Go to [Issues](https://github.com/aaronchristian99/calender/issues)
+2. Click `New Issue`
+3. Use a clear and concise title (e.g., `"Adding event crashes program"`)
+4. In the description, include:
+    - Steps to reproduce the bug
+    - Any additional context or logs that help identify the problem
+
+---
