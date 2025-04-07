@@ -74,11 +74,10 @@ podman compose up -d
 podman exec -it python bash
 ```
 
-### 3. Install Backend Dependencies & Start Server
+### 3. Run migrations
 
 ```bash
-pip install -r requirements.txt
-python3 server.py
+alembic upgrade head
 ```
 
 ### 4. Open in Browser
